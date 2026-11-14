@@ -18,8 +18,8 @@ conflicts=('ignifox')
 options=('!strip' '!debug')
 source_x86_64=("$url/releases/download/v$pkgver-$_emrel/ignifox-$pkgver-$_emrel-linux-x86_64.tar.xz")
 source_aarch64=("$url/releases/download/v$pkgver-$_emrel/ignifox-$pkgver-$_emrel-linux-aarch64.tar.xz")
-sha256sums_x86_64=('897501d993c6b49e4b5dbf038e449d1e5b8d70bb223199d74f447e71ec3125fa')
-sha256sums_aarch64=('f6a477c37ad69feb88ccef47ebdeb93a24a549005ec875abb4f4c27790a1fc0c')
+sha256sums_x86_64=('73fff56389721dbad51d45d502260fb850a3bc1f12ca5a480f8372c1676f988f')
+sha256sums_aarch64=('c5a72cc510d1f13ee902c5dd019e697a57e66acc62ab5a97f8c708f6aa0378d0')
 
 package() {
   install -d "$pkgdir/opt" "$pkgdir/usr/bin"

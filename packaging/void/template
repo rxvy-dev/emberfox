@@ -14,8 +14,8 @@ nostrip=yes
 noverifyrdeps=yes
 distfiles="${homepage}/releases/download/v${version}-${_emrel}/ignifox-${version}-${_emrel}-linux-${XBPS_TARGET_MACHINE}.tar.xz"
 case "$XBPS_TARGET_MACHINE" in
-	x86_64) checksum=897501d993c6b49e4b5dbf038e449d1e5b8d70bb223199d74f447e71ec3125fa ;; # x86_64-sum
-	aarch64) checksum=f6a477c37ad69feb88ccef47ebdeb93a24a549005ec875abb4f4c27790a1fc0c ;; # aarch64-sum
+	x86_64) checksum=73fff56389721dbad51d45d502260fb850a3bc1f12ca5a480f8372c1676f988f ;; # x86_64-sum
+	aarch64) checksum=c5a72cc510d1f13ee902c5dd019e697a57e66acc62ab5a97f8c708f6aa0378d0 ;; # aarch64-sum
 esac
 
 do_install() {
