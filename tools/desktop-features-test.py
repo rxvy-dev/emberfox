@@ -278,8 +278,20 @@ def _():
     assert items == 2, f"feeds.js got {items!r} headlines"
     chrome_async("IgniBoot.writeNewtabConfig().then(() => done(1), e => done(String(e)))")
     url = chrome("return IgniBoot.newtabURL()")
-    drv.switch_to.new_window("tab")       # the earlier unload step may have unloaded the old one
-    drv.get(url)
+    # Open it from the browser side, then attach to that tab (the tab WebDriver was using may
+    # have been unloaded by the previous step).
+    chrome("gBrowser.selectedTab = gBrowser.addTrustedTab(arguments[0])", url)
+
+    def attach():
+        for h in drv.window_handles:
+            try:
+                drv.switch_to.window(h)
+                if drv.current_url.startswith(url.split("#")[0]):
+                    return True
+            except Exception:  # noqa: BLE001
+                continue
+        return False
+    wait_for(attach, "the new tab page tab")
     wait_for(lambda: drv.execute_script("return document.querySelectorAll('#feed-list li').length") == 2, "headlines on the page")
     assert drv.execute_script("return !document.getElementById('todo').hidden"), "to-do widget hidden"
     assert "Release" in drv.execute_script("return document.getElementById('cd-title').textContent")
