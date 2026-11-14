@@ -57,7 +57,7 @@ echo "Opening a new tab from the menu"
 adb shell input tap $((w - 60)) 150 >/dev/null 2>&1
 sleep 4
 shot 7-menu-top
-adb shell input tap $((w - 350)) 240 >/dev/null 2>&1
+adb shell input tap $((w - 350)) 185 >/dev/null 2>&1
 sleep 12
 shot 8-newtab-synthwave
 
