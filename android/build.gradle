@@ -1,0 +1,66 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    dependencies {
+        classpath(libs.kotlin.gradle.plugin)
+    }
+}
+
+plugins {
+    alias libs.plugins.android.application apply false
+    alias libs.plugins.compose.compiler apply false
+}
+
+allprojects {
+    repositories {
+        def googleRepo = providers.gradleProperty("googleRepo")
+        if (googleRepo.present) {
+            maven {
+                name = "Google"
+                url = googleRepo.get()
+                allowInsecureProtocol = true // Local Nexus in CI uses HTTP
+            }
+        } else {
+            google()
+        }
+
+        maven {
+            name = "Mozilla Nightly"
+            url = "https://nightly.maven.mozilla.org/maven2"
+
+            content {
+                // Always fetch components from the snapshots repository
+                includeGroup "org.mozilla.components"
+            }
+        }
+
+        maven {
+            name = "Mozilla"
+            url = "https://maven.mozilla.org/maven2"
+
+            content {
+                // Never fetch components from here. We always want to use snapshots.
+                excludeGroup "org.mozilla.components"
+            }
+        }
+
+        def centralRepo = providers.gradleProperty("centralRepo")
+        if (centralRepo.present) {
+            maven {
+                name = "MavenCentral"
+                url = centralRepo.get()
+                allowInsecureProtocol = true // Local Nexus in CI uses HTTP
+            }
+        } else {
+            mavenCentral()
+        }
+    }
+}
+
+tasks.register('listRepositories') {
+    def repositories = project.repositories.collect { "Name: ${it.name}; url: ${it.url}" }
+    doLast {
+        println "Repositories:"
+        repositories.each { println it }
+    }
+}

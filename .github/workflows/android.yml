@@ -1,0 +1,88 @@
+name: Android
+
+# Builds the Ignifox for Android APKs (one per CPU type).
+#  - runs on every change under android/
+#  - release.yml calls it so the APKs land on the GitHub Release
+#  - or run it by hand from the Actions tab and grab the APKs from the run's artifacts
+
+on:
+  push:
+    branches: [main, android]
+    paths: ["android/**", ".github/workflows/android.yml"]
+  pull_request:
+    paths: ["android/**"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version name shown in the app"
+        default: ""
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-${{ github.ref }}-${{ inputs.version }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    name: Build APKs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Signing key
+        id: key
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+        run: |
+          if [[ -n "$KEYSTORE_B64" ]]; then
+            printf '%s' "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/ignifox.jks"
+            echo "IGNIFOX_KEYSTORE=$RUNNER_TEMP/ignifox.jks" >> "$GITHUB_ENV"
+            echo "Signing with the Ignifox release key" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::No ANDROID_KEYSTORE_B64 secret: signing with a throwaway debug key. Updates will not install over older builds."
+          fi
+
+      - name: Build
+        env:
+          IGNIFOX_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          IGNIFOX_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          IN_VERSION: ${{ inputs.version }}
+        run: |
+          V="${IN_VERSION:-}"
+          [[ -n "$V" ]] || V="$(sed -n 's/^android-components = "\([0-9]*\.[0-9]*\).*/\1/p' gradle/libs.versions.toml)-dev"
+          ./gradlew --no-daemon --stacktrace assembleNightly -PversionName="$V"
+
+      - name: Collect + check APKs
+        run: |
+          mkdir -p ../dist
+          for abi in arm64-v8a armeabi-v7a x86_64; do
+            src=$(find app/build/outputs/apk/nightly -name "*-$abi-*.apk" | head -1)
+            case $abi in arm64-v8a) n=arm64 ;; armeabi-v7a) n=arm32 ;; *) n=$abi ;; esac
+            cp "$src" "../dist/ignifox-android-$n.apk"
+          done
+          ls -la ../dist
+          ./audit.sh ../dist/ignifox-android-arm64.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-android
+          path: dist/*.apk
+          if-no-files-found: error
