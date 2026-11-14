@@ -27,26 +27,41 @@ scenario() {
   } > "$profile/user.js"
 
   echo "== $name (expect $expect)"
-  HOME="$home" XDG_STATE_HOME="$home/.local/state" "$app" --no-remote --profile "$profile" about:blank \
-    > "$out/$name-browser.log" 2>&1 &
-  local pid=$!
-  local win=""
-  for _ in $(seq 1 60); do
-    win=$(xdotool search --onlyvisible --class ignifox 2>/dev/null | tail -1)
-    [[ -n "$win" ]] && break
-    sleep 1
-  done
+  # Ignifox writes its new tab page into the profile when it starts. Start it once so the page
+  # (and its config.js with this scenario's settings) exists, then start it again on that page.
+  # (Opening it with Ctrl+T would need a window manager, which a bare virtual screen lacks.)
+  run_browser() {
+    HOME="$home" XDG_STATE_HOME="$home/.local/state" "$app" --no-remote --profile "$profile" "$1" \
+      >> "$out/$name-browser.log" 2>&1 &
+    pid=$!
+    win=""
+    for _ in $(seq 1 60); do
+      win=$(xdotool search --onlyvisible --class ignifox 2>/dev/null | tail -1)
+      [[ -n "$win" ]] && break
+      sleep 1
+    done
+  }
+  local pid win page="$profile/igni-newtab/index.html"
+  run_browser about:blank
+  for _ in $(seq 1 30); do [[ -f "$profile/igni-newtab/config.js" ]] && break; sleep 1; done
+  sleep 3
+  kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null
+  if [[ ! -f "$page" ]]; then
+    echo "   ✗ Ignifox did not write its new tab page into the profile"; tail -20 "$out/$name-browser.log"; fail=1
+    return
+  fi
+  grep -o '"wallpaper":"[a-z]*"\|"motion":"[a-z]*"' "$profile/igni-newtab/config.js" | tr '\n' ' ' | sed 's/^/   config: /'; echo
+
+  run_browser "file://$page"
   if [[ -z "$win" ]]; then
     echo "   ✗ no browser window appeared"; tail -20 "$out/$name-browser.log"; fail=1
     kill "$pid" 2>/dev/null; return
   fi
-  xdotool windowsize "$win" 1280 800 windowmove "$win" 0 0 2>/dev/null
-  sleep 12                                  # let the engine write the new tab page
-  xdotool windowactivate --sync "$win" key --clearmodifiers ctrl+t 2>/dev/null
-  sleep 6
-  import -window "$win" "$out/$name-1.png"
+  xdotool windowmove "$win" 0 0 windowsize "$win" 1280 800 2>/dev/null
+  sleep 10
+  import -window root "$out/$name-1.png"
   sleep 1
-  import -window "$win" "$out/$name-2.png"
+  import -window root "$out/$name-2.png"
   kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null
 
   # Compare the lower-left part of the page: away from the clock and the blinking search cursor.
