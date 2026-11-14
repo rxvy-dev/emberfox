@@ -277,7 +277,7 @@ def _():
     items = chrome_async("IgniBoot.refreshFeeds().then(i => done(i.length), e => done(String(e)))")
     assert items == 2, f"feeds.js got {items!r} headlines"
     chrome_async("IgniBoot.writeNewtabConfig().then(() => done(1), e => done(String(e)))")
-    url = chrome("return IgniBoot.newtabURL()")
+    url = chrome("return IgniBoot.newtabURL()") + f"?fresh={int(time.time())}"   # unique: earlier new tabs exist
     # Open it from the browser side, then attach to that tab (the tab WebDriver was using may
     # have been unloaded by the previous step).
     chrome("gBrowser.selectedTab = gBrowser.addTrustedTab(arguments[0])", url)
@@ -286,7 +286,7 @@ def _():
         for h in drv.window_handles:
             try:
                 drv.switch_to.window(h)
-                if drv.current_url.startswith(url.split("#")[0]):
+                if drv.current_url == url:
                     return True
             except Exception:  # noqa: BLE001
                 continue
