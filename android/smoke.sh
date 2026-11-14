@@ -23,7 +23,11 @@ adb install -r "$apk" || { echo "install failed"; exit 1; }
 
 echo "Starting Ignifox"
 adb shell monkey -p "$pkg" -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
-sleep 45
+sleep 40
+shot 0-first-start-ublock
+# The first start offers uBlock Origin; dismiss the prompt to carry on.
+adb shell input keyevent KEYCODE_BACK >/dev/null 2>&1
+sleep 5
 shot 1-newtab
 
 echo "Opening a website"

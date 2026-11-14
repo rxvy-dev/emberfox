@@ -74,3 +74,11 @@ test("android: wallpapers, widget and theme links are registered", () => {
   assert.match(manifest, /android\.app\.shortcuts/);
   for (const w of ["flames", "storm", "fireflies"]) assert.ok(w in WALLPAPERS);
 });
+
+test("android: theme attributes point at colour resources, never raw colours", () => {
+  // Android Components resolve some theme colours as resource IDs; a raw #rrggbb has none and crashes.
+  const xml = readFileSync(join(res, "values/ignifox_themes.xml"), "utf8");
+  for (const m of xml.matchAll(/<item name="[^"]+">([^<]+)<\/item>/g)) {
+    if (m[1].startsWith("#")) assert.fail(`theme item uses a raw colour: ${m[0]}`);
+  }
+});

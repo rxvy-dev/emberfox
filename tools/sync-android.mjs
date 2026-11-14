@@ -57,30 +57,39 @@ ${rows.join("\n")}
 }
 
 export function themesXml() {
-  const styles = Object.entries(THEMES).map(([k, t]) => `    <style name="Igni.${cap(k)}" parent="">
-        <item name="colorPrimary">${t.accent}</item>
-        <item name="colorOnPrimary">${onColor(t.accent)}</item>
-        <item name="colorPrimaryDark">${t.bg}</item>
-        <item name="colorAccent">${t.accent}</item>
-        <item name="colorSecondary">${t.accent}</item>
-        <item name="colorOnSecondary">${onColor(t.accent)}</item>
-        <item name="colorControlActivated">${t.accent}</item>
-        <item name="colorSurface">${t.bg2}</item>
-        <item name="colorOnSurface">${t.fg}</item>
-        <item name="colorOnSurfaceVariant">${t.fgDim}</item>
-        <item name="colorSurfaceContainer">${t.bg2}</item>
-        <item name="colorSurfaceContainerHigh">${t.bg3}</item>
-        <item name="colorSurfaceContainerHighest">${t.bg3}</item>
-        <item name="colorSurfaceVariant">${t.bg3}</item>
-        <item name="colorOutline">${t.fgDim}</item>
-        <item name="android:colorBackground">${t.bg}</item>
-        <item name="android:windowBackground">@color/igni_${k}_bg</item>
-        <item name="android:navigationBarColor">${t.bg}</item>
-        <item name="android:textColorPrimary">${t.fg}</item>
-        <item name="android:textColorSecondary">${t.fgDim}</item>
-        <item name="android:textColorLink">${t.accent}</item>
-    </style>`);
-  const colors = Object.entries(THEMES).map(([k, t]) => `    <color name="igni_${k}_bg">${t.bg}</color>`);
+  // Every theme attribute points at a colour *resource*: parts of Android Components read theme
+  // colours as resource IDs, and a raw "#rrggbb" there has no ID (it crashed the add-on prompt).
+  const colorsOf = (k, t) => ({
+    bg: t.bg, bg2: t.bg2, bg3: t.bg3, fg: t.fg, dim: t.fgDim, accent: t.accent, on_accent: onColor(t.accent),
+  });
+  const colors = Object.entries(THEMES).flatMap(([k, t]) =>
+    Object.entries(colorsOf(k, t)).map(([n, c]) => `    <color name="igni_${k}_${n}">${c}</color>`));
+  const styles = Object.entries(THEMES).map(([k]) => {
+    const c = n => `@color/igni_${k}_${n}`;
+    return `    <style name="Igni.${cap(k)}" parent="">
+        <item name="colorPrimary">${c("accent")}</item>
+        <item name="colorOnPrimary">${c("on_accent")}</item>
+        <item name="colorPrimaryDark">${c("bg")}</item>
+        <item name="colorAccent">${c("accent")}</item>
+        <item name="colorSecondary">${c("accent")}</item>
+        <item name="colorOnSecondary">${c("on_accent")}</item>
+        <item name="colorControlActivated">${c("accent")}</item>
+        <item name="colorSurface">${c("bg2")}</item>
+        <item name="colorOnSurface">${c("fg")}</item>
+        <item name="colorOnSurfaceVariant">${c("dim")}</item>
+        <item name="colorSurfaceContainer">${c("bg2")}</item>
+        <item name="colorSurfaceContainerHigh">${c("bg3")}</item>
+        <item name="colorSurfaceContainerHighest">${c("bg3")}</item>
+        <item name="colorSurfaceVariant">${c("bg3")}</item>
+        <item name="colorOutline">${c("dim")}</item>
+        <item name="android:colorBackground">${c("bg")}</item>
+        <item name="android:windowBackground">${c("bg")}</item>
+        <item name="android:navigationBarColor">${c("bg")}</item>
+        <item name="android:textColorPrimary">${c("fg")}</item>
+        <item name="android:textColorSecondary">${c("dim")}</item>
+        <item name="android:textColorLink">${c("accent")}</item>
+    </style>`;
+  });
   const names = Object.values(THEMES).map(t => `        <item>${t.name}</item>`);
   const keys = Object.keys(THEMES).map(k => `        <item>${k}</item>`);
   return `<?xml version="1.0" encoding="utf-8"?>
