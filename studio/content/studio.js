@@ -167,6 +167,21 @@ function range(key, label, desc, min, max, step = 1, fmt = v => v) {
   return row(key, label, desc, [input, out]);
 }
 
+function dateRow(key, label, desc) {
+  const input = h("input", { type: "datetime-local", "aria-label": label });
+  input.addEventListener("change", () => set(key, input.value));
+  bind(() => { if (document.activeElement != input) input.value = get(key) || ""; }, input);
+  const clear = h("button", { class: "btn", onclick: () => set(key, "") }, "Clear");
+  return row(key, label, desc, h("span", { class: "btns" }, input, clear));
+}
+
+function textArea(key, label, desc, placeholder = "") {
+  const input = h("textarea", { rows: 4, placeholder, spellcheck: "false", "aria-label": label, class: "ta" });
+  input.addEventListener("change", () => set(key, input.value.trim()));
+  bind(() => { if (document.activeElement != input) input.value = get(key) || ""; }, input);
+  return row(key, label, desc, input);
+}
+
 function text(key, label, desc, { placeholder = "", list = null } = {}) {
   const input = h("input", { type: "text", placeholder, list: list ? list.id : null, "aria-label": label });
   input.addEventListener("change", () => set(key, input.value.trim()));
@@ -507,11 +522,12 @@ function newtabPreview() {
 
 function wallpaperPicker() {
   const grid = h("div", { class: "walls" });
-  const file = h("input", { type: "file", accept: "image/png,image/jpeg,image/webp,image/gif,image/avif", hidden: true });
+  const file = h("input", { type: "file", accept: "image/png,image/jpeg,image/webp,image/gif,image/avif,video/mp4,video/webm", hidden: true });
   file.addEventListener("change", async () => {
     const f = file.files[0];
     if (!f) return;
-    if (f.size > 40 * 1024 * 1024) { toast("That picture is over 40 MB"); return; }
+    const video = f.type.startsWith("video/");
+    if (f.size > (video ? 200 : 40) * 1024 * 1024) { toast(video ? "That video is over 200 MB" : "That picture is over 40 MB"); return; }
     try {
       const bytes = new Uint8Array(await f.arrayBuffer());
       await IgniBoot.setNewtabWallpaper(bytes, (f.name.split(".").pop() || "jpg"));
@@ -533,7 +549,8 @@ function wallpaperPicker() {
       file);
   }, grid);
   return h("div", {}, grid, h("div", { class: "btns", style: { marginTop: "10px" } },
-    h("button", { class: "btn", onclick: () => file.click() }, "Choose a picture…")));
+    h("button", { class: "btn", onclick: () => file.click() }, "Choose a picture, GIF or video…"),
+    h("span", { class: "val", style: { textAlign: "start" } }, "Videos (MP4/WebM) play muted on a loop.")));
 }
 
 function linksEditor() {
@@ -623,7 +640,16 @@ function renderNewtab() {
       text("ignifox.newtab.name", "Your name for the greeting", null, { placeholder: "e.g. rxvy" }),
       toggle("ignifox.newtab.search", "Search box"),
       toggle("ignifox.newtab.engineSwitcher", "Engine switcher in the search box", "Pick an engine per search, or type a keyword like @yt first."),
-      toggle("ignifox.newtab.notes", "Notes", "A small notepad in the corner. Saved only on this computer.")),
+      toggle("ignifox.newtab.notes", "Notes", "A small notepad in the side column. Saved only on this computer.")),
+    h("h2", {}, "Widgets"),
+    h("p", { class: "lede" }, "A column on the right of the new tab. To-do items and notes stay on this computer."),
+    card(
+      toggle("ignifox.newtab.todo", "To-do list", "Tick things off, or remove them with ×."),
+      text("ignifox.newtab.countdown.title", "Countdown name", "Leave the date empty to hide the countdown.", { placeholder: "e.g. Summer break" }),
+      dateRow("ignifox.newtab.countdown.date", "Countdown to"),
+      textArea("ignifox.newtab.feeds", "News feeds", "RSS or Atom addresses, one per line. Ignifox fetches them every 30 minutes, without cookies.",
+        "https://archlinux.org/feeds/news/\nhttps://www.phoronix.com/rss.php"),
+      range("ignifox.newtab.feeds.count", "Headlines to show", null, 3, 20, 1, v => `${v}`)),
     h("h2", {}, "Shortcuts"),
     linksEditor(),
     card(

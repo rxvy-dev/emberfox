@@ -142,3 +142,38 @@ test("day/night: off uses the preset, time uses the day or night theme", () => {
   assert.equal(resolvePal(v, 12).bg, ALL_THEMES.frost.bg);
   assert.equal(resolvePal(v, 23).bg, ALL_THEMES.void.bg);
 });
+
+// ---------------------------------------------------------------- news feeds
+import { feedURLs, mergeFeeds, parseFeed } from "../studio/content/data.sys.mjs";
+
+test("feeds: RSS 2.0 items with CDATA and entities", () => {
+  const xml = `<?xml version="1.0"?><rss><channel><title>Arch Linux: Recent news</title>
+    <item><title><![CDATA[Valkey &amp; <b>Redis</b>]]></title><link>https://archlinux.org/news/valkey/</link><pubDate>Tue, 11 Nov 2026 10:00:00 +0000</pubDate></item>
+    <item><title>Tom &amp; Jerry &#8212; ok</title><link>https://archlinux.org/news/two/</link></item>
+    <item><title>bad link</title><link>javascript:alert(1)</link></item>
+  </channel></rss>`;
+  const items = parseFeed(xml);
+  assert.equal(items.length, 2);
+  assert.equal(items[0].title, "Valkey & Redis");
+  assert.equal(items[0].source, "Arch Linux: Recent news");
+  assert.equal(items[1].title, "Tom & Jerry — ok");
+});
+
+test("feeds: Atom entries use the alternate link", () => {
+  const xml = `<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog</title>
+    <entry><title type="html">Post one</title><link rel="self" href="https://x.example/self"/><link rel="alternate" href="https://x.example/one"/><updated>2026-11-10T00:00:00Z</updated></entry>
+    <entry><title>Post two</title><link href="https://x.example/two"/></entry></feed>`;
+  const items = parseFeed(xml);
+  assert.deepEqual(items.map(i => i.link), ["https://x.example/one", "https://x.example/two"]);
+});
+
+test("feeds: URL list and merging keeps every feed represented", () => {
+  assert.deepEqual(feedURLs("https://a.example/rss\nnot a url\nfile:///etc/passwd  http://b.example/feed"), ["https://a.example/rss", "http://b.example/feed"]);
+  const a = Array.from({ length: 10 }, (_, i) => ({ title: "a" + i, link: "https://a/" + i, date: `2026-11-${10 + i}` }));
+  const b = [{ title: "b0", link: "https://b/0", date: "2026-01-01" }];
+  const merged = mergeFeeds([a, b], 6);
+  assert.equal(merged.length, 6);
+  assert.ok(merged.some(i => i.title == "b0"), "the quiet feed still shows up");
+  assert.equal(merged[0].title, "a9", "newest first");
+  assert.equal(mergeFeeds([], 6).length, 0);
+});

@@ -18,7 +18,7 @@ import {
   readPref,
   resolvePalette,
 } from "chrome://ignifox/content/prefs.sys.mjs";
-import { menuHideCSS } from "chrome://ignifox/content/data.sys.mjs";
+import { feedURLs, menuHideCSS, mergeFeeds, parseFeed } from "chrome://ignifox/content/data.sys.mjs";
 
 const { setTimeout, setInterval } = ChromeUtils.importESModule("resource://gre/modules/Timer.sys.mjs");
 
@@ -31,6 +31,7 @@ const UPDATE_INTERVAL = 24 * 60 * 60; // seconds between automatic checks
 const UPDATE_DELAY_MS = 90 * 1000; // wait after startup so it never slows launch
 const NEWTAB_FILES = ["index.html", "newtab.css", "newtab.js", "fx.js", "logo.svg", "MetalMania-Regular.ttf"];
 const TOPSITES_REFRESH_MS = 15 * 60 * 1000;
+const FEEDS_REFRESH_MS = 30 * 60 * 1000;
 
 let gChromeHandle = null; // keeps chrome://ignifox/ registered for the app's lifetime
 const gCustomSheets = new WeakMap(); // window -> loaded custom css url
@@ -153,6 +154,10 @@ export const IgniBoot = {
     } else if (topic == "nsPref:changed") {
       if (data.startsWith("ignifox.newtab.") || data.startsWith("ignifox.theme.") || data == "ignifox.shape.radius") {
         this.queueNewtabConfig();
+      }
+      if (data == "ignifox.newtab.feeds" || data == "ignifox.newtab.feeds.count") {
+        clearTimeout(this._feedsTimer);
+        this._feedsTimer = setTimeout(() => this.refreshFeeds().catch(e => log("feeds", e)), 1500);
       }
       if (data == "ignifox.newtab.enabled" || data == "ignifox.newtab.home") {
         this.applyNewtab();
@@ -511,7 +516,9 @@ export const IgniBoot = {
       }
     }
     await this.writeNewtabConfig();
+    await this.refreshFeeds().catch(e => log("feeds", e));
     this.applyNewtab();
+    setInterval(() => this.refreshFeeds().catch(e => log("feeds", e)), FEEDS_REFRESH_MS);
     const refresh = () => {
       if (readPref(Services.prefs, "ignifox.newtab.topSites", "bool")) {
         this.writeNewtabConfig().catch(() => {});
@@ -636,6 +643,10 @@ export const IgniBoot = {
       tileStyle: v["ignifox.newtab.tileStyle"],
       favicons: v["ignifox.newtab.favicons"],
       notes: v["ignifox.newtab.notes"],
+      todo: v["ignifox.newtab.todo"],
+      countdown: v["ignifox.newtab.countdown.date"]
+        ? { title: String(v["ignifox.newtab.countdown.title"] || "").slice(0, 60), date: v["ignifox.newtab.countdown.date"] }
+        : null,
       font: "",
       fontFile: "",
     };
@@ -657,6 +668,37 @@ export const IgniBoot = {
     const js = `window.IGNI_NEWTAB = ${JSON.stringify(cfg).replace(/</g, "\\u003c")};\n`;
     await IOUtils.writeUTF8(PathUtils.join(dir, "config.js"), js, { tmpPath: PathUtils.join(dir, "config.js.tmp") });
     Services.obs.notifyObservers(null, "igni-newtab-updated");
+  },
+
+  /**
+   * News for the new tab's side column. The page itself has no network access, so the engine
+   * fetches the feeds the user listed (no cookies, no referrer) and writes feeds.js beside it.
+   * With no feeds set, nothing is fetched and feeds.js is empty.
+   */
+  async refreshFeeds() {
+    const dir = this.newtabDir();
+    const urls = feedURLs(readPref(Services.prefs, "ignifox.newtab.feeds", "string"));
+    const count = Math.max(3, Math.min(20, readPref(Services.prefs, "ignifox.newtab.feeds.count", "int") || 6));
+    let items = [];
+    const win = Services.wm.getMostRecentWindow("navigator:browser");
+    if (urls.length && win) {
+      const lists = await Promise.all(urls.map(async url => {
+        try {
+          const res = await win.fetch(url, { credentials: "omit", cache: "no-cache", referrerPolicy: "no-referrer" });
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+          }
+          return parseFeed((await res.text()).slice(0, 2_000_000), 20);
+        } catch (e) {
+          log("feed failed", url, e.message);
+          return [];
+        }
+      }));
+      items = mergeFeeds(lists, count);
+    }
+    const js = `window.IGNI_FEEDS = ${JSON.stringify(items).replace(/</g, "\\u003c")};\n`;
+    await IOUtils.writeUTF8(PathUtils.join(dir, "feeds.js"), js, { tmpPath: PathUtils.join(dir, "feeds.js.tmp") });
+    return items;
   },
 
   /** Studio hands over a picked image; it's copied next to the page. */

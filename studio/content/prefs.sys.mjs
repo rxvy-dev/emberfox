@@ -79,6 +79,12 @@ export const IGNI_PREFS = {
   "ignifox.newtab.wallpaper":         { type: "string", def: "embers" },  // see WALLPAPERS
   "ignifox.newtab.wallpaperFile":     { type: "string", def: "" },
   "ignifox.newtab.motion":            { type: "string", def: "on" },      // on | system | off
+  // Widgets in the side column of the new tab page
+  "ignifox.newtab.todo":              { type: "bool",   def: false },
+  "ignifox.newtab.countdown.title":   { type: "string", def: "" },
+  "ignifox.newtab.countdown.date":    { type: "string", def: "" },        // YYYY-MM-DD or YYYY-MM-DDTHH:MM
+  "ignifox.newtab.feeds":             { type: "string", def: "" },        // one RSS/Atom URL per line
+  "ignifox.newtab.feeds.count":       { type: "int",    def: 6 },
   "ignifox.newtab.dim":               { type: "int",    def: 25,  min: 0,   max: 90 },
   "ignifox.newtab.blur":              { type: "int",    def: 0,   min: 0,   max: 30 },
   "ignifox.newtab.clock":             { type: "bool",   def: true },
@@ -582,9 +588,12 @@ export const WALLPAPERS = {
   starfield: "Starfield (animated)",
   matrix: "Code rain (animated)",
   snow: "Snowfall (animated)",
+  flames: "Flames (animated)",
+  storm: "Thunderstorm (animated)",
+  fireflies: "Fireflies (animated)",
   gradient: "Theme gradient",
   solid: "Solid theme color",
-  image: "My own picture",
+  image: "My picture, GIF or video",
   none: "Plain",
 };
 

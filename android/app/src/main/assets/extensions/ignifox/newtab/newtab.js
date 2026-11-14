@@ -8,7 +8,7 @@
     search: true, engineSwitcher: true,
     engine: { name: "DuckDuckGo", url: "https://duckduckgo.com/?q={searchTerms}", alias: "@ddg" },
     engines: [], links: [], columns: 6, tileStyle: "rounded", favicons: false, notes: false,
-    font: "", fontFile: "", motion: "on",
+    font: "", fontFile: "", motion: "on", todo: false, countdown: null, feedItems: null,
   }, window.IGNI_NEWTAB || {});
 
   const $ = s => document.getElementById(s);
@@ -28,10 +28,18 @@
   if (C.platform) root.dataset.platform = C.platform;   // "android" in Ignifox for Android
   root.dataset.tiles = C.tileStyle;
   root.dataset.wall = C.wallpaper == "image" && !C.wallpaperFile && !C.wallpaperData ? "gradient" : C.wallpaper;
-  if (C.wallpaper == "image" && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(C.wallpaperData || "")) {
+  if (C.wallpaper == "image" && /^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(C.wallpaperData || "")) {
     $("wall").style.backgroundImage = `url("${C.wallpaperData}")`;   // Android hands the picture over inline
+  } else if (C.wallpaper == "image" && C.wallpaperFile && /^[\w.-]+\.(mp4|webm|ogv|mov)$/i.test(C.wallpaperFile)) {
+    // A video wallpaper: muted, looping, never takes focus.
+    const v = document.createElement("video");
+    Object.assign(v, { src: C.wallpaperFile, muted: true, loop: true, autoplay: true, playsInline: true, disablePictureInPicture: true });
+    v.setAttribute("aria-hidden", "true");
+    v.id = "wall-video";
+    $("wall").prepend(v);
+    if (C.motion == "off") v.addEventListener("loadeddata", () => v.pause(), { once: true });
   } else if (C.wallpaper == "image" && C.wallpaperFile && /^[\w.-]+$/.test(C.wallpaperFile)) {
-    $("wall").style.backgroundImage = `url("${C.wallpaperFile}")`;
+    $("wall").style.backgroundImage = `url("${C.wallpaperFile}")`;   // pictures and animated GIFs
   }
 
   // ---- custom font for clock + greeting (an imported font, or any installed family)
@@ -149,12 +157,80 @@
     tiles.append(a);
   }
 
-  // ---- notes (stay in this page's local storage)
-  const notes = $("notes"), nt = $("notes-text");
-  notes.hidden = !C.notes;
-  if (C.notes) {
+  // ---- side column: countdown, to-do, notes, news. Everything typed here stays in this page's storage.
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  };
+  const feedItems = Array.isArray(C.feedItems) ? C.feedItems : Array.isArray(window.IGNI_FEEDS) ? window.IGNI_FEEDS : [];
+  const cd = C.countdown && C.countdown.date ? new Date(C.countdown.date) : null;
+  const show = { countdown: !!(cd && !isNaN(cd)), todo: !!C.todo, notes: !!C.notes, feeds: feedItems.length > 0 };
+  for (const [id, on] of Object.entries(show)) $(id).hidden = !on;
+  $("side").hidden = !Object.values(show).some(Boolean);
+  root.toggleAttribute("data-side", !$("side").hidden);
+
+  if (show.notes) {
+    const nt = $("notes-text");
     try { nt.value = localStorage.getItem("igni-notes") || ""; } catch (e) {}
     nt.addEventListener("input", () => { try { localStorage.setItem("igni-notes", nt.value); } catch (e) {} });
+  }
+
+  if (show.countdown) {
+    $("cd-title").textContent = (C.countdown.title || "Countdown").slice(0, 60);
+    const out = $("cd-value");
+    const paint = () => {
+      let ms = cd - Date.now();
+      const past = ms < 0; ms = Math.abs(ms);
+      const d = Math.floor(ms / 864e5), hh = Math.floor(ms / 36e5) % 24, mm = Math.floor(ms / 6e4) % 60;
+      out.replaceChildren();
+      const big = document.createElement("b"); big.textContent = d > 0 ? `${d}` : `${hh}:${String(mm).padStart(2, "0")}`;
+      const small = document.createElement("span");
+      small.textContent = d > 0 ? ` day${d == 1 ? "" : "s"}${hh ? `, ${hh} h` : ""}${past ? " ago" : " to go"}` : past ? " ago" : " to go";
+      out.append(big, small);
+    };
+    paint();
+    setInterval(paint, 30000);
+  }
+
+  if (show.todo) {
+    const list = $("todo-list"), input = $("todo-in");
+    let items = store.get("igni-todo", []);
+    const save = () => store.set("igni-todo", items);
+    const render = () => {
+      list.replaceChildren(...items.map((it, i) => {
+        const li = document.createElement("li");
+        li.classList.toggle("done", !!it.done);
+        const box = document.createElement("input");
+        box.type = "checkbox"; box.checked = !!it.done; box.setAttribute("aria-label", "Done");
+        box.addEventListener("change", () => { it.done = box.checked; save(); render(); });
+        const txt = document.createElement("span"); txt.textContent = it.text;
+        const del = document.createElement("button"); del.textContent = "×"; del.title = "Remove";
+        del.addEventListener("click", () => { items.splice(i, 1); save(); render(); });
+        li.append(box, txt, del);
+        return li;
+      }));
+    };
+    render();
+    $("todo-form").addEventListener("submit", e => {
+      e.preventDefault();
+      const text = input.value.trim().slice(0, 200);
+      if (!text) return;
+      items.push({ text, done: false }); input.value = ""; save(); render();
+    });
+  }
+
+  if (show.feeds) {
+    const list = $("feed-list");
+    for (const it of feedItems.slice(0, 30)) {
+      let url;
+      try { url = new URL(it.link); } catch (e) { continue; }
+      if (!/^https?:$/.test(url.protocol)) continue;
+      const li = document.createElement("li");
+      const a = document.createElement("a"); a.href = url.href; a.textContent = String(it.title || url.hostname).slice(0, 160);
+      const src = document.createElement("small"); src.textContent = String(it.source || url.hostname.replace(/^www\./, "")).slice(0, 40);
+      li.append(a, src);
+      list.append(li);
+    }
   }
 
   // ---- gear tip

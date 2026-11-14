@@ -5,7 +5,7 @@
   <!-- Ignifox New Tab: an ordinary unprivileged page. It can't touch the browser;
        its settings arrive in config.js, written by Ignifox Studio's engine. -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'none'; script-src 'self' file: resource:; style-src 'self' file: resource: 'unsafe-inline'; img-src 'self' file: resource: https: data:; font-src 'self' file: resource:; connect-src 'none'; form-action 'none'">
+        content="default-src 'none'; script-src 'self' file: resource:; style-src 'self' file: resource: 'unsafe-inline'; img-src 'self' file: resource: https: data:; font-src 'self' file: resource:; media-src 'self' file: resource: data:; connect-src 'none'; form-action 'none'">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark light">
   <meta name="referrer" content="no-referrer">
@@ -13,6 +13,7 @@
   <link rel="icon" href="logo.svg">
   <link rel="stylesheet" href="newtab.css">
   <script src="config.js"></script>
+  <script src="feeds.js"></script>
   <script src="fx.js" defer></script>
   <script src="newtab.js" defer></script>
 </head>
@@ -40,9 +41,24 @@
     <nav id="tiles" aria-label="Shortcuts"></nav>
   </main>
 
-  <aside id="notes" hidden>
-    <div class="nhead">Notes</div>
-    <textarea id="notes-text" spellcheck="false" placeholder="Jot something down… (stays on this computer)"></textarea>
+  <aside id="side" hidden>
+    <section id="countdown" class="card" hidden>
+      <div class="nhead" id="cd-title">Countdown</div>
+      <div id="cd-value"></div>
+    </section>
+    <section id="todo" class="card" hidden>
+      <div class="nhead">To-do</div>
+      <ul id="todo-list"></ul>
+      <form id="todo-form"><input id="todo-in" placeholder="Add a task and press Enter" autocomplete="off" aria-label="New task"></form>
+    </section>
+    <section id="notes" class="card" hidden>
+      <div class="nhead">Notes</div>
+      <textarea id="notes-text" spellcheck="false" placeholder="Jot something down… (stays on this device)"></textarea>
+    </section>
+    <section id="feeds" class="card" hidden>
+      <div class="nhead">News</div>
+      <ul id="feed-list"></ul>
+    </section>
   </aside>
 
   <button id="gear" title="Customize this page in Ignifox Studio">

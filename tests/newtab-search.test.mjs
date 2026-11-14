@@ -50,7 +50,8 @@ test("engine writes every setting the new tab page reads", () => {
   const written = new Set([...cfgBlock.matchAll(/^\s{6}(\w+)[:,]/gm)].map(m => m[1]));
   const defaults = page.slice(page.indexOf("const C = Object.assign({"), page.indexOf("}, window.IGNI_NEWTAB"));
   const read_ = new Set([...defaults.matchAll(/\b(\w+): /g)].map(m => m[1]))
-    .difference(new Set(["bg", "bg2", "bg3", "fg", "fgDim", "accent", "accent2", "dark", "name", "url", "alias"]));
+    .difference(new Set(["bg", "bg2", "bg3", "fg", "fgDim", "accent", "accent2", "dark", "name", "url", "alias",
+      "feedItems"]));   // feedItems: Android hands news over in the config; the desktop writes feeds.js instead
   for (const k of read_) assert.ok(written.has(k), `new tab reads "${k}" but the engine never writes it`);
 });
 

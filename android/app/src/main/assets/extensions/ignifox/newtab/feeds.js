@@ -1,0 +1,1 @@
+window.IGNI_FEEDS = [];

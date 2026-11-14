@@ -51,6 +51,9 @@ scenario() {
     return
   fi
   grep -o '"wallpaper":"[a-z]*"\|"motion":"[a-z]*"' "$profile/igni-newtab/config.js" | tr '\n' ' ' | sed 's/^/   config: /'; echo
+  if [[ -f "$profile/igni-newtab/feeds.js" ]]; then
+    echo "   feeds.js: $(grep -o '"title"' "$profile/igni-newtab/feeds.js" | wc -l) headlines"
+  fi
 
   run_browser "file://$page"
   if [[ -z "$win" ]]; then
@@ -86,5 +89,9 @@ scenario snow-follow-system still \
   'user_pref("ignifox.newtab.wallpaper", "snow");' 'user_pref("ignifox.newtab.motion", "system");' \
   'user_pref("ui.prefersReducedMotion", 1);'
 scenario starfield-default moving 'user_pref("ignifox.newtab.wallpaper", "starfield");'
+scenario flames-widgets moving 'user_pref("ignifox.newtab.wallpaper", "flames");' \
+  'user_pref("ignifox.newtab.todo", true);' 'user_pref("ignifox.newtab.notes", true);' \
+  'user_pref("ignifox.newtab.countdown.title", "Summer break");' 'user_pref("ignifox.newtab.countdown.date", "2027-06-27T15:00");' \
+  'user_pref("ignifox.newtab.feeds", "https://archlinux.org/feeds/news/");'
 
 if [[ $fail == 0 ]]; then echo "DESKTOP SMOKE TEST PASSED"; else echo "DESKTOP SMOKE TEST FAILED"; exit 1; fi

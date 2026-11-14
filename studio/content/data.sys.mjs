@@ -307,3 +307,76 @@ export function randomPalette(rng = Math.random) {
     accent, accent2: hsl((ha + 35) % 360, 95, Math.min(88, l + 12)),
   };
 }
+
+// --------------------------------------------------------------- news feeds
+const XML_ENTITIES = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
+
+function decodeXML(s) {
+  return String(s)
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
+    .replace(/<[^>]+>/g, "")                                    // markup inside titles
+    .replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e) => {
+      if (e[0] == "#") {
+        const n = e[1].toLowerCase() == "x" ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10);
+        return Number.isFinite(n) && n > 0 && n < 0x110000 ? String.fromCodePoint(n) : "";
+      }
+      return XML_ENTITIES[e.toLowerCase()] ?? m;
+    })
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function firstTag(block, name) {
+  const m = new RegExp(`<${name}(?:\\s[^>]*)?>([\\s\\S]*?)</${name}>`, "i").exec(block);
+  return m ? decodeXML(m[1]) : "";
+}
+
+/**
+ * Pulls { title, link, date } items out of an RSS 2.0, RSS 1.0 or Atom feed. Deliberately
+ * simple text parsing: it never fetches anything the feed points at and ignores everything
+ * except titles, links and dates. Only http(s) links survive.
+ */
+export function parseFeed(xml, limit = 20) {
+  const text = String(xml || "");
+  const source = firstTag(text.replace(/<(item|entry)[\s>][\s\S]*$/i, ""), "title");
+  const items = [];
+  const re = /<(item|entry)(?:\s[^>]*)?>([\s\S]*?)<\/\1>/gi;
+  let m;
+  while ((m = re.exec(text)) && items.length < limit) {
+    const block = m[2];
+    let link = "";
+    if (m[1].toLowerCase() == "entry") {
+      const alt = /<link\b[^>]*rel=["']alternate["'][^>]*>/i.exec(block) || /<link\b[^>]*>/i.exec(block);
+      const href = alt && /href=["']([^"']+)["']/i.exec(alt[0]);
+      link = href ? decodeXML(href[1]) : "";
+    } else {
+      link = firstTag(block, "link") || firstTag(block, "guid");
+    }
+    const title = firstTag(block, "title");
+    const date = firstTag(block, "pubDate") || firstTag(block, "updated") || firstTag(block, "published") || firstTag(block, "dc:date");
+    if (!/^https?:\/\//i.test(link) || !title) {
+      continue;
+    }
+    items.push({ title: title.slice(0, 200), link, date, source: source.slice(0, 60) });
+  }
+  return items;
+}
+
+/** Feed URLs from the settings box: one per line, http(s) only, at most 8. */
+export function feedURLs(text) {
+  return String(text || "")
+    .split(/\s+/)
+    .map(s => s.trim())
+    .filter(s => /^https?:\/\/[^\s]+$/i.test(s))
+    .slice(0, 8);
+}
+
+/** Newest first across all feeds, a few from each first so one busy feed can't crowd out the rest. */
+export function mergeFeeds(lists, count = 6) {
+  const t = it => { const n = Date.parse(it.date); return Number.isFinite(n) ? n : 0; };
+  const newest = items => [...items].sort((a, b) => t(b) - t(a));
+  const per = Math.max(1, Math.floor(count / Math.max(1, lists.length)));
+  const picked = lists.flatMap(l => l.slice(0, per));
+  const rest = newest(lists.flatMap(l => l.slice(per)));
+  return newest([...picked, ...rest.slice(0, Math.max(0, count - picked.length))]).slice(0, count);
+}

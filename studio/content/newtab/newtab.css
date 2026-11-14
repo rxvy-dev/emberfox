@@ -145,14 +145,41 @@ kbd { font: 11px ui-monospace, monospace; padding: 1px 5px; border-radius: 4px; 
 :root[data-tiles="minimal"] .tile .ico { background: none; border-color: transparent; backdrop-filter: none; }
 
 /* ---------------------------------------------------------- notes, gear */
-#notes {
-  position: fixed; z-index: 3; right: 22px; bottom: 22px; width: 280px;
-  border-radius: 14px; overflow: hidden;
+#side {
+  position: fixed; z-index: 3; right: 22px; top: 22px; bottom: 22px; width: 290px;
+  display: flex; flex-direction: column; gap: 12px; overflow-y: auto; scrollbar-width: none;
+  justify-content: flex-end;
+}
+#side .card {
+  border-radius: 14px; overflow: hidden; flex: none;
   background: color-mix(in srgb, var(--bg2) 85%, transparent); backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
 }
 .nhead { padding: 8px 12px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); }
-#notes-text { width: 100%; height: 160px; border: 0; outline: 0; resize: none; padding: 0 12px 12px; background: none; color: var(--fg); font: 13px/1.5 inherit; }
+#notes-text { width: 100%; height: 140px; border: 0; outline: 0; resize: none; padding: 0 12px 12px; background: none; color: var(--fg); font: inherit; font-size: 13px; line-height: 1.5; }
+@media (min-width: 901px) { :root[data-side] #center { padding-right: 330px; } }
+#cd-value { padding: 0 12px 12px; color: var(--dim); font-size: 13px; }
+#cd-value b { font-size: 34px; font-weight: 300; color: var(--fg); }
+#todo-list, #feed-list { list-style: none; margin: 0; padding: 0 6px 6px; max-height: 240px; overflow-y: auto; scrollbar-width: thin; }
+#todo-list li { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 8px; font-size: 13px; }
+#todo-list li:hover { background: color-mix(in srgb, var(--fg) 6%, transparent); }
+#todo-list li span { flex: 1; word-break: break-word; }
+#todo-list li.done span { text-decoration: line-through; color: var(--dim); }
+#todo-list input { accent-color: var(--accent); margin: 0; }
+#todo-list button { border: 0; background: none; color: var(--dim); cursor: pointer; font-size: 16px; opacity: 0; }
+#todo-list li:hover button { opacity: 1; }
+#todo-form { padding: 0 10px 10px; }
+#todo-in {
+  width: 100%; border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent); border-radius: 8px; outline: 0;
+  padding: 7px 9px; background: color-mix(in srgb, var(--bg) 60%, transparent); color: var(--fg); font: inherit; font-size: 13px;
+}
+#todo-in:focus { border-color: var(--accent); }
+#feed-list li { padding: 6px 6px; border-radius: 8px; }
+#feed-list li:hover { background: color-mix(in srgb, var(--fg) 6%, transparent); }
+#feed-list a { display: block; color: var(--fg); text-decoration: none; font-size: 13px; line-height: 1.35; }
+#feed-list a:hover { color: var(--accent2); }
+#feed-list small { color: var(--dim); font-size: 11px; }
+#wall-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 #gear {
   position: fixed; z-index: 3; left: 18px; bottom: 18px; width: 38px; height: 38px; border-radius: 50%; border: 0; cursor: pointer;
   background: color-mix(in srgb, var(--bg2) 70%, transparent); color: var(--dim); display: grid; place-items: center; opacity: .55;
@@ -180,10 +207,17 @@ kbd { font: 11px ui-monospace, monospace; padding: 1px 5px; border-radius: 4px; 
 :root[data-platform="android"][data-wall="aurora"] #wall::after { filter: none; background: radial-gradient(closest-side, var(--accent2), transparent); }
 :root[data-platform="android"] #wall { filter: none; inset: 0; }
 :root[data-platform="android"] #center { padding-left: 16px; padding-right: 16px; }
-:root[data-platform="android"] #notes { position: static; width: auto; margin: 18px 16px; }
+:root[data-platform="android"] #side { position: static; width: auto; margin: 18px 16px; justify-content: flex-start; }
+:root[data-platform="android"] #center { height: auto; min-height: 100%; }
 @media (max-width: 600px) {
   #clock { font-size: clamp(54px, 19vw, 92px); }
   #greeting { font-size: clamp(20px, 6vw, 30px); }
   #search { width: 100%; }
   #tiles { gap: 10px; }
+}
+
+/* Narrow windows: the side column moves under the page instead of covering it. */
+@media (max-width: 900px) {
+  #side { position: static; width: auto; margin: 0 16px 24px; }
+  body { overflow-y: auto; }
 }

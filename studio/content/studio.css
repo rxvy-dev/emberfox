@@ -437,3 +437,7 @@ input[type="url"] {
 }
 .fxsw[data-fx="aurora"][data-motion="off"]::before, .fxsw[data-fx="aurora"][data-motion="off"]::after { animation-play-state: paused; }
 @keyframes sw-drift { to { transform: translate(25%, 18%) scale(1.15); } }
+
+textarea.ta { width: 320px; min-height: 80px; resize: vertical; font: 12px/1.45 ui-monospace, monospace; padding: 8px;
+  border-radius: 8px; border: 1px solid var(--line); background: var(--bg3, #1a1a1a); color: inherit; }
+input[type="datetime-local"] { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: inherit; color-scheme: dark light; }
