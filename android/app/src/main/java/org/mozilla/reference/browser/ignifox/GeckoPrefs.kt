@@ -67,5 +67,14 @@ object GeckoPrefs {
         // Freedom: let people install add-ons that Mozilla has not signed, if they ask for it.
         val unsigned = Ignifox.prefs(context).getBoolean(Ignifox.UNSIGNED_ADDONS, false)
         engine.setBrowserPref("xpinstall.signatures.required", !unsigned, Branch.USER, {}, fail("signatures"))
+
+        // Fingerprinting: randomised signals (default on), or Tor-style resistance (off; can break sites).
+        val prefs = Ignifox.prefs(context)
+        engine.setBrowserPref(
+            "privacy.fingerprintingProtection", prefs.getBoolean(ExtraKeys.FP_PROTECT, true), Branch.USER, {}, fail("fpp"),
+        )
+        engine.setBrowserPref(
+            "privacy.resistFingerprinting", prefs.getBoolean(ExtraKeys.FP_RESIST, false), Branch.USER, {}, fail("rfp"),
+        )
     }
 }

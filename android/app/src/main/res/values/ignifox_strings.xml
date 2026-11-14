@@ -30,7 +30,7 @@
     <string name="igni_nt_enabled">Ignifox New Tab</string>
     <string name="igni_nt_enabled_summary">Off opens a blank page instead</string>
     <string name="igni_nt_wallpaper">Wallpaper</string>
-    <string name="igni_nt_wallpaper_pick">Use a picture as wallpaper</string>
+    <string name="igni_nt_wallpaper_pick">Use a picture or GIF as wallpaper</string>
     <string name="igni_nt_dim">Darken wallpaper</string>
     <string name="igni_nt_blur">Blur wallpaper</string>
     <string name="igni_nt_motion">Wallpaper animation</string>
@@ -116,10 +116,10 @@
     </string-array>
 
     <string-array name="igni_wallpaper_names">
-        <item>Embers (animated)</item><item>Aurora</item><item>Starfield (animated)</item><item>Code rain (animated)</item><item>Snowfall (animated)</item><item>Gradient</item><item>Solid colour</item><item>My picture</item>
+        <item>Embers (animated)</item><item>Aurora</item><item>Starfield (animated)</item><item>Code rain (animated)</item><item>Snowfall (animated)</item><item>Flames (animated)</item><item>Thunderstorm (animated)</item><item>Fireflies (animated)</item><item>Gradient</item><item>Solid colour</item><item>My picture</item>
     </string-array>
     <string-array name="igni_wallpaper_keys" translatable="false">
-        <item>embers</item><item>aurora</item><item>starfield</item><item>matrix</item><item>snow</item><item>gradient</item><item>solid</item><item>image</item>
+        <item>embers</item><item>aurora</item><item>starfield</item><item>matrix</item><item>snow</item><item>flames</item><item>storm</item><item>fireflies</item><item>gradient</item><item>solid</item><item>image</item>
     </string-array>
 
     <string-array name="igni_motion_names">
@@ -149,4 +149,57 @@
         <item>https://dns.adguard-dns.com/dns-query</item>
         <item>https://mozilla.cloudflare-dns.com/dns-query</item>
     </string-array>
+
+    <!-- updates, burn, keep, widget, links -->
+    <string name="igni_update_title">Ignifox %1$s is out</string>
+    <string name="igni_update_message">You have %1$s. New versions bring the latest Firefox security fixes. On most phones, download ignifox-android-arm64.apk.</string>
+    <string name="igni_update_get">Get it</string>
+    <string name="igni_update_skip">Skip this version</string>
+    <string name="igni_update_later">Later</string>
+    <string name="igni_update_failed">Couldn\'t reach GitHub to check for updates</string>
+    <string name="igni_update_current">You have the newest Ignifox (%1$s)</string>
+    <string name="igni_menu_burn">🔥 Burn everything</string>
+    <string name="igni_burn_confirm">Close every tab and delete history, cookies, site data and caches?</string>
+    <string name="igni_burn_go">Burn</string>
+    <string name="igni_burned">🔥 Burned: tabs closed, history, cookies and site data deleted</string>
+    <string name="igni_menu_keep">Keep / stop keeping this site\'s cookies</string>
+    <string name="igni_keep_on">This site\'s cookies will be kept</string>
+    <string name="igni_keep_off">This site\'s cookies will be deleted when you close it</string>
+    <string name="igni_ubo_installed">uBlock Origin is installed</string>
+    <string name="igni_widget_search">Search or type an address</string>
+    <string name="igni_widget_description">Search, your shortcuts and the burn button</string>
+    <string name="igni_theme_link_title">Use this Ignifox theme?</string>
+    <string name="igni_theme_link_use">Use theme</string>
+
+    <!-- Studio -->
+    <string name="igni_gallery">Theme gallery</string>
+    <string name="igni_gallery_summary">Themes made by other Ignifox users (downloads the list from GitHub)</string>
+    <string name="igni_gallery_failed">Couldn\'t load the gallery</string>
+    <string name="igni_site_tint">Tint the toolbar with each site\'s colour</string>
+    <string name="igni_site_tint_summary">Taken from the site\'s icon</string>
+    <string name="igni_site_tint_strength">Tint strength</string>
+    <string name="igni_nt_todo">To-do list</string>
+    <string name="igni_nt_cd_title">Countdown name</string>
+    <string name="igni_nt_cd_date">Countdown to</string>
+    <string name="igni_nt_cd_date_summary">Like 2027-06-27 15:00. Empty hides the countdown.</string>
+    <string name="igni_nt_feeds">News feeds</string>
+    <string name="igni_nt_feeds_summary">RSS or Atom addresses, one per line. Fetched when Ignifox starts, without cookies.</string>
+    <string name="igni_nt_feeds_count">Headlines to show</string>
+    <string name="igni_cat_tabs">Tabs</string>
+    <string name="igni_tabs_grid">Show tabs as a grid</string>
+    <string name="igni_swipe_tabs">Swipe the address bar to switch tabs</string>
+    <string name="igni_fp_protect">Fingerprinting protection</string>
+    <string name="igni_fp_protect_summary">Randomises the signals trackers use to recognise you</string>
+    <string name="igni_fp_resist">Resist fingerprinting (Tor-style)</string>
+    <string name="igni_fp_resist_summary">Strongest, but sets your time zone to UTC and can break sites</string>
+    <string name="igni_auto_delete">Delete a site\'s cookies when I close it</string>
+    <string name="igni_auto_delete_summary">15 seconds after its last tab closes. Logs you out of sites you don\'t keep.</string>
+    <string name="igni_keep_sites">Keep cookies for these sites</string>
+    <string name="igni_keep_sites_summary">One domain per line; covers its subdomains</string>
+    <string name="igni_burn_now">🔥 Burn everything now</string>
+    <string name="igni_ubo">uBlock Origin</string>
+    <string name="igni_ubo_summary">Install the ad and tracker blocker (asks you to confirm)</string>
+    <string name="igni_updates">Tell me about new versions</string>
+    <string name="igni_updates_summary">Checks GitHub once a day. Sends nothing about you.</string>
+    <string name="igni_updates_now">Check for updates now</string>
 </resources>

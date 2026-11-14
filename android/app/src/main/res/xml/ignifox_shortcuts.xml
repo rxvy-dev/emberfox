@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut android:shortcutId="new_tab" android:enabled="true" android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/igni_menu_new_tab">
+        <intent android:action="dev.rxvy.ignifox.NEW_TAB"
+            android:targetPackage="dev.rxvy.ignifox" android:targetClass="org.mozilla.reference.browser.IntentReceiverActivity" />
+    </shortcut>
+    <shortcut android:shortcutId="private_tab" android:enabled="true" android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/igni_menu_private_tab">
+        <intent android:action="dev.rxvy.ignifox.PRIVATE_TAB"
+            android:targetPackage="dev.rxvy.ignifox" android:targetClass="org.mozilla.reference.browser.IntentReceiverActivity" />
+    </shortcut>
+    <shortcut android:shortcutId="burn" android:enabled="true" android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/igni_menu_burn">
+        <intent android:action="dev.rxvy.ignifox.BURN"
+            android:targetPackage="dev.rxvy.ignifox" android:targetClass="org.mozilla.reference.browser.IntentReceiverActivity" />
+    </shortcut>
+</shortcuts>

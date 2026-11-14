@@ -286,6 +286,7 @@ object Ignifox {
     private const val WALLPAPER_FILE = "ignifox-wallpaper.b64"
     private const val WALLPAPER_MAX_SIDE = 960
     private const val WALLPAPER_QUALITY = 60
+    private const val MAX_GIF_BYTES = 600 * 1024     // the page address has a size limit
 
     /**
      * The new tab page (the same one the Linux browser uses) ships inside the APK as a tiny
@@ -324,8 +325,22 @@ object Ignifox {
     fun isNewTab(url: CharSequence): Boolean = url.startsWith("moz-extension://") && url.contains(NEW_TAB_PATH)
 
     /** Shrinks a picked picture and keeps it as the new tab wallpaper. False if it could not be read. */
-    fun setWallpaper(context: Context, uri: Uri): Boolean =
-        try {
+    fun setWallpaper(context: Context, uri: Uri): Boolean {
+        return try {
+            val type = context.contentResolver.getType(uri).orEmpty()
+            val gif = if (type == "image/gif") {
+                context.contentResolver.openInputStream(uri)?.use { it.readBytes() }?.takeIf { it.size <= MAX_GIF_BYTES }
+            } else {
+                null
+            }
+            if (gif != null) {
+                File(context.filesDir, WALLPAPER_FILE).writeText(Base64.encodeToString(gif, Base64.NO_WRAP))
+                prefs(context).edit {
+                    putString(NT_WALLPAPER, "image")
+                    putString(NT_WALLPAPER_FILE, "gif-" + System.currentTimeMillis())
+                }
+                return true
+            }
             val source = context.contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it) }
             if (source == null) {
                 false
@@ -359,12 +374,14 @@ object Ignifox {
         } catch (_: OutOfMemoryError) {
             false
         }
+    }
 
     private fun wallpaperData(context: Context): String {
         val file = File(context.filesDir, WALLPAPER_FILE)
         if (prefs(context).getString(NT_WALLPAPER, "embers") != "image" || !file.exists()) return ""
         return try {
-            "data:image/jpeg;base64," + file.readText()
+            val mime = if (prefs(context).getString(NT_WALLPAPER_FILE, "").orEmpty().startsWith("gif-")) "gif" else "jpeg"
+            "data:image/$mime;base64," + file.readText()
         } catch (_: java.io.IOException) {
             ""
         }
@@ -435,6 +452,15 @@ object Ignifox {
             .put("tileStyle", p.getString(NT_TILES, "rounded"))
             .put("favicons", false)
             .put("notes", p.getBoolean(NT_NOTES, false))
+            .put("todo", p.getBoolean(ExtraKeys.NT_TODO, false))
+            .put(
+                "countdown",
+                p.getString(ExtraKeys.NT_CD_DATE, "").orEmpty().trim().takeIf { it.isNotEmpty() }?.let { date ->
+                    JSONObject().put("title", p.getString(ExtraKeys.NT_CD_TITLE, "").orEmpty().take(60))
+                        .put("date", date.replace(' ', 'T'))
+                } ?: JSONObject.NULL,
+            )
+            .put("feedItems", Feeds.cached(context))
             .put("font", if (p.getBoolean(NT_METAL, false)) "Metal Mania" else "")
             .put("fontFile", "")
     }
@@ -510,6 +536,7 @@ object Ignifox {
 
     /** Called by Studio after any change: update the engine and tell open screens. */
     fun changed(context: Context) {
+        IgniWidget.refresh(context)
         applyEngineSettings(context)
         prefs(context).edit { putInt(REVISION, revision(context) + 1) }
     }

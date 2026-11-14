@@ -141,6 +141,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="https" />
             </intent-filter>
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/ignifox_shortcuts" />
         </activity>
 
         <service
@@ -190,6 +191,31 @@
         <service android:name=".media.MediaSessionService"
             android:foregroundServiceType="mediaPlayback"
             android:exported="false" />
+        <!-- Ignifox: home-screen widget and ignifox://theme links -->
+        <receiver
+            android:name=".ignifox.IgniWidget"
+            android:label="@string/app_name"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/ignifox_widget_info" />
+        </receiver>
+
+        <activity
+            android:name=".ignifox.ThemeLinkActivity"
+            android:theme="@style/IgniTranslucent"
+            android:excludeFromRecents="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="ignifox" android:host="theme" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

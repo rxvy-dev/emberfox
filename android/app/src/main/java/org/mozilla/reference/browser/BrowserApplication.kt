@@ -4,6 +4,8 @@
 
 package org.mozilla.reference.browser
 
+import org.mozilla.reference.browser.ignifox.Feeds
+import org.mozilla.reference.browser.ignifox.AutoDelete
 import org.mozilla.reference.browser.ignifox.Ignifox
 import android.app.Application
 import java.util.concurrent.TimeUnit
@@ -76,6 +78,8 @@ open class BrowserApplication : Application() {
         }
 
         restoreBrowserState()
+        AutoDelete.start(this, applicationScope)
+        applicationScope.launch { Feeds.refresh(this@BrowserApplication) }
 
         GlobalAddonDependencyProvider.initialize(
             components.core.addonManager,

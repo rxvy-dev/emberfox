@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ignifox home-screen widget: search, four shortcuts and the burn button. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/w_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/w_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/ignifox_widget_shape"
+        android:importantForAccessibility="no" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:padding="12dp">
+        <FrameLayout
+            android:id="@+id/w_search"
+            android:layout_width="match_parent"
+            android:layout_height="46dp">
+            <ImageView
+                android:id="@+id/w_search_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ignifox_widget_pill"
+                android:importantForAccessibility="no" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="8dp"
+                android:paddingEnd="14dp">
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:src="@mipmap/ic_icon_foreground"
+                    android:contentDescription="@string/app_name" />
+                <TextView
+                    android:id="@+id/w_search_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:text="@string/igni_widget_search"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <TextView android:id="@+id/w_s1" style="@style/IgniWidgetTile" />
+            <TextView android:id="@+id/w_s2" style="@style/IgniWidgetTile" />
+            <TextView android:id="@+id/w_s3" style="@style/IgniWidgetTile" />
+            <TextView android:id="@+id/w_s4" style="@style/IgniWidgetTile" />
+            <TextView android:id="@+id/w_burn" style="@style/IgniWidgetTile" android:text="🔥" android:contentDescription="@string/igni_menu_burn" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

@@ -4,6 +4,8 @@
 
 package org.mozilla.reference.browser.tabs
 
+import org.mozilla.reference.browser.ignifox.ExtraKeys
+import androidx.recyclerview.widget.GridLayoutManager
 import org.mozilla.reference.browser.ignifox.Ignifox
 import android.content.Context
 import android.graphics.Color
@@ -97,7 +99,10 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
     }
 
     private fun createAndSetupTabsTray(context: Context): TabsTray {
-        val layoutManager = LinearLayoutManager(context)
+        // Ignifox: a grid of tab cards (Studio → Tabs), or the classic list.
+        val grid = Ignifox.prefs(context).getBoolean(ExtraKeys.TABS_GRID, true)
+        val columns = if (context.resources.configuration.screenWidthDp >= WIDE_SCREEN_DP) 3 else 2
+        val layoutManager = if (grid) GridLayoutManager(context, columns) else LinearLayoutManager(context)
         val thumbnailLoader = ThumbnailLoader(context.components.core.thumbnailStorage)
         val palette = Ignifox.palette(context)
         val trayStyling =
@@ -110,7 +115,8 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
                 selectedItemUrlTextColor = palette.fgDim,
             )
         val viewHolderProvider: ViewHolderProvider = { viewGroup ->
-            val view = LayoutInflater.from(context).inflate(R.layout.browser_tabstray_item, viewGroup, false)
+            val layout = if (grid) R.layout.ignifox_tab_grid_item else R.layout.browser_tabstray_item
+            val view = LayoutInflater.from(context).inflate(layout, viewGroup, false)
 
             DefaultTabViewHolder(view, thumbnailLoader)
         }
@@ -152,5 +158,6 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
 
     companion object {
         private const val SELECTED_TAB_TINT = 0.25f
+        private const val WIDE_SCREEN_DP = 600
     }
 }

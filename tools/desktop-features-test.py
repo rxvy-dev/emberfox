@@ -21,6 +21,7 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 
 TARBALL, OUT = sys.argv[1], sys.argv[2]
 os.makedirs(OUT, exist_ok=True)
@@ -76,8 +77,7 @@ with tarfile.open(TARBALL) as t:
     t.extractall(work, filter="fully_trusted")
 opts = Options()
 opts.binary_location = os.path.join(work, "ignifox", "firefox")
-# Recent Firefox only lets automation run code in the browser itself when asked for explicitly.
-opts.add_argument("-remote-allow-system-access")
+
 for k, v in {
     "ignifox.firstrun.done": True,
     "browser.shell.checkDefaultBrowser": False,
@@ -86,7 +86,8 @@ for k, v in {
     "browser.sessionstore.resume_from_crash": False,
 }.items():
     opts.set_preference(k, v)
-drv = webdriver.Firefox(options=opts)
+# Recent Firefox only lets automation run code in the browser itself when the driver asks for it.
+drv = webdriver.Firefox(options=opts, service=Service(service_args=["--allow-system-access"]))
 drv.set_window_size(1280, 800)
 drv.set_window_position(0, 0)
 

@@ -52,7 +52,7 @@ adb shell am force-stop "$pkg"
 adb shell "run-as $pkg sh -c 'ls shared_prefs'" > "$out/prefs-files.txt" 2>&1 || true
 prefs="/data/data/$pkg/shared_prefs/${pkg}_preferences.xml"
 adb shell "cat $prefs" > "$out/prefs-before.xml" 2>&1 || true
-adb shell "sed -i 's#</map>#<boolean name=\"igni_debug_console\" value=\"true\" /><string name=\"igni_theme\">synthwave</string><string name=\"igni_bar_position\">top</string><string name=\"igni_bar_shape\">pill</string><string name=\"igni_nt_wallpaper\">aurora</string></map>#' $prefs" || true
+adb shell "sed -i 's#</map>#<boolean name=\"igni_debug_console\" value=\"true\" /><string name=\"igni_theme\">synthwave</string><string name=\"igni_bar_position\">top</string><string name=\"igni_bar_shape\">pill</string><string name=\"igni_nt_wallpaper\">flames</string><boolean name=\"igni_nt_todo\" value=\"true\" /><string name=\"igni_nt_cd_title\">Release</string><string name=\"igni_nt_cd_date\">2027-01-01 00:00</string><boolean name=\"igni_site_tint\" value=\"true\" /></map>#' $prefs" || true
 adb shell monkey -p "$pkg" -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
 sleep 30
 shot 6-synthwave-top
@@ -63,6 +63,18 @@ shot 7-menu-top
 adb shell input tap $((w - 350)) 185 >/dev/null 2>&1
 sleep 12
 shot 8-newtab-synthwave
+
+echo "Tabs as a grid"
+adb shell input tap $((w - 150)) 150 >/dev/null 2>&1
+sleep 5
+shot 10-tab-grid
+adb shell input keyevent KEYCODE_BACK >/dev/null 2>&1
+sleep 2
+
+echo "Swiping the address bar to the previous tab"
+adb shell input swipe $((w / 4)) 150 $((w * 3 / 4)) 150 250 >/dev/null 2>&1
+sleep 4
+shot 11-after-swipe
 
 echo "Searching from the new tab page"
 adb shell input tap $((w / 2)) $((h * 52 / 100)) >/dev/null 2>&1

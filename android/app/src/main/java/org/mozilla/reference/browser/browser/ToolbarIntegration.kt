@@ -4,6 +4,13 @@
 
 package org.mozilla.reference.browser.browser
 
+import org.mozilla.reference.browser.ignifox.SiteTint
+import org.mozilla.reference.browser.ignifox.ExtraKeys
+import org.mozilla.reference.browser.ignifox.Burn
+import org.mozilla.reference.browser.ignifox.AutoDelete
+import android.widget.Toast
+import android.graphics.Bitmap
+import android.app.AlertDialog
 import android.content.res.ColorStateList
 import mozilla.components.concept.menu.candidate.TextStyle
 import mozilla.components.concept.menu.MenuStyle
@@ -58,7 +65,7 @@ import org.mozilla.reference.browser.tabs.synced.SyncedTabsActivity
 @Suppress("LongParameterList")
 class ToolbarIntegration(
     private val context: Context,
-    toolbar: BrowserToolbar,
+    private val toolbar: BrowserToolbar,
     toolbarParentView: View,
     historyStorage: PlacesHistoryStorage,
     private val store: BrowserStore,
@@ -77,6 +84,7 @@ class ToolbarIntegration(
     private val barOnTop = Ignifox.prefs(context).getString(Ignifox.BAR_POSITION, "bottom") == "top"
     private val scope = MainScope()
     private var menuUpdateJob: Job? = null
+    private var tintJob: kotlinx.coroutines.Job? = null
 
     private fun menuToolbar(session: SessionState?): RowMenuCandidate {
         val tint = palette.fg
@@ -170,7 +178,16 @@ class ToolbarIntegration(
             TextMenuCandidate(text = context.getString(R.string.igni_menu_private_tab), textStyle = menuText) {
                 tabsUseCases.addTab(url = "about:privatebrowsing", selectTab = true, private = true)
             },
+            TextMenuCandidate(text = context.getString(R.string.igni_menu_burn), textStyle = menuText) {
+                AlertDialog.Builder(context)
+                    .setTitle(R.string.igni_menu_burn)
+                    .setMessage(R.string.igni_burn_confirm)
+                    .setPositiveButton(R.string.igni_burn_go) { _, _ -> Burn.burn(context) }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
+            },
         ) +
+            keepCookiesItem(sessionState) +
             sessionMenuItems +
             listOf(
                 TextMenuCandidate(text = "Add-ons", textStyle = menuText) {
@@ -264,8 +281,44 @@ class ToolbarIntegration(
             sessionId,
         )
 
+    /** "Keep cookies for this site" when cookie auto-delete is on. */
+    private fun keepCookiesItem(sessionState: SessionState?): List<MenuCandidate> {
+        val url = sessionState?.content?.url ?: return emptyList()
+        if (!Ignifox.prefs(context).getBoolean(ExtraKeys.AUTO_DELETE, false) || !url.startsWith("http")) return emptyList()
+        return listOf(
+            TextMenuCandidate(text = context.getString(R.string.igni_menu_keep), textStyle = menuText) {
+                scope.launch {
+                    val kept = AutoDelete.toggleKeep(context, url) ?: return@launch
+                    Toast.makeText(
+                        context,
+                        if (kept) R.string.igni_keep_on else R.string.igni_keep_off,
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            },
+        )
+    }
+
+    /** Toolbar tinted with the colour of the current site's icon (Studio → Look → Site tint). */
+    private fun applyTint(icon: Bitmap?) {
+        val p = Ignifox.prefs(context)
+        val base = Ignifox.barBackground(palette)
+        val color = if (p.getBoolean(ExtraKeys.SITE_TINT, false)) SiteTint.colorOf(icon) else null
+        val strength = p.getInt(ExtraKeys.SITE_TINT_STRENGTH, DEFAULT_TINT).coerceIn(5, 80) / 100f
+        toolbar.setBackgroundColor(if (color == null) base else Ignifox.blend(base, color, strength))
+    }
+
     override fun start() {
         toolbarFeature.start()
+
+        tintJob?.cancel()
+        tintJob = scope.launch {
+            store
+                .flow()
+                .map { state -> state.selectedTab?.content?.icon }
+                .distinctUntilChanged()
+                .collect { icon -> applyTint(icon) }
+        }
 
         menuUpdateJob?.cancel()
         menuUpdateJob = scope.launch {
@@ -284,7 +337,13 @@ class ToolbarIntegration(
 
         menuUpdateJob?.cancel()
         menuUpdateJob = null
+        tintJob?.cancel()
+        tintJob = null
     }
 
     override fun onBackPressed(): Boolean = toolbarFeature.onBackPressed()
+
+    companion object {
+        private const val DEFAULT_TINT = 35
+    }
 }

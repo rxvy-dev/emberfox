@@ -34,9 +34,11 @@ test("android: wallpapers offered in Studio exist in the shared new tab page", (
 
 test("android: Studio setting keys in the screen match the ones the code reads", () => {
   const screen = readFileSync(join(res, "xml/ignifox_preferences.xml"), "utf8");
-  const code = readFileSync(join(root, "android/app/src/main/java/org/mozilla/reference/browser/ignifox/Ignifox.kt"), "utf8");
+  const dir = join(root, "android/app/src/main/java/org/mozilla/reference/browser/ignifox");
+  const code = readFileSync(join(dir, "Ignifox.kt"), "utf8") + readFileSync(join(dir, "Extras.kt"), "utf8");
   const consts = new Set([...code.matchAll(/const val \w+ = "(igni_\w+)"/g)].map(m => m[1]));
-  const actions = new Set(["igni_surprise", "igni_nt_wallpaper_pick", "igni_search_engine", "igni_search_add", "igni_clear_now", "igni_addons", "igni_addons_more", "igni_addon_file", "igni_about_config", "igni_source", "igni_theme_code", "igni_theme_code_copy"]);
+  const actions = new Set(["igni_surprise", "igni_nt_wallpaper_pick", "igni_search_engine", "igni_search_add", "igni_clear_now", "igni_addons", "igni_addons_more", "igni_addon_file", "igni_about_config", "igni_source", "igni_theme_code", "igni_theme_code_copy",
+    "igni_gallery", "igni_burn_now", "igni_ubo", "igni_update_now"]);
   for (const m of screen.matchAll(/android:key="(igni_\w+)"/g)) {
     assert.ok(consts.has(m[1]) || actions.has(m[1]), `${m[1]} is in the Studio screen but nothing reads it`);
   }
@@ -63,4 +65,12 @@ test("wallpapers: every canvas effect is a wallpaper, and fx.js ships on Linux a
   const html = readFileSync(join(root, "studio/content/newtab/index.html"), "utf8");
   assert.ok(html.indexOf('src="fx.js"') < html.indexOf('src="newtab.js"'), "fx.js must load before newtab.js");
   assert.match(readFileSync(join(root, "studio/content/studio.html"), "utf8"), /newtab\/fx\.js/);
+});
+
+test("android: wallpapers, widget and theme links are registered", () => {
+  const manifest = readFileSync(join(root, "android/app/src/main/AndroidManifest.xml"), "utf8");
+  assert.match(manifest, /\.ignifox\.IgniWidget/);
+  assert.match(manifest, /android:scheme="ignifox" android:host="theme"/);
+  assert.match(manifest, /android\.app\.shortcuts/);
+  for (const w of ["flames", "storm", "fireflies"]) assert.ok(w in WALLPAPERS);
 });

@@ -115,6 +115,22 @@ class StudioFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             Toast.makeText(requireContext(), code, Toast.LENGTH_LONG).show()
         }
 
+        for (key in listOf(ExtraKeys.NT_FEEDS, ExtraKeys.KEEP_SITES)) {
+            findPreference<EditTextPreference>(key)?.setOnBindEditTextListener { edit ->
+                edit.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE or
+                    InputType.TYPE_TEXT_VARIATION_URI
+                edit.isSingleLine = false
+                edit.minLines = MIN_LINK_LINES
+            }
+        }
+        click("igni_gallery") { openGallery() }
+        click("igni_burn_now") {
+            Burn.burn(requireContext())
+            activity?.finish()
+        }
+        click("igni_ubo") { UBlock.install(requireContext()) }
+        click("igni_update_now") { Updates.checkNow(requireActivity(), lifecycleScope) }
+
         click("igni_surprise") { surpriseMe() }
         click("igni_nt_wallpaper_pick") { pickWallpaper.launch("image/*") }
         click("igni_search_add") { addSearchEngine() }
@@ -147,6 +163,13 @@ class StudioFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
     override fun onSharedPreferenceChanged(prefs: SharedPreferences?, key: String?) {
         if (key == null || !key.startsWith("igni_") || key == Ignifox.REVISION) return
         if (key == Ignifox.THEME || key == Ignifox.ACCENT) needsRecreate = true
+        if (key == ExtraKeys.NT_FEEDS || key == ExtraKeys.NT_FEEDS_COUNT) {
+            val app = requireContext().applicationContext
+            lifecycleScope.launch {
+                Feeds.refresh(app)
+                Ignifox.changed(app)
+            }
+        }
         // Several settings can change at once (a look, Surprise me); apply them in one go.
         handler.removeCallbacks(applyChanges)
         handler.postDelayed(applyChanges, APPLY_DELAY_MS)
@@ -174,6 +197,40 @@ class StudioFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             putString(Ignifox.ACCENT, Ignifox.hex(accent))
             putString(Ignifox.BAR_SHAPE, listOf("rounded", "pill", "square").random())
             putString(Ignifox.NT_WALLPAPER, listOf("embers", "aurora", "gradient").random())
+        }
+    }
+
+    /** The community gallery: pick a theme from the list in the Ignifox repository. */
+    private fun openGallery() {
+        val context = requireContext()
+        lifecycleScope.launch {
+            val themes = try {
+                Gallery.load()
+            } catch (_: Exception) {
+                emptyList()
+            }
+            if (!isAdded) return@launch
+            if (themes.isEmpty()) {
+                Toast.makeText(context, R.string.igni_gallery_failed, Toast.LENGTH_LONG).show()
+                return@launch
+            }
+            val labels = themes.map { t ->
+                val p = Ignifox.paletteFromCode(t.code)
+                android.text.SpannableString("●  ${t.name}").apply {
+                    if (p != null) {
+                        setSpan(android.text.style.ForegroundColorSpan(p.accent), 0, 1, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
+                }
+            }.toTypedArray<CharSequence>()
+            AlertDialog.Builder(context)
+                .setTitle(R.string.igni_gallery)
+                .setItems(labels) { _, i ->
+                    Gallery.apply(context, themes[i].code)
+                    needsRecreate = true
+                    handler.post(applyChanges)
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
         }
     }
 

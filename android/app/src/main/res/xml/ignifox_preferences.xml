@@ -22,6 +22,9 @@
             android:key="igni_theme_code_copy" android:title="@string/igni_theme_code_copy" android:summary="@string/igni_theme_code_copy_summary"
             android:persistent="false" app:iconSpaceReserved="false" />
         <androidx.preference.Preference
+            android:key="igni_gallery" android:title="@string/igni_gallery" android:summary="@string/igni_gallery_summary"
+            android:persistent="false" app:iconSpaceReserved="false" />
+        <androidx.preference.Preference
             android:key="igni_surprise" android:title="@string/igni_surprise" android:summary="@string/igni_surprise_summary"
             android:persistent="false" app:iconSpaceReserved="false" />
         <androidx.preference.ListPreference
@@ -32,6 +35,11 @@
             android:key="igni_bar_shape" android:title="@string/igni_bar_shape" android:defaultValue="rounded"
             android:entries="@array/igni_bar_shape_names" android:entryValues="@array/igni_bar_shape_keys"
             app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="igni_site_tint" android:title="@string/igni_site_tint" android:summary="@string/igni_site_tint_summary" android:defaultValue="false" app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:key="igni_site_tint_strength" android:title="@string/igni_site_tint_strength" android:defaultValue="35"
+            app:min="5" android:max="80" app:seekBarIncrement="5" app:showSeekBarValue="true" app:iconSpaceReserved="false" />
         <androidx.preference.ListPreference
             android:key="igni_web_scheme" android:title="@string/igni_web_scheme" android:defaultValue="theme"
             android:entries="@array/igni_web_scheme_names" android:entryValues="@array/igni_web_scheme_keys"
@@ -85,7 +93,28 @@
             android:entries="@array/igni_tiles_names" android:entryValues="@array/igni_tiles_keys"
             app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
+            android:key="igni_nt_todo" android:title="@string/igni_nt_todo" android:defaultValue="false" app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:key="igni_nt_cd_title" android:title="@string/igni_nt_cd_title" android:defaultValue=""
+            app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:key="igni_nt_cd_date" android:title="@string/igni_nt_cd_date" android:summary="@string/igni_nt_cd_date_summary"
+            android:defaultValue="" app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:key="igni_nt_feeds" android:title="@string/igni_nt_feeds" android:summary="@string/igni_nt_feeds_summary"
+            android:defaultValue="" app:iconSpaceReserved="false" />
+        <androidx.preference.SeekBarPreference
+            android:key="igni_nt_feeds_count" android:title="@string/igni_nt_feeds_count" android:defaultValue="6"
+            app:min="3" android:max="20" app:showSeekBarValue="true" app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
             android:key="igni_nt_notes" android:title="@string/igni_nt_notes" android:defaultValue="false" app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/igni_cat_tabs" app:iconSpaceReserved="false">
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="igni_tabs_grid" android:title="@string/igni_tabs_grid" android:defaultValue="true" app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="igni_swipe_tabs" android:title="@string/igni_swipe_tabs" android:defaultValue="true" app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/igni_cat_search" app:iconSpaceReserved="false">
@@ -112,7 +141,19 @@
             android:entries="@array/igni_doh_names" android:entryValues="@array/igni_doh_keys"
             app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
         <androidx.preference.SwitchPreferenceCompat
+            android:key="igni_fp_protect" android:title="@string/igni_fp_protect" android:summary="@string/igni_fp_protect_summary" android:defaultValue="true" app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="igni_fp_resist" android:title="@string/igni_fp_resist" android:summary="@string/igni_fp_resist_summary" android:defaultValue="false" app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="igni_auto_delete" android:title="@string/igni_auto_delete" android:summary="@string/igni_auto_delete_summary" android:defaultValue="false" app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:key="igni_keep_sites" android:title="@string/igni_keep_sites" android:summary="@string/igni_keep_sites_summary"
+            android:defaultValue="" app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
             android:key="igni_clear_on_quit" android:title="@string/igni_clear_on_quit" android:defaultValue="false" app:iconSpaceReserved="false" />
+        <androidx.preference.Preference
+            android:key="igni_burn_now" android:title="@string/igni_burn_now"
+            android:persistent="false" app:iconSpaceReserved="false" />
         <androidx.preference.Preference
             android:key="igni_clear_now" android:title="@string/igni_clear_now" android:summary="@string/igni_clear_now_summary"
             android:persistent="false" app:iconSpaceReserved="false" />
@@ -129,6 +170,9 @@
 
     <PreferenceCategory android:title="@string/igni_cat_freedom" app:iconSpaceReserved="false">
         <androidx.preference.Preference
+            android:key="igni_ubo" android:title="@string/igni_ubo" android:summary="@string/igni_ubo_summary"
+            android:persistent="false" app:iconSpaceReserved="false" />
+        <androidx.preference.Preference
             android:key="igni_addons" android:title="@string/igni_addons" android:summary="@string/igni_addons_summary"
             android:persistent="false" app:iconSpaceReserved="false" />
         <androidx.preference.Preference
@@ -142,6 +186,11 @@
             android:defaultValue="false" app:iconSpaceReserved="false" />
         <androidx.preference.Preference
             android:key="igni_about_config" android:title="@string/igni_about_config" android:summary="@string/igni_about_config_summary"
+            android:persistent="false" app:iconSpaceReserved="false" />
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="igni_update_check" android:title="@string/igni_updates" android:summary="@string/igni_updates_summary" android:defaultValue="true" app:iconSpaceReserved="false" />
+        <androidx.preference.Preference
+            android:key="igni_update_now" android:title="@string/igni_updates_now"
             android:persistent="false" app:iconSpaceReserved="false" />
         <androidx.preference.Preference
             android:key="igni_source" android:title="@string/igni_source" android:summary="@string/igni_source_summary"
