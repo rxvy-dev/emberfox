@@ -101,6 +101,34 @@ Ignifox keeps its own profile folder, separate from any Firefox you have. Firefo
 
 ---
 
+## Android
+
+Ignifox for Android is the same idea on your phone: Mozilla's Gecko engine, no telemetry,
+and **Ignifox Studio** built in. It shares its themes and its new tab page with the Linux
+browser, so a theme code made on one works on the other.
+
+**Get it:** download the APK from the [latest release](https://github.com/rxvy-dev/ignifox/releases/latest), open it, and allow your browser or file manager to install apps when Android asks.
+
+| Your phone | File |
+|---|---|
+| Almost every phone from the last 8 years | [`ignifox-android-arm64.apk`](https://github.com/rxvy-dev/ignifox/releases/latest/download/ignifox-android-arm64.apk) |
+| Older 32-bit phones | [`ignifox-android-arm32.apk`](https://github.com/rxvy-dev/ignifox/releases/latest/download/ignifox-android-arm32.apk) |
+| x86 tablets, emulators, Waydroid | [`ignifox-android-x86_64.apk`](https://github.com/rxvy-dev/ignifox/releases/latest/download/ignifox-android-x86_64.apk) |
+
+Android 8 or newer. For automatic updates, add `https://github.com/rxvy-dev/ignifox` to [Obtainium](https://obtainium.imranr.dev/).
+
+| | |
+|---|---|
+| **Look** | All ten Ignifox themes, custom accent, one-tap looks, 🎲 Surprise me, theme codes shared with Linux, toolbar on top or bottom, rounded / pill / square address bar |
+| **New tab** | The same Ignifox New Tab: animated wallpapers or your own picture, clock, greeting, shortcuts, search-engine switcher |
+| **Search** | Pick the default engine or add any site as one |
+| **Privacy** | Strict tracker blocking, HTTPS-only, Global Privacy Control and secure DNS choices, all on one screen. No telemetry, no crash upload |
+| **Freedom** | No Google Play Services, Firebase or other closed libraries · any add-on from addons.mozilla.org · install add-ons from a file, unsigned ones if you allow it · `about:config` unlocked · zoom on every site |
+
+Trade-offs of shipping without Google's libraries: no passkeys and no casting, and websites can't send push notifications while the app is closed.
+
+The app lives in [`android/`](android/). It is built on Mozilla's open-source Android Components (the building blocks of Firefox for Android), starting from their reference browser. Build it yourself with `cd android && ./gradlew assembleNightly` (JDK 17+ and the Android SDK).
+
 ## Build
 
 ```bash

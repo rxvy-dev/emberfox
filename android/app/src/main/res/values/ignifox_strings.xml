@@ -15,6 +15,12 @@
     <string name="igni_theme">Theme</string>
     <string name="igni_accent">Accent colour</string>
     <string name="igni_accent_summary">Any colour as #rrggbb. Leave empty for the theme\'s own.</string>
+    <string name="igni_theme_code">Use a theme from Ignifox on Linux</string>
+    <string name="igni_theme_code_summary">Paste the igni: code from Studio → Look → Palette editor</string>
+    <string name="igni_theme_code_bad">That is not an Ignifox theme code</string>
+    <string name="igni_theme_code_copy">Copy this theme as a code</string>
+    <string name="igni_theme_code_copy_summary">Paste it into Ignifox on Linux, or send it to a friend</string>
+    <string name="igni_theme_custom">Custom (from a code)</string>
     <string name="igni_surprise">🎲 Surprise me</string>
     <string name="igni_surprise_summary">Random theme and accent that stay readable</string>
     <string name="igni_bar_position">Toolbar position</string>
@@ -109,10 +115,10 @@
     </string-array>
 
     <string-array name="igni_wallpaper_names">
-        <item>Embers (animated)</item><item>Aurora</item><item>Gradient</item><item>Solid colour</item><item>My picture</item>
+        <item>Embers (animated)</item><item>Aurora</item><item>Starfield (animated)</item><item>Code rain (animated)</item><item>Snowfall (animated)</item><item>Gradient</item><item>Solid colour</item><item>My picture</item>
     </string-array>
     <string-array name="igni_wallpaper_keys" translatable="false">
-        <item>embers</item><item>aurora</item><item>gradient</item><item>solid</item><item>image</item>
+        <item>embers</item><item>aurora</item><item>starfield</item><item>matrix</item><item>snow</item><item>gradient</item><item>solid</item><item>image</item>
     </string-array>
 
     <string-array name="igni_layout_names"><item>Centred</item><item>Top</item><item>Minimal (search and shortcuts only)</item></string-array>

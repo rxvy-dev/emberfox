@@ -15,6 +15,12 @@
         <androidx.preference.EditTextPreference
             android:key="igni_accent" android:title="@string/igni_accent" android:summary="@string/igni_accent_summary"
             android:defaultValue="" app:iconSpaceReserved="false" />
+        <androidx.preference.EditTextPreference
+            android:key="igni_theme_code" android:title="@string/igni_theme_code" android:summary="@string/igni_theme_code_summary"
+            android:defaultValue="" app:iconSpaceReserved="false" />
+        <androidx.preference.Preference
+            android:key="igni_theme_code_copy" android:title="@string/igni_theme_code_copy" android:summary="@string/igni_theme_code_copy_summary"
+            android:persistent="false" app:iconSpaceReserved="false" />
         <androidx.preference.Preference
             android:key="igni_surprise" android:title="@string/igni_surprise" android:summary="@string/igni_surprise_summary"
             android:persistent="false" app:iconSpaceReserved="false" />

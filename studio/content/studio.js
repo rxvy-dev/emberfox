@@ -371,6 +371,15 @@ function renderLook() {
       h("button", { class: "btn", onclick: surpriseMe }, "🎲 Surprise me"),
       h("span", { class: "val", style: { textAlign: "start" } }, "Random colors that are always readable. Keep it with Save as my theme below.")),
 
+    h("h2", {}, "Day and night"),
+    h("p", { class: "lede" }, "Let Ignifox change theme by the clock: one for the day, one for the night."),
+    card(
+      toggle("ignifox.theme.auto", "Switch themes automatically", "Uses the two themes below instead of the one picked above.", { on: "time", off: "off" }),
+      select("ignifox.theme.day", "Day theme", null, Object.entries(M.THEMES).map(([k, t]) => [k, t.name])),
+      select("ignifox.theme.night", "Night theme", null, Object.entries(M.THEMES).map(([k, t]) => [k, t.name])),
+      range("ignifox.theme.dayStart", "Day starts at", null, 0, 23, 1, v => `${String(v).padStart(2, "0")}:00`),
+      range("ignifox.theme.nightStart", "Night starts at", null, 0, 23, 1, v => `${String(v).padStart(2, "0")}:00`)),
+
     h("h2", {}, "Quick accent"),
     card(colorPick("ignifox.theme.accent", "Accent color", "Keep the preset, just swap its highlight color (focus rings, glow, progress).")),
 

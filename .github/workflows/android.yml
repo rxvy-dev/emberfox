@@ -94,6 +94,8 @@ jobs:
     timeout-minutes: 30
     # Emulators on shared runners are flaky; a failure here is a signal to look, not a blocker.
     continue-on-error: true
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -124,3 +126,18 @@ jobs:
         with:
           name: android-smoke
           path: smoke
+
+      # The screenshots also go to a side branch, so they can be looked at (and linked) without
+      # downloading a zip. Each run replaces the last.
+      - name: Publish screenshots to the android-screenshots branch
+        if: always() && github.event_name == 'push'
+        run: |
+          mkdir -p "$RUNNER_TEMP/shots" && cd "$RUNNER_TEMP/shots"
+          cp "$GITHUB_WORKSPACE"/smoke/*.png "$GITHUB_WORKSPACE"/smoke/problems.txt . 2>/dev/null || true
+          grep -a -E "AndroidRuntime|GeckoRuntime|IgnifoxPrefs|chromium|Gecko  " "$GITHUB_WORKSPACE/smoke/logcat.txt" | tail -400 > log-tail.txt || true
+          echo "Screenshots from the Android emulator test of $GITHUB_SHA" > README.md
+          git init -q -b android-screenshots
+          git config user.name "ignifox-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -q -m "Emulator screenshots for $GITHUB_SHA"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" android-screenshots

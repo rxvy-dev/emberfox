@@ -5,6 +5,8 @@
 package org.mozilla.reference.browser.ignifox
 
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
@@ -87,6 +89,30 @@ class StudioFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPre
             Ignifox.applyLook(requireContext(), value as String)
             needsRecreate = true
             false
+        }
+
+        // Themes made in the Linux browser's palette editor come over as a short code.
+        findPreference<EditTextPreference>(Ignifox.THEME_CODE)?.setOnPreferenceChangeListener { _, value ->
+            val ok = Ignifox.paletteFromCode(value as? String) != null
+            if (ok) {
+                Ignifox.prefs(requireContext()).edit { putString(Ignifox.THEME, Ignifox.CUSTOM) }
+                needsRecreate = true
+            } else {
+                Toast.makeText(requireContext(), R.string.igni_theme_code_bad, Toast.LENGTH_LONG).show()
+            }
+            ok
+        }
+        findPreference<ListPreference>(Ignifox.THEME)?.apply {
+            if (Ignifox.paletteFromCode(Ignifox.prefs(requireContext()).getString(Ignifox.THEME_CODE, "")) != null) {
+                entries = entries.toList().plus(getString(R.string.igni_theme_custom)).toTypedArray()
+                entryValues = entryValues.toList().plus(Ignifox.CUSTOM).toTypedArray()
+            }
+        }
+        click("igni_theme_code_copy") {
+            val code = Ignifox.codeFor(Ignifox.palette(requireContext()))
+            val clipboard = requireContext().getSystemService(ClipboardManager::class.java)
+            clipboard?.setPrimaryClip(ClipData.newPlainText("Ignifox theme", code))
+            Toast.makeText(requireContext(), code, Toast.LENGTH_LONG).show()
         }
 
         click("igni_surprise") { surpriseMe() }

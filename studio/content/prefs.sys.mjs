@@ -33,6 +33,13 @@ export const IGNI_PREFS = {
   "ignifox.theme.enabled":            { type: "bool",   def: true },
   "ignifox.theme.preset":             { type: "string", def: "ignis" },
   "ignifox.theme.accent":             { type: "string", def: "" },        // "" = use preset accent
+  // Day/night: "time" swaps between two themes by the clock; "off" always uses the preset.
+  "ignifox.theme.auto":               { type: "string", def: "off" },
+  "ignifox.theme.day":                { type: "string", def: "frost" },
+  "ignifox.theme.night":              { type: "string", def: "ignis" },
+  "ignifox.theme.dayStart":           { type: "int",    def: 7 },
+  "ignifox.theme.nightStart":         { type: "int",    def: 19 },
+  "ignifox.theme.tick":               { type: "int",    def: -1 },        // internal: the engine bumps it each hour to repaint
   // Full custom palette (preset "custom"): JSON {bg,bg2,bg3,fg,fgDim,accent,accent2}
   "ignifox.theme.custom":             { type: "string", def: "" },
   // User-saved themes (preset "user:<name>"): JSON { name: palette, ... }
@@ -69,7 +76,7 @@ export const IGNI_PREFS = {
   "ignifox.newtab.enabled":           { type: "bool",   def: true },
   "ignifox.newtab.home":              { type: "bool",   def: true },      // also use it as the home page
   "ignifox.newtab.layout":            { type: "string", def: "center" },  // center | top | minimal
-  "ignifox.newtab.wallpaper":         { type: "string", def: "embers" },  // embers | aurora | gradient | solid | image | none
+  "ignifox.newtab.wallpaper":         { type: "string", def: "embers" },  // see WALLPAPERS
   "ignifox.newtab.wallpaperFile":     { type: "string", def: "" },
   "ignifox.newtab.dim":               { type: "int",    def: 25,  min: 0,   max: 90 },
   "ignifox.newtab.blur":              { type: "int",    def: 0,   min: 0,   max: 30 },
@@ -423,9 +430,28 @@ export function codeToPalette(code) {
   return PALETTE_KEYS.every(k => isHex(p[k])) ? completePalette(p) : null;
 }
 
+/** Is `hour` (0-23) inside the day part of a day that starts at dayStart and ends at nightStart? */
+export function isDayHour(hour, dayStart, nightStart) {
+  const clamp = (n, d) => (Number.isInteger(n) && n >= 0 && n <= 23 ? n : d);
+  const d = clamp(dayStart, 7), n = clamp(nightStart, 19);
+  if (d == n) {
+    return true;
+  }
+  return d < n ? hour >= d && hour < n : hour >= d || hour < n;
+}
+
+/** The theme key in force right now: the chosen preset, or the day/night theme when that is on. */
+export function activePreset(values, hour = new Date().getHours()) {
+  if (values["ignifox.theme.auto"] != "time") {
+    return values["ignifox.theme.preset"] || "ignis";
+  }
+  const day = isDayHour(hour, values["ignifox.theme.dayStart"], values["ignifox.theme.nightStart"]);
+  return (day ? values["ignifox.theme.day"] : values["ignifox.theme.night"]) || "ignis";
+}
+
 /** Resolve the palette that should be painted, from ignifox.* pref values. */
-export function resolvePalette(values) {
-  const preset = values["ignifox.theme.preset"] || "ignis";
+export function resolvePalette(values, hour = new Date().getHours()) {
+  const preset = activePreset(values, hour);
   let pal;
   if (preset == "custom") {
     pal = completePalette(parseJSON(values["ignifox.theme.custom"] || "{}", {}), "Custom");
@@ -552,6 +578,9 @@ export const DEFAULT_LINKS = [
 export const WALLPAPERS = {
   embers: "Rising embers (animated)",
   aurora: "Aurora glow (animated)",
+  starfield: "Starfield (animated)",
+  matrix: "Code rain (animated)",
+  snow: "Snowfall (animated)",
   gradient: "Theme gradient",
   solid: "Solid theme color",
   image: "My own picture",

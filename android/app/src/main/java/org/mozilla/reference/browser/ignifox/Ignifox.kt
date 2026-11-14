@@ -36,6 +36,7 @@ object Ignifox {
     // ---- setting keys (all live in the default shared preferences)
     const val THEME = "igni_theme"
     const val ACCENT = "igni_accent"
+    const val THEME_CODE = "igni_theme_code"
     const val LOOK = "igni_look"
     const val BAR_POSITION = "igni_bar_position"
     const val BAR_SHAPE = "igni_bar_shape"
@@ -85,6 +86,9 @@ object Ignifox {
             "Reddit | https://www.reddit.com\n" +
             "Add-ons | https://addons.mozilla.org/android/"
 
+    const val CUSTOM = "custom"
+    private const val CODE_COLORS = 7
+    private const val DARK_BELOW = 0.4
     private const val URL_BOX_ROUNDED_DP = 10f
     private const val URL_BOX_PILL_DP = 28f
     private const val SUGGESTION_ALPHA = 0x66
@@ -99,9 +103,40 @@ object Ignifox {
     /** The chosen theme, with the custom accent colour applied when one is set. */
     fun palette(context: Context): Palette {
         val p = prefs(context)
+        if (p.getString(THEME, "ignis") == CUSTOM) {
+            paletteFromCode(p.getString(THEME_CODE, ""))?.let { return it }
+        }
         val base = Themes.ALL.firstOrNull { it.key == p.getString(THEME, "ignis") } ?: Themes.ALL.first()
         val accent = parseColor(p.getString(ACCENT, "")) ?: return base
         return base.copy(accent = accent)
+    }
+
+    /**
+     * Theme codes are shared with the Linux browser ("igni:" then seven colours: background,
+     * two surfaces, text, dim text, accent, second accent), so a theme made there works here.
+     */
+    fun paletteFromCode(code: String?): Palette? {
+        val match = Regex("^igni:([0-9a-fA-F,]+)$").find(code?.trim().orEmpty()) ?: return null
+        val colors = match.groupValues[1].split(",").map { parseColor(it) ?: return null }
+        if (colors.size != CODE_COLORS) return null
+        val dark = luminance(colors[0]) < DARK_BELOW
+        return Palette(
+            CUSTOM, "Custom", dark,
+            colors[0], colors[1], colors[2], colors[3], colors[4], colors[5], colors[6],
+            if (dark) R.style.Igni_Obsidian else R.style.Igni_Paper,
+        )
+    }
+
+    fun codeFor(p: Palette): String =
+        "igni:" + listOf(p.bg, p.bg2, p.bg3, p.fg, p.fgDim, p.accent, p.accent2).joinToString(",") { hex(it).drop(1) }
+
+    private fun luminance(color: Int): Double {
+        fun channel(v: Int): Double {
+            val c = v / 255.0
+            return if (c <= 0.03928) c / 12.92 else Math.pow((c + 0.055) / 1.055, 2.4)
+        }
+        return 0.2126 * channel(Color.red(color)) + 0.7152 * channel(Color.green(color)) +
+            0.0722 * channel(Color.blue(color))
     }
 
     fun parseColor(text: String?): Int? {
@@ -400,9 +435,10 @@ object Ignifox {
         settings.httpsOnlyMode = httpsOnly(context)
         settings.globalPrivacyControlEnabled = p.getBoolean(GPC, true)
         settings.forceUserScalableContent = p.getBoolean(ZOOM_ANY, true)
-        settings.fontSizeFactor = p.getInt(FONT_SCALE, PERCENT.toInt()) / PERCENT
+        // The engine refuses a manual text size while it is following the phone's font size.
         settings.automaticFontSizeAdjustment = false
         settings.fontInflationEnabled = p.getInt(FONT_SCALE, PERCENT.toInt()) != PERCENT.toInt()
+        settings.fontSizeFactor = p.getInt(FONT_SCALE, PERCENT.toInt()) / PERCENT
         applyDoh(context)
         GeckoPrefs.apply(context, engine)
     }
