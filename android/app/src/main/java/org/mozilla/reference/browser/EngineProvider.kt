@@ -33,6 +33,11 @@ object EngineProvider {
             // About config it's no longer enabled by default
             builder.aboutConfigEnabled(true)
             builder.extensionsWebAPIEnabled(true)
+            // For debugging only: web console messages go to the device log when this is switched on.
+            builder.consoleOutput(
+                androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
+                    .getBoolean("igni_debug_console", false),
+            )
             runtime = GeckoRuntime.create(context, builder.build())
         }
 

@@ -49,7 +49,7 @@ adb shell am force-stop "$pkg"
 adb shell "run-as $pkg sh -c 'ls shared_prefs'" > "$out/prefs-files.txt" 2>&1 || true
 prefs="/data/data/$pkg/shared_prefs/${pkg}_preferences.xml"
 adb shell "cat $prefs" > "$out/prefs-before.xml" 2>&1 || true
-adb shell "sed -i 's#</map>#<string name=\"igni_theme\">synthwave</string><string name=\"igni_bar_position\">top</string><string name=\"igni_bar_shape\">pill</string><string name=\"igni_nt_wallpaper\">aurora</string></map>#' $prefs" || true
+adb shell "sed -i 's#</map>#<boolean name=\"igni_debug_console\" value=\"true\" /><string name=\"igni_theme\">synthwave</string><string name=\"igni_bar_position\">top</string><string name=\"igni_bar_shape\">pill</string><string name=\"igni_nt_wallpaper\">aurora</string></map>#' $prefs" || true
 adb shell monkey -p "$pkg" -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
 sleep 30
 shot 6-synthwave-top

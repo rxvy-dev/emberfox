@@ -134,7 +134,7 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/shots" && cd "$RUNNER_TEMP/shots"
           cp "$GITHUB_WORKSPACE"/smoke/*.png "$GITHUB_WORKSPACE"/smoke/problems.txt . 2>/dev/null || true
-          grep -a -E "AndroidRuntime|GeckoRuntime|IgnifoxPrefs|chromium|Gecko  " "$GITHUB_WORKSPACE/smoke/logcat.txt" | tail -400 > log-tail.txt || true
+          grep -a -i -E "gecko|ignifox|mozac|AndroidRuntime" "$GITHUB_WORKSPACE/smoke/logcat.txt" | grep -a -v "avc: " | cut -c1-600 | tail -1500 > log-tail.txt || true
           echo "Screenshots from the Android emulator test of $GITHUB_SHA" > README.md
           git init -q -b android-screenshots
           git config user.name "ignifox-bot"
