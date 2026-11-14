@@ -1,0 +1,15 @@
+name: Feature idea
+description: Suggest something for Emberfox or Ember Studio
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [Ember Studio – look & color, Ember Studio – placement, Privacy, Packaging / a distro, Something else]

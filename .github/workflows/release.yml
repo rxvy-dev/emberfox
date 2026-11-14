@@ -1,0 +1,214 @@
+name: Release
+
+# Builds Emberfox for x86_64 + aarch64 and publishes a GitHub Release.
+#  - push a tag like v160.0.1-1   (Firefox 160.0.1, Emberfox revision 1)
+#  - or run it by hand from the Actions tab
+#  - or let firefox-watch.yml call it when Mozilla ships a new Firefox
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      firefox_version:
+        description: "Firefox version to build on (or 'latest')"
+        default: latest
+      revision:
+        description: "Emberfox revision on top of that Firefox (1, 2, …)"
+        default: "1"
+  workflow_call:
+    inputs:
+      firefox_version:
+        type: string
+        default: latest
+      revision:
+        type: string
+        default: "1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  meta:
+    name: Resolve version
+    runs-on: ubuntu-24.04
+    outputs:
+      firefox: ${{ steps.v.outputs.firefox }}
+      revision: ${{ steps.v.outputs.revision }}
+      version: ${{ steps.v.outputs.version }}
+      tag: ${{ steps.v.outputs.tag }}
+    steps:
+      - id: v
+        env:
+          IN_FF: ${{ inputs.firefox_version }}
+          IN_REL: ${{ inputs.revision }}
+        run: |
+          if [[ "$GITHUB_REF_TYPE" == tag && "$GITHUB_REF_NAME" == v* ]]; then
+            V="${GITHUB_REF_NAME#v}"; FF="${V%-*}"; REL="${V##*-}"
+            [[ "$FF" != "$V" ]] || REL=1
+          else
+            FF="${IN_FF:-latest}"; REL="${IN_REL:-1}"
+            if [[ "$FF" == latest ]]; then
+              FF=$(curl -fsSL https://product-details.mozilla.org/1.0/firefox_versions.json | jq -r .LATEST_FIREFOX_VERSION)
+            fi
+          fi
+          [[ "$FF" =~ ^[0-9]+(\.[0-9]+)+$ ]] || { echo "bad Firefox version '$FF'"; exit 1; }
+          [[ "$REL" =~ ^[0-9]+$ ]] || { echo "bad revision '$REL'"; exit 1; }
+          { echo "firefox=$FF"; echo "revision=$REL"; echo "version=$FF-$REL"; echo "tag=v$FF-$REL"; } >> "$GITHUB_OUTPUT"
+          echo "### Building Emberfox $FF-$REL" >> "$GITHUB_STEP_SUMMARY"
+
+  build:
+    name: Build ${{ matrix.arch }}
+    needs: meta
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86_64, aarch64]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq librsvg2-bin imagemagick unzip xz-utils rpm
+
+      - name: Repack Firefox ${{ needs.meta.outputs.firefox }}
+        run: |
+          echo "${{ needs.meta.outputs.revision }}" > VERSION
+          ./build.sh repack --version "${{ needs.meta.outputs.firefox }}" --arch "${{ matrix.arch }}"
+
+      - name: Telemetry audit
+        run: ./build.sh audit
+
+      - name: .deb
+        run: ./build.sh deb
+
+      - name: .rpm
+        run: ./build.sh rpm && find dist -name '*.rpm' -exec mv {} dist/ \;
+
+      - name: AppImage
+        continue-on-error: true
+        run: ./build.sh appimage
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.arch }}
+          path: |
+            dist/*.tar.xz
+            dist/*.deb
+            dist/*.rpm
+            dist/*.AppImage
+          if-no-files-found: error
+
+  flatpak:
+    name: Flatpak
+    needs: [meta, build]
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist-x86_64
+          path: dist
+
+      - name: Prepare manifest
+        run: |
+          T=$(ls "$PWD"/dist/emberfox-*-linux-x86_64.tar.xz)
+          sed "s|EMBERFOX_TARBALL|$T|" packaging/flatpak/dev.rxvy.Emberfox.yml > dev.rxvy.Emberfox.yml
+          cp packaging/flatpak/dev.rxvy.Emberfox.metainfo.xml .
+
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: Emberfox-${{ needs.meta.outputs.version }}-x86_64.flatpak
+          manifest-path: dev.rxvy.Emberfox.yml
+          upload-artifact: false
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-flatpak
+          path: "*.flatpak"
+
+  publish:
+    name: Publish release
+    needs: [meta, build, flatpak]
+    if: ${{ !cancelled() && needs.build.result == 'success' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: dist-*
+          path: dist
+          merge-multiple: true
+
+      - name: Checksums + notes
+        env:
+          V: ${{ needs.meta.outputs.version }}
+          FF: ${{ needs.meta.outputs.firefox }}
+        run: |
+          cd dist
+          rm -f ./*.sha256
+          sha256sum ./* | sed 's| \./| |' > SHA256SUMS
+          cat > ../notes.md <<NOTES
+          Emberfox **$V**, built on **Firefox $FF** ([Firefox $FF release notes](https://www.firefox.com/en-US/firefox/$FF/releasenotes/), including its security fixes).
+
+          ### Download
+
+          | You're on | Get |
+          |---|---|
+          | Any Linux (glibc) | \`emberfox-$V-linux-x86_64.tar.xz\`, extract, run \`./install.sh\` (or \`--user\`) |
+          | Any Linux, no install | \`Emberfox-$V-x86_64.AppImage\` |
+          | Any Linux, sandboxed (incl. musl, immutable) | \`Emberfox-$V-x86_64.flatpak\` |
+          | Debian · Ubuntu · Mint · Pop!_OS | \`emberfox_${V}_amd64.deb\` |
+          | Fedora · openSUSE · RHEL | \`emberfox-*.x86_64.rpm\` |
+          | Arch / Void / Gentoo | recipes in \`packaging/\` (updated automatically) |
+          | ARM64 (Pi 5, Asahi, Snapdragon) | the \`aarch64\` / \`arm64\` files |
+
+          Every file is listed in \`SHA256SUMS\`. Each build passed \`./build.sh audit\` (no telemetry binaries, all data-upload prefs locked off).
+          NOTES
+          sed -i 's/^          //' ../notes.md
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.meta.outputs.tag }}
+          name: Emberfox ${{ needs.meta.outputs.version }}
+          body_path: notes.md
+          target_commitish: ${{ github.sha }}
+          files: dist/*
+          fail_on_unmatched_files: false
+
+  recipes:
+    name: Bump distro recipes
+    needs: [meta, publish]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: dist-*
+          path: dist
+          merge-multiple: true
+
+      - name: Update PKGBUILD, Void template, ebuild, AppStream
+        run: ./scripts/update-recipes.sh "${{ needs.meta.outputs.version }}" dist
+
+      - name: Commit
+        run: |
+          git config user.name "emberfox-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A packaging
+          if git diff --cached --quiet; then echo "recipes already current"; exit 0; fi
+          git commit -m "packaging: point recipes at ${{ needs.meta.outputs.version }}"
+          git push origin HEAD:main

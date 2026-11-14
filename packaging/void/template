@@ -1,0 +1,32 @@
+# Template file for 'emberfox-bin'  (Void Linux / Auxo, glibc)
+# Copy to void-packages/srcpkgs/emberfox-bin/template, then: ./xbps-src pkg emberfox-bin
+pkgname=emberfox-bin
+version=160.0.1
+_emrel=1
+revision=1
+archs="x86_64 aarch64"
+short_desc="Telemetry-free, deeply customizable browser built on Firefox"
+maintainer="rxvy <rxvy@users.noreply.github.com>"
+license="MPL-2.0"
+homepage="https://github.com/rxvy-dev/emberfox"
+depends="gtk+3 dbus-glib alsa-lib libXt nss"
+nostrip=yes
+noverifyrdeps=yes
+distfiles="${homepage}/releases/download/v${version}-${_emrel}/emberfox-${version}-${_emrel}-linux-${XBPS_TARGET_MACHINE}.tar.xz"
+case "$XBPS_TARGET_MACHINE" in
+	x86_64) checksum=0000000000000000000000000000000000000000000000000000000000000000 ;; # x86_64-sum
+	aarch64) checksum=0000000000000000000000000000000000000000000000000000000000000000 ;; # aarch64-sum
+esac
+
+do_install() {
+	vmkdir opt/emberfox
+	vcopy "*" opt/emberfox
+	rm -f ${DESTDIR}/opt/emberfox/install.sh
+	vmkdir usr/bin
+	ln -s /opt/emberfox/emberfox ${DESTDIR}/usr/bin/emberfox
+	sed 's|^Exec=emberfox|Exec=/usr/bin/emberfox|' emberfox.desktop > emberfox.desktop.sys
+	vinstall emberfox.desktop.sys 644 usr/share/applications emberfox.desktop
+	vmkdir usr/share
+	cp -r icons ${DESTDIR}/usr/share/icons
+	vlicense LICENSE.emberfox
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src chrome:; script-src chrome:; style-src chrome: 'unsafe-inline'; img-src chrome: data: moz-icon: file:; font-src chrome:; object-src 'none'">
+  <meta name="color-scheme" content="dark light">
+  <title>Ember Studio</title>
+  <link rel="icon" href="chrome://ember/content/logo.svg">
+  <link rel="stylesheet" href="chrome://ember/content/studio.css">
+  <script type="module" src="chrome://ember/content/studio.js"></script>
+</head>
+<body>
+  <aside class="nav">
+    <a class="brand" href="#look" title="Ember Studio">
+      <img src="chrome://ember/content/logo.svg" alt="" width="44" height="44">
+      <div>
+        <img class="wordmark" src="chrome://ember/content/wordmark.svg" alt="Emberfox" height="22">
+        <span class="sub">Studio</span>
+      </div>
+    </a>
+    <nav id="nav-links"></nav>
+    <div class="nav-foot">
+      <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>E</kbd> opens Studio<br>
+      <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Z</kbd> focus mode
+    </div>
+  </aside>
+
+  <main id="main"></main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <div id="welcome" class="welcome" hidden></div>
+</body>
+</html>

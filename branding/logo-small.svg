@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Simplified Emberfox mark for 16–48 px: no sparks, no glow, chunkier shapes -->
+  <defs>
+    <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffb02e"/>
+      <stop offset="0.35" stop-color="#ff4a1f"/>
+      <stop offset="1" stop-color="#c00a16"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="512" height="512" rx="120" fill="#140708"/>
+  <path d="M258 40 C272 90 314 104 302 152 L256 186 L210 152 C204 116 228 104 232 76 C244 96 252 110 252 126 C258 104 262 80 258 40 Z" fill="#ffb53a"/>
+  <path fill="url(#fur)" d="M128 56 L210 166 L256 156 L302 166 L384 56 L404 236 L444 266 L382 326 L256 470 L130 326 L68 266 L108 236 Z"/>
+  <path fill="#0c0405" d="M256 196 L306 234 L366 252 L326 308 L284 318 L256 424 L228 318 L186 308 L146 252 L206 234 Z"/>
+  <path d="M166 254 L246 280 L196 296 Z" fill="#ff3a1a"/>
+  <path d="M346 254 L266 280 L316 296 Z" fill="#ff3a1a"/>
+</svg>

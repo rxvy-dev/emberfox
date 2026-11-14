@@ -1,0 +1,40 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#aboutDialogContainer {
+  background-color: #0b0607;
+  background-image: radial-gradient(ellipse at 20% 30%, rgba(227, 18, 27, 0.28), transparent 60%);
+  color: #f3e6e4;
+  color-scheme: dark;
+}
+
+#bottomBox {
+  background-color: rgba(0, 0, 0, 0.45);
+  border-top: 1px solid rgba(255, 59, 31, 0.35);
+}
+
+#trademark {
+  color: #8f7c7a;
+}
+
+#rightBox {
+  background-size: auto 44px;
+  margin-inline: 30px;
+  padding-top: 76px;
+}
+
+#bottomBox {
+  padding: 15px 10px;
+}
+
+#trademark {
+  font-size: xx-small;
+  text-align: center;
+  margin-block: 10px;
+}
+
+a.text-link,
+.text-link {
+  color: #ff5a3c;
+}

@@ -1,0 +1,239 @@
+/* Emberfox — Ember Studio chrome stylesheet.
+ * Loaded into every browser window as an AUTHOR sheet by boot.sys.mjs.
+ * Everything is gated on root attributes the engine sets from ember.* prefs,
+ * so toggles apply instantly. Firefox's design tokens live in CSS @layers,
+ * so these un-layered rules take precedence without fighting specificity. */
+
+/* ============================================================ toolbar button */
+#ember-studio-button {
+  list-style-image: url("chrome://ember/content/icons/studio.svg");
+}
+:root[ember-themed] #ember-studio-button .toolbarbutton-icon {
+  fill: var(--ember-accent) !important;
+}
+
+/* ================================================================== theme */
+:root[ember-themed] {
+  --toolbox-background-color: var(--ember-bg) !important;
+  --toolbox-background-color-inactive: var(--ember-bg) !important;
+  --toolbox-text-color: var(--ember-fg) !important;
+  --toolbox-text-color-inactive: var(--ember-fg-dim) !important;
+
+  --toolbar-background-color: var(--ember-bg-2) !important;
+  --toolbar-text-color: var(--ember-fg) !important;
+  --toolbar-color: var(--ember-fg) !important;
+
+  --toolbar-field-background-color: var(--ember-bg-3) !important;
+  --toolbar-field-text-color: var(--ember-fg) !important;
+  --toolbar-field-border-color: transparent !important;
+  --toolbar-field-background-color-focus: var(--ember-bg-3) !important;
+  --toolbar-field-text-color-focus: var(--ember-fg) !important;
+  --toolbar-field-border-color-focus: var(--ember-accent) !important;
+
+  --tab-background-color-selected: var(--ember-bg-2) !important;
+  --tab-text-color-selected: var(--ember-fg) !important;
+  --tab-background-color-hover: color-mix(in srgb, var(--ember-accent) 12%, transparent) !important;
+  --tab-text-color: var(--ember-fg-dim) !important;
+  --tab-text-color-hover: var(--ember-fg) !important;
+
+  --toolbarbutton-icon-fill: var(--ember-fg) !important;
+  --toolbarbutton-icon-fill-attention: var(--ember-accent) !important;
+  --button-background-color-toolbar-hover: color-mix(in srgb, var(--ember-fg) 10%, transparent) !important;
+  --button-background-color-toolbar-active: color-mix(in srgb, var(--ember-accent) 22%, transparent) !important;
+  --toolbarbutton-hover-background: color-mix(in srgb, var(--ember-fg) 10%, transparent) !important;
+
+  --urlbar-box-background-color: color-mix(in srgb, var(--ember-fg) 6%, transparent) !important;
+  --urlbar-box-background-color-hover: color-mix(in srgb, var(--ember-fg) 12%, transparent) !important;
+  --urlbar-box-text-color: var(--ember-fg) !important;
+  --urlbarview-background-color-selected: color-mix(in srgb, var(--ember-accent) 28%, var(--ember-bg-3)) !important;
+  --urlbarview-text-color-selected: var(--ember-fg) !important;
+  --urlbarview-background-color-hover: color-mix(in srgb, var(--ember-fg) 8%, transparent) !important;
+  --urlbarview-text-color-action: var(--ember-accent-2) !important;
+
+  --panel-background-color: var(--ember-bg-2) !important;
+  --panel-text-color: var(--ember-fg) !important;
+  --panel-border-color: color-mix(in srgb, var(--ember-accent) 30%, transparent) !important;
+
+  --sidebar-background-color: var(--ember-bg) !important;
+  --sidebar-text-color: var(--ember-fg) !important;
+  --sidebar-border-color: color-mix(in srgb, var(--ember-accent) 18%, transparent) !important;
+  --tabpanel-background-color: var(--ember-bg) !important;
+  --chrome-content-separator-color: color-mix(in srgb, var(--ember-accent) 22%, transparent) !important;
+  --tabs-navbar-separator-color: transparent !important;
+
+  --focus-outline-color: var(--ember-accent) !important;
+  --color-accent-primary: var(--ember-accent) !important;
+  --color-accent-primary-hover: color-mix(in srgb, var(--ember-accent) 85%, white) !important;
+  --color-accent-primary-active: color-mix(in srgb, var(--ember-accent) 75%, white) !important;
+  --color-accent-primary-selected: var(--ember-accent) !important;
+  --link-color: var(--ember-accent-2) !important;
+}
+:root[ember-dark] { color-scheme: dark !important; }
+:root[ember-light] { color-scheme: light !important; }
+
+:root[ember-themed] #navigator-toolbox {
+  background-color: var(--ember-bg) !important;
+  color: var(--ember-fg) !important;
+  border-bottom-color: color-mix(in srgb, var(--ember-accent) 18%, transparent) !important;
+}
+:root[ember-themed] #nav-bar,
+:root[ember-themed] #PersonalToolbar {
+  background-color: var(--ember-bg-2) !important;
+  color: var(--ember-fg) !important;
+}
+:root[ember-themed] #TabsToolbar,
+:root[ember-themed] #toolbar-menubar {
+  background-color: transparent !important;
+  color: var(--ember-fg) !important;
+}
+:root[ember-themed] #browser,
+:root[ember-themed] sidebar-main,
+:root[ember-themed] #sidebar-box {
+  background-color: var(--ember-bg) !important;
+  color: var(--ember-fg) !important;
+}
+:root[ember-themed] .urlbar-input::selection,
+:root[ember-themed] .urlbar-input *::selection {
+  background-color: color-mix(in srgb, var(--ember-accent) 55%, transparent);
+  color: var(--ember-fg);
+}
+:root[ember-themed] #urlbar[focused] .urlbar-background {
+  box-shadow: 0 0 0 1px var(--ember-accent),
+              0 0 14px -4px color-mix(in srgb, var(--ember-accent) 70%, transparent) !important;
+}
+:root[ember-themed] menupopup,
+:root[ember-themed] panel {
+  --panel-background-color: var(--ember-bg-2) !important;
+  --panel-text-color: var(--ember-fg) !important;
+}
+
+/* ================================================================ effects */
+:root[ember-themed][ember-glow] {
+  --tab-box-shadow-selected:
+    0 0 0 1px color-mix(in srgb, var(--ember-accent) 55%, transparent),
+    0 0 14px -3px color-mix(in srgb, var(--ember-accent) 65%, transparent) !important;
+}
+
+:root[ember-themed][ember-strip] #nav-bar {
+  border-top: 2px solid transparent !important;
+  border-image: linear-gradient(90deg, transparent, var(--ember-accent) 20%, var(--ember-accent-2) 50%, var(--ember-accent) 80%, transparent) 1 !important;
+}
+
+@keyframes ember-load {
+  from { background-position: -60% 100%; }
+  to   { background-position: 160% 100%; }
+}
+:root[ember-progress] .tabbrowser-tab[busy] .tab-background {
+  background-image: linear-gradient(90deg, transparent, var(--ember-accent, #ff3b1f), var(--ember-accent-2, #ffb02e), transparent) !important;
+  background-size: 45% 2px !important;
+  background-repeat: no-repeat !important;
+  animation: ember-load 1.1s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root[ember-progress] .tabbrowser-tab[busy] .tab-background {
+    animation: none;
+    background-size: 100% 2px !important;
+  }
+}
+
+/* ================================================================== shape */
+:root {
+  --toolbarbutton-border-radius: var(--ember-radius, 4px) !important;
+  --tab-border-radius: var(--ember-radius, 4px) !important;
+  --urlbar-border-radius: var(--ember-radius, 4px) !important;
+  --panel-border-radius: calc(var(--ember-radius, 8px) + 2px) !important;
+}
+#tabbrowser-tabs[orient="horizontal"] {
+  --tab-max-width: var(--ember-tab-max, 225px) !important;
+}
+
+/* ================================================================= layout */
+
+/* --- tabs below the navigation bar */
+:root[ember-tabs="bottom"] #navigator-toolbox {
+  display: flex !important;
+  flex-direction: column !important;
+}
+:root[ember-tabs="bottom"] #toolbar-menubar { order: 0; }
+:root[ember-tabs="bottom"] #nav-bar { order: 1; }
+:root[ember-tabs="bottom"] #PersonalToolbar { order: 2; }
+:root[ember-tabs="bottom"] #TabsToolbar { order: 3; }
+:root[ember-tabs="bottom"] #TabsToolbar .titlebar-spacer[type="pre-tabs"] { display: none !important; }
+
+/* --- no horizontal tab strip (for vertical-tab extensions or keyboard-only use) */
+:root[ember-tabs="hidden"]:not([customizing]) #TabsToolbar {
+  visibility: collapse !important;
+}
+
+/* --- focus mode: toolbars slide away and return on hover (Ctrl+Alt+Z) */
+:root[ember-autohide]:not([customizing], [inFullscreen]) #navigator-toolbox {
+  position: fixed !important;
+  inset-inline: 0;
+  top: 0;
+  z-index: 10 !important;
+  transform: translateY(calc(-100% + 4px));
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  box-shadow: none;
+}
+:root[ember-autohide]:not([customizing], [inFullscreen]) #navigator-toolbox:is(:hover, :focus-within, :has([open]), :has([panelopen])) {
+  transform: none;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+}
+:root[ember-autohide][ember-themed]:not([customizing]) #navigator-toolbox::after {
+  content: "";
+  position: absolute;
+  inset-inline: 30%;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, transparent, var(--ember-accent), transparent);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* --- centered URL text while not editing */
+:root[ember-urlbar-centered] #urlbar:not([focused]) .urlbar-input {
+  text-align: center !important;
+}
+
+/* --- close buttons only on the selected / hovered tab */
+:root[ember-tabclose-hover] .tabbrowser-tab:not([selected], :hover) .tab-close-button {
+  display: none !important;
+}
+
+/* --- tighter navigation bar */
+:root[ember-compact-nav] #nav-bar {
+  --toolbarbutton-padding-outer: 1px !important;
+  --toolbarbutton-padding-inner: 5px !important;
+  padding-block: 1px !important;
+}
+:root[ember-compact-nav] #nav-bar #urlbar-container {
+  padding-block: 2px !important;
+}
+
+/* =========================================================== hide things */
+:root[ember-hide-newtab] :is(#tabs-newtab-button, #new-tab-button) { display: none !important; }
+:root[ember-hide-alltabs] #alltabs-button { display: none !important; }
+:root[ember-hide-extensions] #unified-extensions-button { display: none !important; }
+:root[ember-hide-navdisabled] :is(#back-button, #forward-button)[disabled] { display: none !important; }
+:root[ember-hide-tabicons] .tabbrowser-tab:not([pinned]) .tab-icon-stack { display: none !important; }
+:root[ember-hide-urlbar-icons] #urlbar:not([focused]) :is(
+  #tracking-protection-icon-container,
+  #page-action-buttons > :not(#star-button-box, #reader-mode-button, #picture-in-picture-button)
+) {
+  display: none !important;
+}
+
+/* ============================================================= typography */
+:root[ember-font] :is(#navigator-toolbox, sidebar-main, #sidebar-box) :is(.tab-label, .urlbar-input, toolbarbutton, label, description) {
+  font-family: var(--ember-font) !important;
+}
+:root[ember-font-size] :is(#navigator-toolbox, sidebar-main) :is(.tab-label, .urlbar-input, .toolbarbutton-text, label) {
+  font-size: var(--ember-font-size) !important;
+}
+
+/* ======================================================== blank page tint */
+:root[ember-contentbg] #tabbrowser-tabpanels,
+:root[ember-contentbg] .browserStack {
+  background-color: var(--ember-bg) !important;
+}

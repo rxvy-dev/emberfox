@@ -1,0 +1,47 @@
+# Flatpak: works on every distro, including musl ones (Alpine, Void-musl,
+# postmarketOS desktop) and immutable ones (Fedora Silverblue/Kinoite, SteamOS,
+# Bazzite, NixOS, Vanilla OS).
+#   flatpak-builder --user --install --force-clean build-flatpak packaging/flatpak/dev.rxvy.Emberfox.yml
+# (build.sh flatpak fills in the tarball path for you)
+id: dev.rxvy.Emberfox
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+command: emberfox
+separate-locales: false
+finish-args:
+  - --share=ipc
+  - --share=network
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --socket=pulseaudio
+  - --socket=cups
+  - --device=all
+  - --filesystem=xdg-download
+  - --persist=.emberfox
+  - --env=MOZ_ENABLE_WAYLAND=1
+  - --talk-name=org.freedesktop.FileManager1
+  - --talk-name=org.freedesktop.Notifications
+  - --talk-name=org.freedesktop.portal.*
+  - --talk-name=org.a11y.Bus
+  - --own-name=org.mozilla.emberfox.*
+  - --system-talk-name=org.freedesktop.NetworkManager
+modules:
+  - name: emberfox
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/lib
+      - cp -a emberfox /app/lib/emberfox
+      - rm -f /app/lib/emberfox/install.sh
+      - mkdir -p /app/bin && printf '#!/bin/sh\nexec /app/lib/emberfox/emberfox "$@"\n' > /app/bin/emberfox && chmod 755 /app/bin/emberfox
+      - sed 's|^Icon=emberfox|Icon=dev.rxvy.Emberfox|' emberfox/emberfox.desktop > dev.rxvy.Emberfox.desktop
+      - install -Dm644 dev.rxvy.Emberfox.desktop /app/share/applications/dev.rxvy.Emberfox.desktop
+      - for s in 16 32 48 64 128 256 512; do install -Dm644 emberfox/icons/hicolor/${s}x${s}/apps/emberfox.png /app/share/icons/hicolor/${s}x${s}/apps/dev.rxvy.Emberfox.png; done
+      - install -Dm644 emberfox/icons/hicolor/scalable/apps/emberfox.svg /app/share/icons/hicolor/scalable/apps/dev.rxvy.Emberfox.svg
+      - install -Dm644 dev.rxvy.Emberfox.metainfo.xml /app/share/metainfo/dev.rxvy.Emberfox.metainfo.xml
+    sources:
+      - type: archive
+        path: EMBERFOX_TARBALL
+        strip-components: 0
+      - type: file
+        path: dev.rxvy.Emberfox.metainfo.xml

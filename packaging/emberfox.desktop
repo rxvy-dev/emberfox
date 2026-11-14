@@ -1,0 +1,31 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Emberfox
+GenericName=Web Browser
+Comment=Private, telemetry-free, deeply customizable browser built on Firefox
+Exec=emberfox %u
+Icon=emberfox
+Terminal=false
+StartupNotify=true
+StartupWMClass=emberfox
+Categories=Network;WebBrowser;
+Keywords=web;browser;internet;firefox;privacy;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;application/pdf;image/svg+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/about;
+Actions=new-window;new-private-window;studio;profile-manager;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=emberfox --new-window %u
+
+[Desktop Action new-private-window]
+Name=New Private Window
+Exec=emberfox --private-window %u
+
+[Desktop Action studio]
+Name=Ember Studio
+Exec=emberfox --new-tab about:ember
+
+[Desktop Action profile-manager]
+Name=Profile Manager
+Exec=emberfox --ProfileManager

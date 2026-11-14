@@ -1,0 +1,42 @@
+# Emberfox mozconfig: Linux desktop release build.
+# Used by scripts/source-build.sh (copied to <firefox-src>/mozconfig).
+
+ac_add_options --enable-application=browser
+ac_add_options --with-app-name=emberfox
+ac_add_options --with-app-basename=Emberfox
+ac_add_options --with-branding=browser/branding/emberfox
+ac_add_options --with-distribution-id=dev.rxvy.emberfox
+
+ac_add_options --enable-release
+ac_add_options --enable-optimize
+ac_add_options --enable-hardening
+ac_add_options --enable-rust-simd
+ac_add_options --disable-debug
+ac_add_options --disable-tests
+
+# ---- no telemetry, no phoning home, compiled out where the build allows it
+ac_add_options --disable-crashreporter
+ac_add_options --disable-updater
+ac_add_options --disable-default-browser-agent
+unset MOZ_TELEMETRY_REPORTING
+export MOZ_DATA_REPORTING=
+export MOZ_SERVICES_HEALTHREPORT=
+export MOZ_NORMANDY=
+export MOZ_CRASHREPORTER=
+export MOZ_CRASHREPORTER_DISABLE=1
+
+# Unbranded-style signing: lets power users turn off add-on signature checks
+# (xpinstall.signatures.required) for self-built extensions. On by default.
+export MOZ_REQUIRE_SIGNING=
+
+# ---- Linux desktop: X11 + Wayland in one binary
+ac_add_options --enable-default-toolkit=cairo-gtk3-x11-wayland
+ac_add_options --enable-alsa
+ac_add_options --enable-pulseaudio
+ac_add_options --enable-jack
+
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-emberfox
+
+# Optional speed-ups, switched on by source-build.sh flags:
+#   --lto  -> ac_add_options --enable-lto=cross
+#   --pgo  -> ac_add_options MOZ_PGO=1

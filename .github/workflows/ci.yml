@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint & tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Unit + consistency tests
+        run: node --test tests/*.test.mjs
+
+      - name: JavaScript syntax
+        run: |
+          for f in ember/content/*.mjs ember/content/studio.js; do
+            node --check --input-type=module < "$f"
+          done
+          tail -n +2 settings/emberfox.cfg > "$RUNNER_TEMP/cfg.js" && node --check "$RUNNER_TEMP/cfg.js"
+          node --check branding/emberfox-branding.js
+          node --check settings/defaults/pref/autoconfig.js
+
+      - name: Policies match Firefox's schema
+        run: |
+          pip install --quiet jsonschema
+          python3 tests/check_policies.py
+
+      - name: Shellcheck
+        run: shellcheck -x -S warning build.sh scripts/*.sh packaging/*.sh packaging/appimage/*.sh tools/preview/run.sh
+
+      - name: Desktop entry + AppStream
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq desktop-file-utils appstream
+          desktop-file-validate packaging/emberfox.desktop
+          appstreamcli validate --no-net --explain packaging/flatpak/dev.rxvy.Emberfox.metainfo.xml || echo "::warning::AppStream validation reported issues"
+
+  repack:
+    name: Repack latest Firefox + audit
+    needs: checks
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq librsvg2-bin imagemagick unzip xz-utils
+
+      - name: Repack
+        run: ./build.sh repack --arch x86_64
+
+      - name: Telemetry audit
+        run: ./build.sh audit
+
+      - name: Upload test build
+        uses: actions/upload-artifact@v4
+        with:
+          name: emberfox-test-build-x86_64
+          path: dist/emberfox-*.tar.xz
+          retention-days: 7

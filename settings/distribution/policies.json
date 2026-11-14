@@ -1,0 +1,91 @@
+{
+  "policies": {
+    "DisableTelemetry": true,
+    "DisableFirefoxStudies": true,
+    "DisableFeedbackCommands": true,
+    "DisableDefaultBrowserAgent": true,
+    "DisableAppUpdate": true,
+    "DisableSetDesktopBackground": false,
+    "DontCheckDefaultBrowser": true,
+    "SkipTermsOfUse": true,
+    "NoDefaultBookmarks": true,
+    "OverrideFirstRunPage": "about:ember#welcome",
+    "OverridePostUpdatePage": "",
+
+    "AIControls": {
+      "Default": { "Value": "blocked", "Locked": false },
+      "Translations": { "Value": "available", "Locked": false }
+    },
+
+    "FirefoxHome": {
+      "Search": true,
+      "TopSites": true,
+      "SponsoredTopSites": false,
+      "Highlights": false,
+      "Stories": false,
+      "SponsoredStories": false,
+      "Locked": false
+    },
+    "FirefoxSuggest": {
+      "WebSuggestions": false,
+      "SponsoredSuggestions": false,
+      "ImproveSuggest": false,
+      "Locked": true
+    },
+    "UserMessaging": {
+      "ExtensionRecommendations": false,
+      "FeatureRecommendations": false,
+      "UrlbarInterventions": false,
+      "SkipOnboarding": true,
+      "MoreFromMozilla": false,
+      "FirefoxLabs": true,
+      "Locked": true
+    },
+
+    "EnableTrackingProtection": {
+      "Value": true,
+      "Locked": false,
+      "Cryptomining": true,
+      "Fingerprinting": true,
+      "EmailTracking": true
+    },
+
+    "SearchEngines": {
+      "Default": "DuckDuckGo",
+      "Add": [
+        {
+          "Name": "Startpage",
+          "URLTemplate": "https://www.startpage.com/sp/search?query={searchTerms}",
+          "Method": "GET",
+          "IconURL": "https://www.startpage.com/favicon.ico",
+          "Alias": "@sp",
+          "Description": "Private Google results",
+          "SuggestURLTemplate": "https://www.startpage.com/osuggestions?q={searchTerms}"
+        },
+        {
+          "Name": "Brave Search",
+          "URLTemplate": "https://search.brave.com/search?q={searchTerms}",
+          "Method": "GET",
+          "IconURL": "https://search.brave.com/favicon.ico",
+          "Alias": "@brave",
+          "Description": "Independent index",
+          "SuggestURLTemplate": "https://search.brave.com/api/suggest?q={searchTerms}"
+        },
+        {
+          "Name": "Arch Wiki",
+          "URLTemplate": "https://wiki.archlinux.org/index.php?search={searchTerms}",
+          "Method": "GET",
+          "IconURL": "https://wiki.archlinux.org/favicon.ico",
+          "Alias": "@aw"
+        }
+      ]
+    },
+
+    "ExtensionSettings": {
+      "uBlock0@raymondhill.net": {
+        "installation_mode": "normal_installed",
+        "install_url": "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
+      }
+    }
+  }
+}

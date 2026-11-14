@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>dev.rxvy.Emberfox</id>
+  <name>Emberfox</name>
+  <summary>Telemetry-free, deeply customizable browser built on Firefox</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MPL-2.0</project_license>
+  <developer id="dev.rxvy"><name>rxvy</name></developer>
+  <description>
+    <p>Emberfox is Firefox with every telemetry, study and crash-report channel locked off,
+    sponsored content removed, and Ember Studio built in.</p>
+    <ul>
+      <li>Ten themes plus a full seven-color palette editor, saved and shareable themes</li>
+      <li>Move tabs (top, bottom, vertical, hidden), the sidebar, bars and every toolbar button</li>
+      <li>Focus mode, corner radius, tab widths, fonts, custom CSS with live reload</li>
+      <li>Balanced, Hardened and Fortress privacy levels with a live no-telemetry proof panel</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">dev.rxvy.Emberfox.desktop</launchable>
+  <url type="homepage">https://github.com/rxvy-dev/emberfox</url>
+  <content_rating type="oars-1.1"/>
+  <releases></releases>
+</component>
