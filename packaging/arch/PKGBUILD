@@ -1,7 +1,7 @@
 # Arch / EndeavourOS / Manjaro / CachyOS / Garuda
 # Maintainer: rxvy
 pkgname=emberfox-bin
-pkgver=160.0.1
+pkgver=160.0
 _emrel=1
 pkgrel=1
 pkgdesc="Telemetry-free, deeply customizable browser built on Firefox"
@@ -18,8 +18,8 @@ conflicts=('emberfox')
 options=('!strip' '!debug')
 source_x86_64=("$url/releases/download/v$pkgver-$_emrel/emberfox-$pkgver-$_emrel-linux-x86_64.tar.xz")
 source_aarch64=("$url/releases/download/v$pkgver-$_emrel/emberfox-$pkgver-$_emrel-linux-aarch64.tar.xz")
-sha256sums_x86_64=('SKIP')
-sha256sums_aarch64=('SKIP')
+sha256sums_x86_64=('897501d993c6b49e4b5dbf038e449d1e5b8d70bb223199d74f447e71ec3125fa')
+sha256sums_aarch64=('f6a477c37ad69feb88ccef47ebdeb93a24a549005ec875abb4f4c27790a1fc0c')
 
 package() {
   install -d "$pkgdir/opt" "$pkgdir/usr/bin"

@@ -19,5 +19,5 @@
   <launchable type="desktop-id">dev.rxvy.Emberfox.desktop</launchable>
   <url type="homepage">https://github.com/rxvy-dev/emberfox</url>
   <content_rating type="oars-1.1"/>
-  <releases></releases>
+  <releases><release version="160.0-1" date="2026-11-14"/></releases>
 </component>

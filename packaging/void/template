@@ -1,7 +1,7 @@
 # Template file for 'emberfox-bin'  (Void Linux / Auxo, glibc)
 # Copy to void-packages/srcpkgs/emberfox-bin/template, then: ./xbps-src pkg emberfox-bin
 pkgname=emberfox-bin
-version=160.0.1
+version=160.0
 _emrel=1
 revision=1
 archs="x86_64 aarch64"
@@ -14,8 +14,8 @@ nostrip=yes
 noverifyrdeps=yes
 distfiles="${homepage}/releases/download/v${version}-${_emrel}/emberfox-${version}-${_emrel}-linux-${XBPS_TARGET_MACHINE}.tar.xz"
 case "$XBPS_TARGET_MACHINE" in
-	x86_64) checksum=0000000000000000000000000000000000000000000000000000000000000000 ;; # x86_64-sum
-	aarch64) checksum=0000000000000000000000000000000000000000000000000000000000000000 ;; # aarch64-sum
+	x86_64) checksum=897501d993c6b49e4b5dbf038e449d1e5b8d70bb223199d74f447e71ec3125fa ;; # x86_64-sum
+	aarch64) checksum=f6a477c37ad69feb88ccef47ebdeb93a24a549005ec875abb4f4c27790a1fc0c ;; # aarch64-sum
 esac
 
 do_install() {
