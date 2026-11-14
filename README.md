@@ -117,6 +117,11 @@ browser, so a theme code made on one works on the other.
 | Older 32-bit phones | [`ignifox-android-arm32.apk`](https://github.com/rxvy-dev/ignifox/releases/latest/download/ignifox-android-arm32.apk) |
 | x86 tablets, emulators, Waydroid | [`ignifox-android-x86_64.apk`](https://github.com/rxvy-dev/ignifox/releases/latest/download/ignifox-android-x86_64.apk) |
 
+**"App not installed"?**
+- You picked the wrong file: phones need `arm64` (or `arm32` for old 32-bit phones). The `x86_64` APK only installs on emulators and x86 tablets.
+- An older Ignifox build is in the way: uninstall it, then install the new one. (Builds made before a signing key was set up each have a different signature, and Android won't install one over another.)
+- The download didn't finish: the APK is about 240 MB; wait for it to complete before opening it.
+
 Android 8 or newer. For automatic updates, add `https://github.com/rxvy-dev/ignifox` to [Obtainium](https://obtainium.imranr.dev/).
 
 | | |

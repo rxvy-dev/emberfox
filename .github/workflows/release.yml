@@ -187,6 +187,11 @@ jobs:
           | ARM64 (Pi 5, Asahi, Snapdragon) | the \`aarch64\` / \`arm64\` files |
           | **Android phone** | \`ignifox-android-arm64.apk\` (32-bit phones: \`arm32\`) |
 
+          **Android says "App not installed"?**
+          - Use \`ignifox-android-arm64.apk\`. The \`x86_64\` APK is only for emulators and x86 tablets and will not install on a phone.
+          - Uninstall any older Ignifox build first if this one will not install over it.
+          - Let the download finish (about 240 MB) before opening it.
+
           Every file is listed in \`SHA256SUMS\`. Each build passed \`./build.sh audit\` (no telemetry binaries, all data-upload prefs locked off).
           NOTES
           sed -i 's/^          //' ../notes.md
