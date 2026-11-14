@@ -1,0 +1,185 @@
+{
+  "version": 1,
+  "themes": [
+    {
+      "id": "black-metal",
+      "name": "Black Metal",
+      "author": "Ignifox",
+      "description": "Pure black and blood red, corpse-paint white text.",
+      "code": "igni:000000,0c0606,1a0b0b,f5f0ee,9c8f8c,d0021b,ff4d3d",
+      "tags": [
+        "dark",
+        "red",
+        "oled"
+      ]
+    },
+    {
+      "id": "corpse-paint",
+      "name": "Corpse Paint",
+      "author": "Ignifox",
+      "description": "Grey stone, white face, black eyes.",
+      "code": "igni:121212,1c1c1c,2a2a2a,f2f2f2,a3a3a3,e8e8e8,8c8c8c",
+      "tags": [
+        "dark",
+        "mono"
+      ]
+    },
+    {
+      "id": "hellfire",
+      "name": "Hellfire",
+      "author": "Ignifox",
+      "description": "Embers on charcoal, orange to gold.",
+      "code": "igni:120a07,1d110b,2b1a10,f7e9dc,b39a86,ff6a00,ffc23d",
+      "tags": [
+        "dark",
+        "orange"
+      ]
+    },
+    {
+      "id": "frostbite",
+      "name": "Frostbite",
+      "author": "Ignifox",
+      "description": "Icy blue on deep navy.",
+      "code": "igni:0a1220,111b2e,1a2840,e6f1ff,8ea3c0,58c4ff,b8e6ff",
+      "tags": [
+        "dark",
+        "blue"
+      ]
+    },
+    {
+      "id": "necro-green",
+      "name": "Necro Green",
+      "author": "Ignifox",
+      "description": "Toxic green glow on a crypt-black base.",
+      "code": "igni:070b08,0e1510,16211a,e3f5e6,8aa592,39ff7a,b6ff4f",
+      "tags": [
+        "dark",
+        "green"
+      ]
+    },
+    {
+      "id": "abyss",
+      "name": "Abyss",
+      "author": "Ignifox",
+      "description": "Deep teal water, bioluminescent cyan.",
+      "code": "igni:031416,07201f,0d2e2c,dff7f4,7fa7a3,14e0c8,8afff0",
+      "tags": [
+        "dark",
+        "teal"
+      ]
+    },
+    {
+      "id": "cyber-grape",
+      "name": "Cyber Grape",
+      "author": "Ignifox",
+      "description": "Purple night with hot-pink neon.",
+      "code": "igni:120a1f,1b1030,27184a,f1e8ff,a596c0,ff2bd6,9b6bff",
+      "tags": [
+        "dark",
+        "purple",
+        "neon"
+      ]
+    },
+    {
+      "id": "amber-crt",
+      "name": "Amber CRT",
+      "author": "Ignifox",
+      "description": "Old amber monitor, scanline warm.",
+      "code": "igni:0d0900,171000,241a02,ffd88a,b38f4a,ffb000,ffdf6b",
+      "tags": [
+        "dark",
+        "retro",
+        "mono"
+      ]
+    },
+    {
+      "id": "mint-terminal",
+      "name": "Mint Terminal",
+      "author": "Ignifox",
+      "description": "Green phosphor on black glass.",
+      "code": "igni:050a07,0a140e,112018,c9ffd9,6fa67f,2bff88,9dffc4",
+      "tags": [
+        "dark",
+        "retro"
+      ]
+    },
+    {
+      "id": "sunset-strip",
+      "name": "Sunset Strip",
+      "author": "Ignifox",
+      "description": "Dusky violet with a sunset gradient accent.",
+      "code": "igni:1a1022,24152f,321d40,fbe9f2,b495ad,ff7a59,ffc15e",
+      "tags": [
+        "dark",
+        "warm"
+      ]
+    },
+    {
+      "id": "crimson-ink",
+      "name": "Crimson Ink",
+      "author": "Ignifox",
+      "description": "Parchment paper and red ink.",
+      "code": "igni:f6efe4,ece2d2,e0d2bd,2a1d14,6e5a48,b3121f,d9541e",
+      "tags": [
+        "light",
+        "red"
+      ]
+    },
+    {
+      "id": "ghost",
+      "name": "Ghost",
+      "author": "Ignifox",
+      "description": "Soft white fog, ink-blue accent.",
+      "code": "igni:f4f6f8,e9edf1,dce2e8,1b2430,5d6b7a,3559e0,7b94ff",
+      "tags": [
+        "light",
+        "blue"
+      ]
+    },
+    {
+      "id": "sakura-night",
+      "name": "Sakura Night",
+      "author": "Ignifox",
+      "description": "Cherry-blossom pink on midnight.",
+      "code": "igni:15101a,1f1726,2c2036,fbeef6,b39aad,ff8fc7,ffd1e8",
+      "tags": [
+        "dark",
+        "pink"
+      ]
+    },
+    {
+      "id": "forest-floor",
+      "name": "Forest Floor",
+      "author": "Ignifox",
+      "description": "Moss, bark and a firefly gold.",
+      "code": "igni:0d120c,151d13,1f2b1c,e8f0e0,93a38a,9ccc4f,f2c94c",
+      "tags": [
+        "dark",
+        "green",
+        "warm"
+      ]
+    },
+    {
+      "id": "rust",
+      "name": "Rust",
+      "author": "Ignifox",
+      "description": "Oxidised iron and copper.",
+      "code": "igni:16100d,211813,2e2119,f3e6dc,ad978a,d96a32,f0a35e",
+      "tags": [
+        "dark",
+        "orange"
+      ]
+    },
+    {
+      "id": "lavender-haze",
+      "name": "Lavender Haze",
+      "author": "Ignifox",
+      "description": "Pale lilac daylight.",
+      "code": "igni:f6f2fb,ece5f6,dfd5ef,241b33,685b7d,7c4ddb,c26bd6",
+      "tags": [
+        "light",
+        "purple"
+      ]
+    }
+  ]
+}

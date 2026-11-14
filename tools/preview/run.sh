@@ -6,6 +6,7 @@ OUT="$ROOT/build/preview"
 rm -rf "$OUT"; mkdir -p "$OUT"
 cp -r "$ROOT/studio/content/." "$OUT/"
 cp "$ROOT/tools/preview/mock.js" "$OUT/"
+cp "$ROOT/themes/index.json" "$OUT/themes-index.json"
 sed -i 's#chrome://ignifox/content/#./#g' "$OUT/studio.css" "$OUT/studio.js"
 python3 - "$OUT" <<'PY'
 import re, sys

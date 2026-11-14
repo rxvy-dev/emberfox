@@ -99,7 +99,8 @@
         version: async () => "160.0.1-1",
         newtabURL: () => "./newtab/index.html",
         setNewtabWallpaper: async () => "wallpaper.jpg",
-        checkForUpdate: async () => ({ status: "current", current: "160.0.1-1", latest: "160.0.1-1" }) } }
+        checkForUpdate: async () => ({ status: "current", current: "160.0.1-1", latest: "160.0.1-1" }),
+        fetchGallery: async () => (await (await fetch("./themes-index.json")).json()).themes } }
       : { CustomizableUI: CUI },
   };
   window.__igniPrefs = prefs;

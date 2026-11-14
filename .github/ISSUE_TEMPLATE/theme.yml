@@ -1,0 +1,24 @@
+name: Share a theme
+description: Put your Ignifox theme in the gallery
+title: "Theme: "
+labels: [theme]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Theme name
+      placeholder: Black Metal
+    validations:
+      required: true
+  - type: input
+    id: code
+    attributes:
+      label: Theme code
+      description: Studio → Look & Color → Palette editor → Copy theme code
+      placeholder: "igni:000000,0c0606,1a0b0b,f5f0ee,9c8f8c,d0021b,ff4d3d"
+    validations:
+      required: true
+  - type: textarea
+    id: about
+    attributes:
+      label: A line about it (optional)

@@ -76,6 +76,8 @@ with tarfile.open(TARBALL) as t:
     t.extractall(work, filter="fully_trusted")
 opts = Options()
 opts.binary_location = os.path.join(work, "ignifox", "firefox")
+# Recent Firefox only lets automation run code in the browser itself when asked for explicitly.
+opts.add_argument("-remote-allow-system-access")
 for k, v in {
     "ignifox.firstrun.done": True,
     "browser.shell.checkDefaultBrowser": False,
@@ -125,7 +127,7 @@ def wait_for(fn, what, timeout=20):
             if last:
                 return last
         except Exception as e:  # noqa: BLE001
-            last = e
+            last = f"{type(e).__name__}: {getattr(e, 'msg', '') or e}"
         time.sleep(0.3)
     raise AssertionError(f"timed out waiting for {what} (last: {last!r})")
 

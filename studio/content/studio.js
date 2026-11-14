@@ -319,10 +319,99 @@ function paletteEditor() {
     h("div", { class: "card", style: { marginTop: "14px" } },
       row(null, "Save as my theme", "Keeps the current colors as a named theme in the gallery.",
         [nameIn, h("button", { class: "btn primary", onclick: saveTheme }, "Save")]),
-      row(null, "Share", "Copy a short code anyone can paste into their Ignifox.",
-        [h("button", { class: "btn", onclick: copyCode }, "Copy theme code"), delBtn]),
+      row(null, "Share", "Copy a short code anyone can paste into their Ignifox, or scan it with your phone.",
+        [h("button", { class: "btn", onclick: copyCode }, "Copy theme code"),
+         h("button", { class: "btn", onclick: () => showThemeQR(M.resolvePalette(igniValues())) }, "QR for my phone"), delBtn]),
       row(null, "Paste a theme code", null,
         [codeIn, h("button", { class: "btn", onclick: applyCode }, "Apply")])));
+}
+
+// ------------------------------------------------------------------ theme gallery + QR
+function themeSwatch(p) {
+  return h("div", { class: "g-swatch", style: { background: p.bg, color: p.fg, borderColor: p.bg3 } },
+    h("div", { class: "g-bar", style: { background: p.bg2 } },
+      h("i", { style: { background: p.accent } }), h("i", { style: { background: p.accent2 } }), h("i", { style: { background: p.fgDim } })),
+    h("div", { class: "g-body" }, h("b", { style: { color: p.fg } }, "Aa"), h("span", { style: { color: p.fgDim } }, "text"),
+      h("span", { class: "g-pill", style: { background: p.accent, color: M.luminance(p.accent) > 0.4 ? "#000" : "#fff" } }, "accent")));
+}
+
+function useGalleryTheme(t) {
+  const pal = M.codeToPalette(t.code);
+  if (!pal) return;
+  const saved = M.savedThemes(igniValues());
+  const name = t.name.replace(/[^\w \-]/g, "").slice(0, 30) || "Gallery theme";
+  saved[name] = Object.fromEntries(M.PALETTE_KEYS.map(k => [k, pal[k]]));
+  set("ignifox.theme.saved", JSON.stringify(saved));
+  set("ignifox.theme.accent", "");
+  set("ignifox.theme.auto", "off");
+  set("ignifox.theme.preset", "user:" + name);
+  toast(`Using “${t.name}” (saved to your themes)`);
+}
+
+function communityGallery() {
+  const grid = h("div", { class: "gallery" });
+  const filter = h("input", { type: "search", placeholder: "Filter: dark, red, retro…", "aria-label": "Filter themes", hidden: true });
+  const status = h("span", { class: "val", style: { textAlign: "start" } });
+  let themes = [];
+  const render = () => {
+    const q = filter.value.trim().toLowerCase();
+    const shown = themes.filter(t => !q || (t.name + " " + t.tags.join(" ") + " " + t.description).toLowerCase().includes(q));
+    grid.replaceChildren(...shown.map(t => {
+      const p = M.codeToPalette(t.code);
+      return h("div", { class: "g-card" }, themeSwatch(p),
+        h("div", { class: "g-meta" }, h("b", {}, t.name), h("span", { class: "desc" }, t.description || (t.author ? "by " + t.author : ""))),
+        h("div", { class: "btns" },
+          h("button", { class: "btn primary", onclick: () => useGalleryTheme(t) }, "Use"),
+          h("button", { class: "btn", title: "QR code for Ignifox on your phone", onclick: () => showThemeQR(p, t.name) }, "QR")));
+    }));
+    status.textContent = shown.length ? `${shown.length} theme${shown.length == 1 ? "" : "s"}` : themes.length ? "No theme matches" : "";
+  };
+  filter.addEventListener("input", render);
+  const browse = h("button", { class: "btn primary", onclick: async () => {
+    browse.disabled = true;
+    status.textContent = "Loading…";
+    try {
+      themes = await IgniBoot.fetchGallery();
+      filter.hidden = false;
+      browse.hidden = true;
+      render();
+    } catch (e) {
+      status.textContent = "Couldn't load the gallery: " + e.message;
+      browse.disabled = false;
+    }
+  } }, "Browse the gallery");
+  const submit = h("button", { class: "btn", onclick: () => window.open(M.GALLERY_SUBMIT) }, "Share my theme");
+  return h("div", {}, h("div", { class: "btns", style: { marginBottom: "10px" } }, browse, filter, submit, status), grid);
+}
+
+/** A dialog with a QR code that opens the theme in Ignifox for Android. */
+function showThemeQR(p, name = "My theme") {
+  const code = M.paletteToCode(p);
+  const link = M.themeLink(code);
+  const qr = window.qrcode(0, "M");
+  qr.addData(link);
+  qr.make();
+  const n = qr.getModuleCount(), scale = 6, quiet = 4;
+  const canvas = h("canvas", { width: (n + quiet * 2) * scale, height: (n + quiet * 2) * scale, class: "qr" });
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#000";
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      if (qr.isDark(r, c)) ctx.fillRect((c + quiet) * scale, (r + quiet) * scale, scale, scale);
+    }
+  }
+  const dlg = h("dialog", { class: "qr-dialog" },
+    h("h2", {}, name),
+    canvas,
+    h("p", { class: "lede" }, "Scan with your phone's camera to open this theme in Ignifox for Android. If your camera app only shows text, copy it and paste it in Studio → “Use a theme from Ignifox on Linux”."),
+    h("code", { class: "qr-code" }, code),
+    h("div", { class: "btns" },
+      h("button", { class: "btn", onclick: async () => { await navigator.clipboard.writeText(code); toast("Theme code copied"); } }, "Copy code"),
+      h("button", { class: "btn primary", onclick: () => dlg.close() }, "Done")));
+  dlg.addEventListener("close", () => dlg.remove());
+  document.body.append(dlg);
+  dlg.showModal();
 }
 
 // ------------------------------------------------------------------ nav
@@ -387,6 +476,10 @@ function renderLook() {
     h("div", { class: "btns", style: { marginTop: "12px" } },
       h("button", { class: "btn", onclick: surpriseMe }, "🎲 Surprise me"),
       h("span", { class: "val", style: { textAlign: "start" } }, "Random colors that are always readable. Keep it with Save as my theme below.")),
+
+    h("h2", {}, "Theme gallery"),
+    h("p", { class: "lede" }, "Themes made by other Ignifox users. Browsing downloads the list from the Ignifox GitHub repository."),
+    communityGallery(),
 
     h("h2", {}, "Day and night"),
     h("p", { class: "lede" }, "Let Ignifox change theme by the clock: one for the day, one for the night."),

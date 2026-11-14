@@ -219,3 +219,21 @@ test("site tint: vivid colour from icon pixels, null for grey icons", () => {
   assert.equal(dominantColor(new Uint8ClampedArray(px([128, 128, 128], 100))), null);
   assert.equal(dominantColor(new Uint8ClampedArray(px([0, 0, 255], 100, 0))), null, "transparent pixels ignored");
 });
+
+// ---------------------------------------------------------------- theme gallery
+import { readFileSync as readFileSync2 } from "node:fs";
+import { codeToPalette, luminance as lum2 } from "../studio/content/prefs.sys.mjs";
+
+test("theme gallery: every theme is a valid, readable code with a unique id", () => {
+  const { themes } = JSON.parse(readFileSync2(new URL("../themes/index.json", import.meta.url), "utf8"));
+  assert.ok(themes.length >= 10);
+  const ratio = (a, b) => { const [x, y] = [lum2(a), lum2(b)].sort((m, n) => n - m); return (x + 0.05) / (y + 0.05); };
+  const ids = new Set();
+  for (const t of themes) {
+    assert.ok(!ids.has(t.id), `duplicate id ${t.id}`); ids.add(t.id);
+    const p = codeToPalette(t.code);
+    assert.ok(p, `${t.name}: bad code`);
+    assert.ok(ratio(p.fg, p.bg) >= 7, `${t.name}: text contrast ${ratio(p.fg, p.bg).toFixed(1)} < 7`);
+    assert.ok(ratio(p.accent, p.bg) >= 3, `${t.name}: accent contrast ${ratio(p.accent, p.bg).toFixed(1)} < 3`);
+  }
+});

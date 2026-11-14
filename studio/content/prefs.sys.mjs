@@ -563,6 +563,13 @@ export const TOOLBAR_PRESETS = {
 // ---------------------------------------------------------- versions
 export const RELEASES_API = "https://api.github.com/repos/rxvy-dev/ignifox/releases/latest";
 export const RELEASES_PAGE = "https://github.com/rxvy-dev/ignifox/releases/latest";
+export const GALLERY_URL = "https://raw.githubusercontent.com/rxvy-dev/ignifox/main/themes/index.json";
+export const GALLERY_SUBMIT = "https://github.com/rxvy-dev/ignifox/issues/new?template=theme.yml";
+
+/** A link that opens a theme in Ignifox for Android (and is easy to turn into a QR code). */
+export function themeLink(code) {
+  return "ignifox://theme?code=" + encodeURIComponent(code);
+}
 
 /** Parse "160.0.1-2" / "v160.0.1-2" -> { ff: [160,0,1], rel: 2 } */
 export function parseVersion(v) {

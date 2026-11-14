@@ -11,8 +11,10 @@
 import {
   IGNI_PREFS,
   PAINTABLE_THEME_IDS,
+  GALLERY_URL,
   RELEASES_API,
   RELEASES_PAGE,
+  codeToPalette,
   compareVersions,
   newtabLinks,
   readPref,
@@ -823,6 +825,33 @@ export const IgniBoot = {
         },
       ]
     );
+  },
+
+  /**
+   * The community theme gallery (themes/index.json in the Ignifox repo). Only fetched when
+   * someone opens the gallery in Studio; no cookies, no referrer. Invalid entries are dropped.
+   */
+  async fetchGallery() {
+    const win = Services.wm.getMostRecentWindow("navigator:browser");
+    if (!win) {
+      throw new Error("no browser window");
+    }
+    const res = await win.fetch(GALLERY_URL, { credentials: "omit", cache: "no-cache", referrerPolicy: "no-referrer" });
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    return (Array.isArray(data?.themes) ? data.themes : [])
+      .filter(t => t && typeof t.name == "string" && codeToPalette(t.code))
+      .slice(0, 200)
+      .map(t => ({
+        id: String(t.id || t.name).slice(0, 40),
+        name: String(t.name).slice(0, 40),
+        author: String(t.author || "").slice(0, 40),
+        description: String(t.description || "").slice(0, 140),
+        code: t.code,
+        tags: Array.isArray(t.tags) ? t.tags.map(String).slice(0, 6) : [],
+      }));
   },
 
   /** Used by Studio after the CSS editor saves. */
