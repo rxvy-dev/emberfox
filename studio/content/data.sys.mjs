@@ -380,3 +380,147 @@ export function mergeFeeds(lists, count = 6) {
   const rest = newest(lists.flatMap(l => l.slice(per)));
   return newest([...picked, ...rest.slice(0, Math.max(0, count - picked.length))]).slice(0, count);
 }
+
+// --------------------------------------------------------------- command palette
+/**
+ * Fuzzy match: every query character must appear in order. Higher is better; -1 = no match.
+ * Rewards matches at word starts and runs of consecutive characters.
+ */
+export function fuzzyScore(query, text) {
+  const q = String(query || "").toLowerCase().trim();
+  const t = String(text || "").toLowerCase();
+  if (!q) {
+    return 0;
+  }
+  if (t.includes(q)) {
+    return 1000 - t.indexOf(q) * 2 + (t.startsWith(q) ? 200 : 0) - t.length * 0.1;
+  }
+  let score = 0, ti = 0, run = 0;
+  for (const ch of q) {
+    if (ch == " ") {
+      continue;
+    }
+    const at = t.indexOf(ch, ti);
+    if (at < 0) {
+      return -1;
+    }
+    const wordStart = at == 0 || /[\s\-_/.:]/.test(t[at - 1]);
+    run = at == ti ? run + 1 : 0;
+    score += 10 + (wordStart ? 15 : 0) + run * 5 - Math.min(10, at - ti);
+    ti = at + 1;
+  }
+  return score - t.length * 0.1;
+}
+
+// --------------------------------------------------------------- workspaces
+export const WORKSPACE_ICONS = ["🔥", "💀", "🦇", "⚡", "🌙", "🎮", "💼", "🎵", "📚", "🛠️", "🌲", "🩸"];
+
+/** Workspaces from the pref: always at least one, unique ids, short names. */
+export function parseWorkspaces(json) {
+  let list = [];
+  try {
+    list = JSON.parse(json || "[]");
+  } catch (e) {}
+  const seen = new Set();
+  const out = [];
+  for (const w of Array.isArray(list) ? list : []) {
+    if (!w || typeof w != "object") {
+      continue;
+    }
+    const id = String(w.id || "").replace(/[^\w-]/g, "").slice(0, 24);
+    if (!id || seen.has(id)) {
+      continue;
+    }
+    seen.add(id);
+    out.push({
+      id,
+      name: String(w.name || "Workspace").slice(0, 30),
+      icon: String(w.icon || "•").slice(0, 8),
+      theme: String(w.theme || "").replace(/[^\w:-]/g, "").slice(0, 40),
+    });
+    if (out.length >= 9) {
+      break;
+    }
+  }
+  return out.length ? out : [{ id: "main", name: "Main", icon: "🔥", theme: "" }];
+}
+
+// --------------------------------------------------------------- web panels
+/** Web panels from the pref: http(s) only, at most 12. */
+export function parsePanels(json) {
+  let list = [];
+  try {
+    list = JSON.parse(json || "[]");
+  } catch (e) {}
+  const out = [];
+  for (const p of Array.isArray(list) ? list : []) {
+    let url;
+    try {
+      url = new URL(String(p?.url || ""));
+    } catch (e) {
+      continue;
+    }
+    if (!/^https?:$/.test(url.protocol)) {
+      continue;
+    }
+    out.push({ url: url.href, title: String(p.title || url.hostname.replace(/^www\./, "")).slice(0, 40), mobile: !!p.mobile });
+    if (out.length >= 12) {
+      break;
+    }
+  }
+  return out;
+}
+
+export const PANEL_SUGGESTIONS = [
+  { title: "Discord", url: "https://discord.com/app" },
+  { title: "WhatsApp", url: "https://web.whatsapp.com/" },
+  { title: "Telegram", url: "https://web.telegram.org/" },
+  { title: "Spotify", url: "https://open.spotify.com/" },
+  { title: "YouTube Music", url: "https://music.youtube.com/" },
+  { title: "ChatGPT", url: "https://chatgpt.com/" },
+  { title: "Claude", url: "https://claude.ai/" },
+  { title: "Notion", url: "https://www.notion.so/" },
+  { title: "Wikipedia", url: "https://en.m.wikipedia.org/" },
+];
+
+// --------------------------------------------------------------- cookie auto-delete
+/** Is `host` covered by the keep-list (one domain per line; covers its subdomains too)? */
+export function siteKept(host, keepText) {
+  const h = String(host || "").toLowerCase().replace(/^\.+|\.+$/g, "");
+  if (!h) {
+    return true;
+  }
+  return String(keepText || "")
+    .split(/[\s,]+/)
+    .map(s => s.trim().toLowerCase().replace(/^\*\./, "").replace(/^https?:\/\//, "").replace(/\/.*$/, ""))
+    .filter(Boolean)
+    .some(k => h == k || h.endsWith("." + k));
+}
+
+// --------------------------------------------------------------- site tint
+/**
+ * The colour a site "is", from its favicon's pixels (RGBA bytes): the average of its vivid
+ * pixels, ignoring transparency and near-white/black/grey. null when the icon has no colour.
+ */
+export function dominantColor(rgba) {
+  let r = 0, g = 0, b = 0, w = 0;
+  for (let i = 0; i + 3 < rgba.length; i += 4) {
+    const a = rgba[i + 3] / 255;
+    if (a < 0.5) {
+      continue;
+    }
+    const R = rgba[i], G = rgba[i + 1], B = rgba[i + 2];
+    const max = Math.max(R, G, B), min = Math.min(R, G, B);
+    const sat = max ? (max - min) / max : 0;
+    if (sat < 0.25 || max < 40) {
+      continue;
+    }
+    const weight = sat * a;
+    r += R * weight; g += G * weight; b += B * weight; w += weight;
+  }
+  if (w < 0.5) {
+    return null;
+  }
+  const hex = n => Math.round(n / w).toString(16).padStart(2, "0");
+  return `#${hex(r)}${hex(g)}${hex(b)}`;
+}

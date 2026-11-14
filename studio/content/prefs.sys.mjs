@@ -85,6 +85,23 @@ export const IGNI_PREFS = {
   "ignifox.newtab.countdown.date":    { type: "string", def: "" },        // YYYY-MM-DD or YYYY-MM-DDTHH:MM
   "ignifox.newtab.feeds":             { type: "string", def: "" },        // one RSS/Atom URL per line
   "ignifox.newtab.feeds.count":       { type: "int",    def: 6 },
+
+  // Command palette, workspaces, web panels, site tint
+  "ignifox.palette.enabled":          { type: "bool",   def: true },        // Ctrl+K
+  "ignifox.workspaces.enabled":       { type: "bool",   def: false },
+  "ignifox.workspaces.list":          { type: "string", def: '[{"id":"main","name":"Main","icon":"🔥","theme":""}]' },
+  "ignifox.panels.enabled":           { type: "bool",   def: false },
+  "ignifox.panels.list":              { type: "string", def: "[]" },
+  "ignifox.panels.width":             { type: "int",    def: 400 },
+  "ignifox.panels.side":              { type: "string", def: "right" },   // right | left
+  "ignifox.theme.siteTint":           { type: "bool",   def: false },
+  "ignifox.theme.siteTint.strength":  { type: "int",    def: 35 },        // percent
+
+  // Cookie auto-delete and tab unloading
+  "ignifox.privacy.autoDelete":       { type: "bool",   def: false },
+  "ignifox.privacy.keepSites":        { type: "string", def: "" },        // one domain per line
+  "ignifox.privacy.autoDelete.cleaned": { type: "int",  def: 0 },
+  "ignifox.tabs.unloadAfter":         { type: "int",    def: 0 },         // minutes, 0 = never
   "ignifox.newtab.dim":               { type: "int",    def: 25,  min: 0,   max: 90 },
   "ignifox.newtab.blur":              { type: "int",    def: 0,   min: 0,   max: 30 },
   "ignifox.newtab.clock":             { type: "bool",   def: true },

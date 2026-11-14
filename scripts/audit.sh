@@ -35,7 +35,8 @@ PY
 
 echo "Ignifox layer"
 for f in studio/content/boot.sys.mjs studio/content/studio.html studio/content/data.sys.mjs studio/content/importer.sys.mjs \
-         studio/content/fonts.sys.mjs studio/content/newtab/index.html studio/content/newtab/newtab.js; do
+         studio/content/fonts.sys.mjs studio/content/features.sys.mjs studio/content/newtab/index.html \
+         studio/content/newtab/newtab.js studio/content/newtab/fx.js; do
   [[ -f "$INST/$f" ]] && ok "$f" || bad "$f missing"
 done
 

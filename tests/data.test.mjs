@@ -177,3 +177,45 @@ test("feeds: URL list and merging keeps every feed represented", () => {
   assert.equal(merged[0].title, "a9", "newest first");
   assert.equal(mergeFeeds([], 6).length, 0);
 });
+
+// ---------------------------------------------------------------- palette, workspaces, panels, keep-list, tint
+import { dominantColor, fuzzyScore, parsePanels, parseWorkspaces, siteKept } from "../studio/content/data.sys.mjs";
+
+test("palette: fuzzy matching ranks sensible results first", () => {
+  assert.equal(fuzzyScore("xyz", "GitHub"), -1);
+  assert.ok(fuzzyScore("gh", "GitHub") > 0);
+  assert.ok(fuzzyScore("git", "GitHub") > fuzzyScore("git", "Digital garden"), "prefix beats middle");
+  assert.ok(fuzzyScore("wp", "Wallpaper: Flames") > fuzzyScore("wp", "Swap tabs"), "word starts count");
+  assert.equal(fuzzyScore("", "anything"), 0);
+});
+
+test("workspaces: always one, ids cleaned, duplicates dropped, at most 9", () => {
+  assert.deepEqual(parseWorkspaces("nope").map(w => w.id), ["main"]);
+  const ws = parseWorkspaces(JSON.stringify([{ id: "a b!", name: "Work" }, { id: "ab" }, { id: "x", icon: "🎮", theme: "toxic" }]));
+  assert.deepEqual(ws.map(w => w.id), ["ab", "x"]);
+  assert.equal(ws[1].theme, "toxic");
+  assert.equal(parseWorkspaces(JSON.stringify(Array.from({ length: 20 }, (_, i) => ({ id: "w" + i })))).length, 9);
+});
+
+test("panels: only http(s) pages", () => {
+  const p = parsePanels(JSON.stringify([{ url: "https://discord.com/app" }, { url: "javascript:alert(1)" }, { url: "file:///x" }, { url: "nope" }]));
+  assert.deepEqual(p.map(x => x.url), ["https://discord.com/app"]);
+  assert.equal(p[0].title, "discord.com");
+});
+
+test("auto-delete keep-list covers subdomains and nothing else", () => {
+  const keep = "github.com\n*.google.com https://claude.ai/";
+  assert.equal(siteKept("github.com", keep), true);
+  assert.equal(siteKept("gist.github.com", keep), true);
+  assert.equal(siteKept("notgithub.com", keep), false);
+  assert.equal(siteKept("mail.google.com", keep), true);
+  assert.equal(siteKept("claude.ai", keep), true);
+  assert.equal(siteKept("example.com", ""), false);
+});
+
+test("site tint: vivid colour from icon pixels, null for grey icons", () => {
+  const px = (rgb, n, a = 255) => Array.from({ length: n }, () => [...rgb, a]).flat();
+  assert.equal(dominantColor(new Uint8ClampedArray([...px([255, 0, 0], 30), ...px([255, 255, 255], 70)])), "#ff0000");
+  assert.equal(dominantColor(new Uint8ClampedArray(px([128, 128, 128], 100))), null);
+  assert.equal(dominantColor(new Uint8ClampedArray(px([0, 0, 255], 100, 0))), null, "transparent pixels ignored");
+});

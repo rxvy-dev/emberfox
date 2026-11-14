@@ -329,6 +329,7 @@ function paletteEditor() {
 const ICONS = {
   look: "M12 2c1 4 6 5 5 10-.5 2.6-2.6 4-5 4s-4.6-1.4-5-4c-.6-3.6 2.4-4.6 2.8-8 1 2 1.6 3.2 1.6 4.8C12.2 7 12.6 4.6 12 2zM4 20h16v2H4z",
   placement: "M3 4h18v4H3zM3 10h7v10H3zM12 10h9v4h-9zM12 16h9v4h-9z",
+  workspaces: "M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm12 0h2v3h3v2h-3v3h-2v-3h-3v-2h3z",
   newtab: "M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm0 2v12h16V6zm7 2h2v3h3v2h-3v3h-2v-3H8v-2h3z",
   search: "M10 3a7 7 0 015.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1110 3zm0 2a5 5 0 100 10 5 5 0 000-10z",
   browsing: "M4 4h16v16H4zM6 8h12v2H6zM6 12h8v2H6z",
@@ -347,6 +348,7 @@ const SECTIONS = [
   ["newtab", "New Tab", renderNewtab],
   ["search", "Search", renderSearch],
   ["placement", "Placement", renderPlacement],
+  ["workspaces", "Workspaces & Panels", renderWorkspaces],
   ["browsing", "Tabs & Browsing", renderBrowsing],
   ["privacy", "Privacy", renderPrivacy],
   ["ai", "AI Features", renderAI],
@@ -394,6 +396,11 @@ function renderLook() {
       select("ignifox.theme.night", "Night theme", null, Object.entries(M.THEMES).map(([k, t]) => [k, t.name])),
       range("ignifox.theme.dayStart", "Day starts at", null, 0, 23, 1, v => `${String(v).padStart(2, "0")}:00`),
       range("ignifox.theme.nightStart", "Night starts at", null, 0, 23, 1, v => `${String(v).padStart(2, "0")}:00`)),
+
+    h("h2", {}, "Site tint"),
+    card(
+      toggle("ignifox.theme.siteTint", "Tint the toolbars with each site's colour", "Taken from the site's icon, like Arc. Grey icons leave your theme as it is."),
+      range("ignifox.theme.siteTint.strength", "Tint strength", null, 5, 80, 5, v => `${v}%`)),
 
     h("h2", {}, "Quick accent"),
     card(colorPick("ignifox.theme.accent", "Accent color", "Keep the preset, just swap its highlight color (focus rings, glow, progress).")),
@@ -987,6 +994,9 @@ function renderBrowsing() {
       toggle("browser.tabs.groups.enabled", "Tab groups"),
       toggle("browser.tabs.splitView.enabled", "Split view", "Two tabs side by side."),
       toggle("browser.tabs.unloadOnLowMemory", "Unload idle tabs when memory is low"),
+      select("ignifox.tabs.unloadAfter", "Unload tabs I haven't looked at for", "Frees memory; an unloaded tab reloads when you click it. Pinned tabs and tabs playing sound are never unloaded.",
+        [[0, "Never"], [15, "15 minutes"], [30, "30 minutes"], [60, "1 hour"], [120, "2 hours"], [240, "4 hours"]]),
+      toggle("ignifox.palette.enabled", "Command palette (Ctrl+K)", "Search tabs, bookmarks, actions, themes and settings from one box. Off = Ctrl+K focuses the search bar as in Firefox."),
       toggle("browser.tabs.warnOnClose", "Warn before closing many tabs"),
       toggle("browser.ctrlTab.sortByRecentlyUsed", "Ctrl+Tab cycles in recently-used order"),
       toggle("privacy.userContext.enabled", "Container tabs", "Keep work, shopping and social logins in separate color-coded tabs."),
@@ -1092,6 +1102,114 @@ function telemetryProof() {
   return h("div", { class: "card" }, grid);
 }
 
+function autoDeleteStats() {
+  const out = h("span", { class: "val" });
+  bind(() => {
+    const n = get("ignifox.privacy.autoDelete.cleaned") || 0;
+    out.textContent = n ? `${n} site${n == 1 ? "" : "s"} cleaned so far` : "Nothing cleaned yet";
+  }, out);
+  return row(null, "Cleaned", null, out);
+}
+
+// ============================================================ WORKSPACES & PANELS
+function renderWorkspaces() {
+  return [
+    h("h1", {}, "Workspaces & Panels"),
+    h("p", { class: "lede" }, "Workspaces are separate sets of tabs, each with its own theme: one for work, one for gaming, one for school. Pinned tabs show in every workspace. Switch with the button in the tab strip, Ctrl+Alt+1…9, or Ctrl+K."),
+    card(toggle("ignifox.workspaces.enabled", "Workspaces", "Off shows all your tabs together again.")),
+    workspacesEditor(),
+    h("h2", {}, "Web panels"),
+    h("p", { class: "lede" }, "Keep sites like Discord, Spotify or a chat app open in a strip beside every page. Each panel stays loaded while you browse. Middle-click a panel icon to unload it."),
+    card(
+      toggle("ignifox.panels.enabled", "Web panels"),
+      select("ignifox.panels.side", "Side", null, [["right", "Right"], ["left", "Left"]]),
+      range("ignifox.panels.width", "Panel width", "You can also drag the panel's edge.", 260, 900, 10, v => `${v}px`)),
+    panelsEditor(),
+  ];
+}
+
+function workspacesEditor() {
+  const wrap = h("div", { class: "card" });
+  const save = list => set("ignifox.workspaces.list", JSON.stringify(list));
+  const themes = [["", "Same as the browser"], ...Object.entries(M.THEMES).map(([k, t]) => [k, t.name]),
+    ...Object.keys(M.savedThemes(igniValues())).map(n => ["user:" + n, n + " (mine)"])];
+  function render() {
+    const list = D.parseWorkspaces(get("ignifox.workspaces.list"));
+    const rows = list.map((ws, i) => {
+      const icon = h("select", { "aria-label": "Icon", class: "ws-icon" },
+        [...new Set([ws.icon, ...D.WORKSPACE_ICONS])].map(ic => h("option", { value: ic, selected: ic == ws.icon }, ic)));
+      const name = h("input", { type: "text", value: ws.name, "aria-label": "Workspace name", style: { width: "180px" } });
+      const theme = h("select", { "aria-label": "Workspace theme" }, themes.map(([k, n]) => h("option", { value: k, selected: k == ws.theme }, n)));
+      const commit = () => {
+        const next = D.parseWorkspaces(get("ignifox.workspaces.list"));
+        next[i] = { ...next[i], icon: icon.value, name: name.value.trim() || next[i].name, theme: theme.value };
+        save(next);
+      };
+      [icon, name, theme].forEach(c => c.addEventListener("change", commit));
+      const remove = h("button", { class: "btn danger", title: "Remove (its tabs move to the first workspace)", disabled: list.length == 1, onclick: () => {
+        const next = D.parseWorkspaces(get("ignifox.workspaces.list"));
+        next.splice(i, 1);
+        save(next);
+      } }, "✕");
+      return h("div", { class: "row" },
+        h("div", { class: "ctl" }, h("span", { class: "val", style: { minWidth: "70px" } }, `Ctrl+Alt+${i + 1}`), icon, name, theme),
+        h("div", { class: "ctl" }, remove));
+    });
+    const add = h("button", { class: "btn primary", disabled: list.length >= 9, onclick: () => {
+      const next = D.parseWorkspaces(get("ignifox.workspaces.list"));
+      const icon = D.WORKSPACE_ICONS.find(ic => !next.some(w => w.icon == ic)) || "•";
+      next.push({ id: "w" + Date.now().toString(36), name: `Workspace ${next.length + 1}`, icon, theme: "" });
+      save(next);
+      set("ignifox.workspaces.enabled", true);
+    } }, "Add workspace");
+    wrap.replaceChildren(...rows, h("div", { class: "row" }, h("div", { class: "ctl" }, add)));
+  }
+  let last = null;
+  bind(() => {
+    const cur = get("ignifox.workspaces.list");
+    if (cur !== last) { last = cur; render(); }
+  }, wrap);
+  return wrap;
+}
+
+function panelsEditor() {
+  const wrap = h("div", { class: "card" });
+  const save = list => set("ignifox.panels.list", JSON.stringify(list));
+  function render() {
+    const list = D.parsePanels(get("ignifox.panels.list"));
+    const rows = list.map((p, i) => h("div", { class: "row" },
+      h("div", { class: "ctl" }, h("b", {}, p.title), h("span", { class: "val", style: { textAlign: "start" } }, p.url)),
+      h("div", { class: "ctl" }, h("button", { class: "btn danger", title: "Remove", onclick: () => {
+        const next = D.parsePanels(get("ignifox.panels.list")); next.splice(i, 1); save(next);
+      } }, "✕"))));
+    const nt = h("input", { type: "text", placeholder: "Name", "aria-label": "Panel name", style: { width: "140px" } });
+    const nu = h("input", { type: "url", placeholder: "https://…", "aria-label": "Panel address", style: { minWidth: "260px" } });
+    const add = (url, title) => {
+      url = String(url || "").trim();
+      if (!url) return;
+      if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+      const next = D.parsePanels(get("ignifox.panels.list"));
+      if (!next.some(p => p.url == url)) next.push({ url, title: title || "" });
+      save(D.parsePanels(JSON.stringify(next)));
+      set("ignifox.panels.enabled", true);
+    };
+    nu.addEventListener("keydown", e => { if (e.key == "Enter") add(nu.value, nt.value.trim()); });
+    const have = new Set(list.map(p => p.url));
+    const chips = D.PANEL_SUGGESTIONS.filter(p => !have.has(p.url))
+      .map(p => h("button", { class: "btn", onclick: () => add(p.url, p.title) }, "+ " + p.title));
+    wrap.replaceChildren(...rows,
+      h("div", { class: "row" }, h("div", { class: "ctl" }, nt, nu),
+        h("div", { class: "ctl" }, h("button", { class: "btn primary", onclick: () => add(nu.value, nt.value.trim()) }, "Add panel"))),
+      chips.length ? h("div", { class: "row" }, h("div", { class: "ctl", style: { flexWrap: "wrap", gap: "6px" } }, h("span", { class: "val" }, "Quick add:"), ...chips)) : null);
+  }
+  let last = null;
+  bind(() => {
+    const cur = get("ignifox.panels.list");
+    if (cur !== last) { last = cur; render(); }
+  }, wrap);
+  return wrap;
+}
+
 function renderPrivacy() {
   return [
     h("h1", {}, "Privacy"),
@@ -1106,6 +1224,11 @@ function renderPrivacy() {
       toggle("privacy.resistFingerprinting", "Resist fingerprinting (Tor-style)", "Strongest, but sets your timezone to UTC and can break sites."),
       select("network.trr.mode", "Encrypted DNS (DoH)", null, [[0, "Off (system DNS)"], [2, "On, fall back to system"], [3, "On, never fall back"], [5, "Explicitly off"]]),
       dohRow(),
+      toggle("ignifox.privacy.autoDelete", "Delete a site's cookies when I close it",
+        "15 seconds after a site's last tab closes, its cookies and storage are deleted. Logs you out of sites you don't keep."),
+      textArea("ignifox.privacy.keepSites", "Keep cookies for these sites", "One domain per line; covers its subdomains. Ctrl+K → “Keep cookies for …” adds the current site.",
+        "github.com\nyoutube.com"),
+      autoDeleteStats(),
       toggle("privacy.sanitize.sanitizeOnShutdown", "Clear data when Ignifox closes"),
       toggle("privacy.clearOnShutdown_v2.cookiesAndStorage", "…cookies & site data"),
       toggle("privacy.clearOnShutdown_v2.historyFormDataAndDownloads", "…history, forms & downloads"),

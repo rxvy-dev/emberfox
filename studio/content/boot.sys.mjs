@@ -19,6 +19,7 @@ import {
   resolvePalette,
 } from "chrome://ignifox/content/prefs.sys.mjs";
 import { feedURLs, menuHideCSS, mergeFeeds, parseFeed } from "chrome://ignifox/content/data.sys.mjs";
+import { IgniFeatures } from "chrome://ignifox/content/features.sys.mjs";
 
 const { setTimeout, setInterval } = ChromeUtils.importESModule("resource://gre/modules/Timer.sys.mjs");
 
@@ -132,6 +133,7 @@ export const IgniBoot = {
     Services.prefs.addObserver("ignifox.", this);
     Services.prefs.addObserver("extensions.activeThemeID", this);
     this.syncNativeLayout();
+    IgniFeatures.init({ paint: win => this.paint(win), openStudio: (win, hash) => this.openStudio(win, hash) });
 
     // Day/night themes: when the hour changes, nudge a pref so every window repaints.
     this._hour = new Date().getHours();
@@ -216,6 +218,11 @@ export const IgniBoot = {
     this.loadCustomCSS(win);
     this.ensureWidget();
     this.addMenuAndKeys(win);
+    try {
+      IgniFeatures.setupWindow(win);
+    } catch (e) {
+      log("features failed", e);
+    }
 
     // Re-evaluate theme painting when the window's theme changes.
     const mo = new win.MutationObserver(() => this.paint(win));
@@ -228,6 +235,10 @@ export const IgniBoot = {
     const doc = win.document;
     const root = doc.documentElement;
     const v = igniValues();
+    // A workspace can carry its own theme; it only applies to the window showing that workspace.
+    if (win._igniThemeOverride) {
+      Object.assign(v, { "ignifox.theme.preset": win._igniThemeOverride, "ignifox.theme.accent": "", "ignifox.theme.auto": "off" });
+    }
     const toggle = (attr, on) => (on ? root.setAttribute(attr, "true") : root.removeAttribute(attr));
 
     // ---- theme

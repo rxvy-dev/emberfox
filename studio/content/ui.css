@@ -353,3 +353,82 @@
     flex: 1 1 var(--tab-min-width-pref, 140px) !important;
   }
 }
+
+/* ================================================================ command palette (Ctrl+K) */
+#igni-palette-shade { position: fixed; inset: 0; z-index: 2147483600; background: rgb(0 0 0 / .35); }
+#igni-palette {
+  position: fixed; z-index: 2147483601; top: 12vh; left: 50%; transform: translateX(-50%);
+  width: min(680px, 92vw); display: flex; flex-direction: column;
+  background: var(--igni-bg-2, #1b1b1d); color: var(--igni-fg, #eee);
+  border: 1px solid color-mix(in srgb, var(--igni-accent, #ff3b1f) 45%, transparent);
+  border-radius: calc(var(--igni-radius, 8px) + 6px); overflow: hidden;
+  box-shadow: 0 24px 80px rgb(0 0 0 / .55), 0 0 0 1px rgb(0 0 0 / .4);
+  font: menu; font-size: 14px;
+}
+#igni-palette-input {
+  border: 0; outline: 0; margin: 0; padding: 16px 18px; font: inherit; font-size: 17px;
+  background: transparent; color: inherit;
+  border-bottom: 1px solid color-mix(in srgb, var(--igni-fg, #eee) 10%, transparent);
+}
+#igni-palette-list { list-style: none; margin: 0; padding: 6px; max-height: 52vh; overflow-y: auto; }
+#igni-palette-list li {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--igni-radius, 8px); cursor: pointer;
+}
+#igni-palette-list li[aria-selected="true"] { background: color-mix(in srgb, var(--igni-accent, #ff3b1f) 24%, transparent); }
+#igni-palette-list .ico { width: 22px; text-align: center; flex: none; }
+#igni-palette-list .lbl { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#igni-palette-list .det { color: var(--igni-fg-dim, #999); font-size: 12px; max-width: 40%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#igni-palette-list .grp {
+  font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--igni-accent-2, #ffb02e);
+  border: 1px solid color-mix(in srgb, var(--igni-accent-2, #ffb02e) 35%, transparent); border-radius: 99px; padding: 1px 7px;
+}
+#igni-palette-hint { padding: 7px 14px; font-size: 11px; color: var(--igni-fg-dim, #999); border-top: 1px solid color-mix(in srgb, var(--igni-fg, #eee) 8%, transparent); }
+
+/* ================================================================ workspaces button */
+#igni-workspaces > .toolbarbutton-icon { display: none !important; }
+#igni-workspaces > .toolbarbutton-text {
+  display: flex !important; align-items: center; padding: 0 8px !important; font-weight: 600; white-space: nowrap;
+  min-height: 24px; border-radius: var(--igni-radius, 6px);
+  background: color-mix(in srgb, var(--igni-accent, #ff3b1f) 18%, transparent);
+}
+#igni-workspaces[hidden] { display: none !important; }
+
+/* ================================================================ web panels */
+#igni-panels { flex: none; }
+#igni-panel-strip {
+  width: 44px; padding: 6px 4px; gap: 6px; align-items: center;
+  background: var(--igni-bg, var(--toolbar-bgcolor));
+  border-inline-start: 1px solid color-mix(in srgb, var(--igni-accent, #ff3b1f) 18%, transparent);
+}
+#igni-panels[side="left"] #igni-panel-strip { border-inline-start: 0; border-inline-end: 1px solid color-mix(in srgb, var(--igni-accent, #ff3b1f) 18%, transparent); }
+.igni-panel-icon {
+  appearance: none; width: 34px; height: 34px; margin: 0 !important; padding: 0 !important; border-radius: calc(var(--igni-radius, 6px) + 2px);
+  justify-content: center; background: color-mix(in srgb, var(--igni-fg, #eee) 7%, transparent);
+  color: var(--igni-accent, #ff3b1f); font-weight: 700; font-size: 15px;
+}
+.igni-panel-icon > .toolbarbutton-icon { display: none; }
+.igni-panel-icon > .toolbarbutton-text { display: block !important; }
+.igni-panel-icon:hover { background: color-mix(in srgb, var(--igni-fg, #eee) 14%, transparent); }
+.igni-panel-icon[checked] { background: color-mix(in srgb, var(--igni-accent, #ff3b1f) 30%, transparent); color: var(--igni-fg, #fff); }
+.igni-panel-add { color: var(--igni-fg-dim, #999); }
+#igni-panel-view { min-width: 220px; max-width: 70vw; background: var(--igni-bg, #fff); }
+#igni-panel-head { padding: 4px 6px 4px 10px; gap: 2px; background: var(--igni-bg-2, var(--toolbar-bgcolor)); color: var(--igni-fg, inherit); }
+#igni-panel-title { font-weight: 600; margin: 0; }
+.igni-panel-btn { margin: 0 !important; padding: 4px !important; }
+.igni-panel-btn > .toolbarbutton-icon { width: 16px; height: 16px; -moz-context-properties: fill; fill: currentColor; }
+#igni-panel-reload { list-style-image: url("chrome://global/skin/icons/reload.svg"); }
+#igni-panel-tab { list-style-image: url("chrome://global/skin/icons/open-in-new.svg"); }
+#igni-panel-close { list-style-image: url("chrome://global/skin/icons/close.svg"); }
+#igni-panel-splitter { border: 0; min-width: 4px; width: 4px; background: transparent; }
+#igni-panel-splitter:hover { background: color-mix(in srgb, var(--igni-accent, #ff3b1f) 40%, transparent); }
+
+/* ================================================================ site tint */
+:root[igni-sitetint] #navigator-toolbox {
+  background-color: color-mix(in srgb, var(--igni-site) var(--igni-site-amt, 35%), var(--igni-bg, var(--toolbar-bgcolor))) !important;
+  transition: background-color .35s ease;
+}
+:root[igni-sitetint] #nav-bar,
+:root[igni-sitetint] #PersonalToolbar {
+  background-color: color-mix(in srgb, var(--igni-site) calc(var(--igni-site-amt, 35%) * .7), var(--igni-bg-2, var(--toolbar-bgcolor))) !important;
+  transition: background-color .35s ease;
+}

@@ -6,7 +6,9 @@ import { readFileSync } from "node:fs";
 import * as M from "../studio/content/prefs.sys.mjs";
 
 const src = f => readFileSync(new URL(`../studio/content/${f}`, import.meta.url), "utf8");
-const studio = src("studio.js"), boot = src("boot.sys.mjs"), css = src("ui.css");
+const studio = src("studio.js"), css = src("ui.css");
+// The engine is boot.sys.mjs plus the browser-window features it starts.
+const boot = src("boot.sys.mjs") + src("features.sys.mjs");
 
 test("every Studio control uses a pref with a declared type", () => {
   const keys = [...studio.matchAll(/\b(?:toggle|select|range|text|colorPick)\(\s*"([a-z0-9_-]+\.[a-z0-9_.-]+)"/gi)].map(m => m[1]);
@@ -17,7 +19,8 @@ test("every Studio control uses a pref with a declared type", () => {
 test("every root attribute the engine sets has CSS, and every CSS attribute is set", () => {
   const set = new Set([...boot.matchAll(/(?:toggle|setAttribute)\("(igni-[a-z-]+)"/g)].map(m => m[1]));
   const styled = new Set([...css.matchAll(/\[(igni-[a-z-]+)/g)].map(m => m[1]));
-  const internalOnly = new Set(["igni-font", "igni-font-size"]); // styled via [attr] too, listed for clarity
+  const internalOnly = new Set(["igni-font", "igni-font-size", // styled via [attr] too, listed for clarity
+    "igni-ws", "igni-ws-hidden", "igni-url", "igni-panel"]);   // data on tabs / panel buttons, not style hooks
   for (const a of set) assert.ok(styled.has(a) || internalOnly.has(a), `${a} is set but never styled`);
   for (const a of styled) assert.ok(set.has(a), `${a} is styled but never set`);
 });
