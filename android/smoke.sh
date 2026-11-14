@@ -53,9 +53,13 @@ adb shell "sed -i 's#</map>#<string name=\"igni_theme\">synthwave</string><strin
 adb shell monkey -p "$pkg" -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
 sleep 30
 shot 6-synthwave-top
-adb shell am start -a android.intent.action.VIEW -d "about:config" "$pkg" >/dev/null 2>&1
-sleep 10
-shot 7-tabs-or-config
+echo "Opening a new tab from the menu"
+adb shell input tap $((w - 60)) 150 >/dev/null 2>&1
+sleep 4
+shot 7-menu-top
+adb shell input tap $((w - 350)) 240 >/dev/null 2>&1
+sleep 12
+shot 8-newtab-synthwave
 
 adb logcat -d > "$out/logcat.txt" 2>/dev/null || true
 grep -E "FATAL EXCEPTION|AndroidRuntime: |IgnifoxPrefs|could not set" "$out/logcat.txt" | head -80 > "$out/problems.txt" || true

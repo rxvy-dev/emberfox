@@ -7,11 +7,15 @@ package org.mozilla.reference.browser.ignifox
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
+import android.util.Base64
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
+import java.io.ByteArrayOutputStream
 import java.io.File
 import mozilla.components.browser.state.search.SearchEngine
 import mozilla.components.browser.state.state.searchEngines
@@ -274,48 +278,67 @@ object Ignifox {
 
     // ---------------------------------------------------------------- new tab page
 
-    private val newTabFiles = listOf("index.html", "newtab.css", "newtab.js", "logo.svg", "MetalMania-Regular.ttf")
-
-    private fun newTabDir(context: Context) = File(context.filesDir, "newtab")
+    private const val NEW_TAB_PAGE = "resource://android/assets/newtab/index.html"
+    private const val WALLPAPER_FILE = "ignifox-wallpaper.b64"
+    private const val WALLPAPER_MAX_SIDE = 960
+    private const val WALLPAPER_QUALITY = 60
 
     /** Where new tabs open. A plain blank page when the Ignifox New Tab is switched off. */
     fun homeUrl(context: Context): String =
         if (prefs(context).getBoolean(NT_ENABLED, true)) newTabUrl(context) else "about:blank"
 
-    fun newTabUrl(context: Context): String = Uri.fromFile(File(newTabDir(context), "index.html")).toString()
+    /**
+     * The page ships inside the APK (it is the same one the Linux browser uses) and cannot
+     * read anything from the app, so its settings travel in the address after "#".
+     */
+    fun newTabUrl(context: Context): String = NEW_TAB_PAGE + "#" + Uri.encode(newTabConfig(context).toString())
 
-    fun isNewTab(context: Context, url: CharSequence): Boolean = url.startsWith(newTabUrl(context))
+    fun isNewTab(url: CharSequence): Boolean = url.startsWith(NEW_TAB_PAGE)
 
-    /** Unpacks the page (it is the same one the Linux browser ships) next to a fresh config.js. */
-    fun writeNewTab(context: Context) {
-        val dir = newTabDir(context)
-        dir.mkdirs()
-        for (name in newTabFiles) {
-            context.assets.open("newtab/$name").use { input ->
-                File(dir, name).outputStream().use { input.copyTo(it) }
+    /** Shrinks a picked picture and keeps it as the new tab wallpaper. False if it could not be read. */
+    fun setWallpaper(context: Context, uri: Uri): Boolean =
+        try {
+            val source = context.contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it) }
+            if (source == null) {
+                false
+            } else {
+                val scale = WALLPAPER_MAX_SIDE.toFloat() / maxOf(source.width, source.height)
+                val small =
+                    if (scale < 1f) {
+                        Bitmap.createScaledBitmap(
+                            source,
+                            (source.width * scale).toInt().coerceAtLeast(1),
+                            (source.height * scale).toInt().coerceAtLeast(1),
+                            true,
+                        )
+                    } else {
+                        source
+                    }
+                val bytes = ByteArrayOutputStream()
+                small.compress(Bitmap.CompressFormat.JPEG, WALLPAPER_QUALITY, bytes)
+                File(context.filesDir, WALLPAPER_FILE)
+                    .writeText(Base64.encodeToString(bytes.toByteArray(), Base64.NO_WRAP))
+                prefs(context).edit {
+                    putString(NT_WALLPAPER, "image")
+                    putString(NT_WALLPAPER_FILE, System.currentTimeMillis().toString())
+                }
+                true
             }
-        }
-        File(dir, "config.js").writeText("window.IGNI_NEWTAB = ${newTabConfig(context)};\n")
-    }
-
-    /** Copies a picked picture in as the new tab wallpaper. Returns false if it could not be read. */
-    fun setWallpaper(context: Context, uri: Uri): Boolean {
-        val dir = newTabDir(context)
-        dir.mkdirs()
-        val name = "wallpaper-${System.currentTimeMillis()}.img"
-        return try {
-            val input = context.contentResolver.openInputStream(uri) ?: return false
-            input.use { stream -> File(dir, name).outputStream().use { stream.copyTo(it) } }
-            dir.listFiles()?.filter { it.name.startsWith("wallpaper-") && it.name != name }?.forEach { it.delete() }
-            prefs(context).edit {
-                putString(NT_WALLPAPER_FILE, name)
-                putString(NT_WALLPAPER, "image")
-            }
-            true
         } catch (_: java.io.IOException) {
             false
         } catch (_: SecurityException) {
             false
+        } catch (_: OutOfMemoryError) {
+            false
+        }
+
+    private fun wallpaperData(context: Context): String {
+        val file = File(context.filesDir, WALLPAPER_FILE)
+        if (prefs(context).getString(NT_WALLPAPER, "embers") != "image" || !file.exists()) return ""
+        return try {
+            "data:image/jpeg;base64," + file.readText()
+        } catch (_: java.io.IOException) {
+            ""
         }
     }
 
@@ -364,7 +387,8 @@ object Ignifox {
             .put("radius", if (p.getString(BAR_SHAPE, "rounded") == "square") 0 else 14)
             .put("layout", p.getString(NT_LAYOUT, "center"))
             .put("wallpaper", p.getString(NT_WALLPAPER, "embers"))
-            .put("wallpaperFile", p.getString(NT_WALLPAPER_FILE, ""))
+            .put("wallpaperFile", "")
+            .put("wallpaperData", wallpaperData(context))
             .put("dim", p.getInt(NT_DIM, 25))
             .put("blur", p.getInt(NT_BLUR, 0))
             .put("clock", p.getBoolean(NT_CLOCK, true))
@@ -455,9 +479,8 @@ object Ignifox {
         }
     }
 
-    /** Called by Studio after any change: redraw the new tab page and tell open screens. */
+    /** Called by Studio after any change: update the engine and tell open screens. */
     fun changed(context: Context) {
-        writeNewTab(context)
         applyEngineSettings(context)
         prefs(context).edit { putInt(REVISION, revision(context) + 1) }
     }

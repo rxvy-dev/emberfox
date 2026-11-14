@@ -27,8 +27,10 @@
   root.dataset.layout = C.layout;
   if (C.platform) root.dataset.platform = C.platform;   // "android" in Ignifox for Android
   root.dataset.tiles = C.tileStyle;
-  root.dataset.wall = C.wallpaper == "image" && !C.wallpaperFile ? "gradient" : C.wallpaper;
-  if (C.wallpaper == "image" && C.wallpaperFile && /^[\w.-]+$/.test(C.wallpaperFile)) {
+  root.dataset.wall = C.wallpaper == "image" && !C.wallpaperFile && !C.wallpaperData ? "gradient" : C.wallpaper;
+  if (C.wallpaper == "image" && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(C.wallpaperData || "")) {
+    $("wall").style.backgroundImage = `url("${C.wallpaperData}")`;   // Android hands the picture over inline
+  } else if (C.wallpaper == "image" && C.wallpaperFile && /^[\w.-]+$/.test(C.wallpaperFile)) {
     $("wall").style.backgroundImage = `url("${C.wallpaperFile}")`;
   }
 

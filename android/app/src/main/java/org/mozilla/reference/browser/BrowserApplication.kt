@@ -67,7 +67,6 @@ open class BrowserApplication : Application() {
         }
 
         components.core.engine.warmUp()
-        Ignifox.writeNewTab(this)
         Ignifox.applyEngineSettings(this)
 
         restoreBrowserState()

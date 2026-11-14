@@ -212,7 +212,7 @@ class ToolbarIntegration(
             hint = context.getString(R.string.toolbar_hint)
 
             // The Ignifox New Tab is a local page: show the search hint instead of its file address.
-            urlFormatter = { url -> if (Ignifox.isNewTab(context, url)) "" else url }
+            urlFormatter = { url -> if (Ignifox.isNewTab(url)) "" else url }
         }
         Ignifox.styleToolbar(toolbar)
 

@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser
 
+import mozilla.components.browser.state.selector.selectedTab
 import org.mozilla.reference.browser.ignifox.Ignifox
 import android.content.Context
 import android.content.Intent
@@ -108,6 +109,10 @@ open class BrowserActivity : AppCompatActivity() {
         super.onResume()
         // Ignifox Studio changed something while we were in the background: redraw with it.
         if (studioRevision != Ignifox.revision(this)) {
+            val tab = components.core.store.state.selectedTab
+            if (tab != null && Ignifox.isNewTab(tab.content.url)) {
+                components.useCases.sessionUseCases.loadUrl(Ignifox.homeUrl(this))
+            }
             recreate()
         }
     }
