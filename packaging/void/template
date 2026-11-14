@@ -2,7 +2,7 @@
 # Copy to void-packages/srcpkgs/ignifox-bin/template, then: ./xbps-src pkg ignifox-bin
 pkgname=ignifox-bin
 version=160.0
-_emrel=1
+_emrel=2
 revision=1
 archs="x86_64 aarch64"
 short_desc="Telemetry-free, deeply customizable browser built on Firefox"
@@ -14,8 +14,8 @@ nostrip=yes
 noverifyrdeps=yes
 distfiles="${homepage}/releases/download/v${version}-${_emrel}/ignifox-${version}-${_emrel}-linux-${XBPS_TARGET_MACHINE}.tar.xz"
 case "$XBPS_TARGET_MACHINE" in
-	x86_64) checksum=73fff56389721dbad51d45d502260fb850a3bc1f12ca5a480f8372c1676f988f ;; # x86_64-sum
-	aarch64) checksum=c5a72cc510d1f13ee902c5dd019e697a57e66acc62ab5a97f8c708f6aa0378d0 ;; # aarch64-sum
+	x86_64) checksum=ce2003a1c9b35a54d849a6d36780d273a06cae5df56a7cacc14e3fd5224fbfd4 ;; # x86_64-sum
+	aarch64) checksum=a40a2c1f0d7b62b3cacba5dc6da1a7219d7b2ce936ae72acc26c4fa30e2e9250 ;; # aarch64-sum
 esac
 
 do_install() {

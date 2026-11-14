@@ -2,7 +2,7 @@
 # Maintainer: rxvy
 pkgname=ignifox-bin
 pkgver=160.0
-_emrel=1
+_emrel=2
 pkgrel=1
 pkgdesc="Telemetry-free, deeply customizable browser built on Firefox"
 arch=('x86_64' 'aarch64')
@@ -18,8 +18,8 @@ conflicts=('ignifox')
 options=('!strip' '!debug')
 source_x86_64=("$url/releases/download/v$pkgver-$_emrel/ignifox-$pkgver-$_emrel-linux-x86_64.tar.xz")
 source_aarch64=("$url/releases/download/v$pkgver-$_emrel/ignifox-$pkgver-$_emrel-linux-aarch64.tar.xz")
-sha256sums_x86_64=('73fff56389721dbad51d45d502260fb850a3bc1f12ca5a480f8372c1676f988f')
-sha256sums_aarch64=('c5a72cc510d1f13ee902c5dd019e697a57e66acc62ab5a97f8c708f6aa0378d0')
+sha256sums_x86_64=('ce2003a1c9b35a54d849a6d36780d273a06cae5df56a7cacc14e3fd5224fbfd4')
+sha256sums_aarch64=('a40a2c1f0d7b62b3cacba5dc6da1a7219d7b2ce936ae72acc26c4fa30e2e9250')
 
 package() {
   install -d "$pkgdir/opt" "$pkgdir/usr/bin"

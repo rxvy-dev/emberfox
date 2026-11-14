@@ -2,7 +2,7 @@
 EAPI=8
 inherit desktop xdg
 
-MY_PV="${PV}-1"
+MY_PV="${PV}-2"
 DESCRIPTION="Telemetry-free, deeply customizable browser built on Firefox"
 HOMEPAGE="https://github.com/rxvy-dev/ignifox"
 SRC_URI="
