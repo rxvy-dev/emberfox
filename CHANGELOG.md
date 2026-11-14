@@ -6,6 +6,18 @@ Ignifox-only changes bump the revision.
 
 ## Unreleased
 
+### Ignifox for Android (new)
+- An Android app on Mozilla's Gecko engine with Ignifox Studio built in: the ten Ignifox themes, custom accent, one-tap looks, Surprise me, toolbar on top or bottom, address bar shapes.
+- The same Ignifox New Tab as on Linux (wallpapers, clock, greeting, shortcuts, engine switcher), sized for phones.
+- Theme codes work across Linux and Android.
+- Privacy on one screen: strict tracker blocking, HTTPS-only, Global Privacy Control, secure DNS. No telemetry, crash upload, Firebase or Google Play Services in the APK (checked on every build).
+- Freedom: any add-on from addons.mozilla.org, add-ons from a file, optional unsigned add-ons, about:config, zoom on every site.
+- APKs for arm64, 32-bit ARM and x86_64 are attached to every release under fixed names, so `releases/latest/download/ignifox-android-arm64.apk` always works.
+
+### Linux: new this round
+- Three more animated new tab wallpapers: Starfield, Code rain and Snowfall (also on Android).
+- Day and night themes: pick two themes and the hours, and Ignifox swaps them by the clock.
+
 ### Import
 - Studio → Import finds Firefox (incl. Snap & Flatpak), LibreWolf, Waterfox, Floorp, Zen, Mullvad Browser and Emberfox profiles.
 - Imports right away: bookmarks (your toolbar comes over as-is if yours is empty), a year of history, settings (Emberfox settings are renamed for Ignifox), userChrome/custom CSS, the Emberfox new tab wallpaper, extensions (reinstalled from addons.mozilla.org).

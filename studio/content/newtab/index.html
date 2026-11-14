@@ -5,7 +5,8 @@
   <!-- Ignifox New Tab: an ordinary unprivileged page. It can't touch the browser;
        its settings arrive in config.js, written by Ignifox Studio's engine. -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: https: data:; font-src 'self' file:; connect-src 'none'; form-action 'none'">
+        content="default-src 'none'; script-src 'self' file: resource:; style-src 'self' file: resource: 'unsafe-inline'; img-src 'self' file: resource: https: data:; font-src 'self' file: resource:; connect-src 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark light">
   <meta name="referrer" content="no-referrer">
   <title>New Tab</title>

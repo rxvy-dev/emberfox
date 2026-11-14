@@ -1,0 +1,143 @@
+name: Android
+
+# Builds the Ignifox for Android APKs (one per CPU type).
+#  - runs on every change under android/
+#  - release.yml calls it so the APKs land on the GitHub Release
+#  - or run it by hand from the Actions tab and grab the APKs from the run's artifacts
+
+on:
+  push:
+    branches: [main, android]
+    paths: ["android/**", ".github/workflows/android.yml"]
+  pull_request:
+    paths: ["android/**"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version name shown in the app"
+        default: ""
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-${{ github.ref }}-${{ inputs.version }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    name: Build APKs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Signing key
+        id: key
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+        run: |
+          if [[ -n "$KEYSTORE_B64" ]]; then
+            printf '%s' "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/ignifox.jks"
+            echo "IGNIFOX_KEYSTORE=$RUNNER_TEMP/ignifox.jks" >> "$GITHUB_ENV"
+            echo "Signing with the Ignifox release key" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::No ANDROID_KEYSTORE_B64 secret: signing with a throwaway debug key. Updates will not install over older builds."
+          fi
+
+      - name: Build
+        env:
+          IGNIFOX_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          IGNIFOX_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          IN_VERSION: ${{ inputs.version }}
+        run: |
+          V="${IN_VERSION:-}"
+          [[ -n "$V" ]] || V="$(sed -n 's/^android-components = "\([0-9]*\.[0-9]*\).*/\1/p' gradle/libs.versions.toml)-dev"
+          ./gradlew --no-daemon --stacktrace assembleNightly -PversionName="$V"
+
+      - name: Collect + check APKs
+        run: |
+          mkdir -p ../dist
+          for abi in arm64-v8a armeabi-v7a x86_64; do
+            src=$(find app/build/outputs/apk/nightly -name "*-$abi-*.apk" | head -1)
+            case $abi in arm64-v8a) n=arm64 ;; armeabi-v7a) n=arm32 ;; *) n=$abi ;; esac
+            cp "$src" "../dist/ignifox-android-$n.apk"
+          done
+          ls -la ../dist
+          ./audit.sh ../dist/ignifox-android-arm64.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-android
+          path: dist/*.apk
+          if-no-files-found: error
+
+  smoke:
+    name: Run it on an emulator
+    needs: apk
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    # Emulators on shared runners are flaky; a failure here is a signal to look, not a blocker.
+    continue-on-error: true
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist-android
+          path: dist
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: default
+          profile: pixel_6
+          disk-size: 6000M
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          script: ./android/smoke.sh dist/ignifox-android-x86_64.apk smoke
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-smoke
+          path: smoke
+
+      # The screenshots also go to a side branch, so they can be looked at (and linked) without
+      # downloading a zip. Each run replaces the last.
+      - name: Publish screenshots to the android-screenshots branch
+        if: always() && github.event_name == 'push'
+        run: |
+          mkdir -p "$RUNNER_TEMP/shots" && cd "$RUNNER_TEMP/shots"
+          cp "$GITHUB_WORKSPACE"/smoke/*.png "$GITHUB_WORKSPACE"/smoke/problems.txt . 2>/dev/null || true
+          grep -a -i -E "gecko|ignifox|mozac|AndroidRuntime" "$GITHUB_WORKSPACE/smoke/logcat.txt" | grep -a -v "avc: " | cut -c1-600 | tail -1500 > log-tail.txt || true
+          echo "Screenshots from the Android emulator test of $GITHUB_SHA" > README.md
+          git init -q -b android-screenshots
+          git config user.name "ignifox-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -q -m "Emulator screenshots for $GITHUB_SHA"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" android-screenshots

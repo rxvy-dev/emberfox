@@ -20,7 +20,7 @@ import {
 } from "chrome://ignifox/content/prefs.sys.mjs";
 import { menuHideCSS } from "chrome://ignifox/content/data.sys.mjs";
 
-const { setTimeout } = ChromeUtils.importESModule("resource://gre/modules/Timer.sys.mjs");
+const { setTimeout, setInterval } = ChromeUtils.importESModule("resource://gre/modules/Timer.sys.mjs");
 
 const BROWSER_URL = "chrome://browser/content/browser.xhtml";
 const UI_SHEET = "chrome://ignifox/content/ui.css";
@@ -131,6 +131,18 @@ export const IgniBoot = {
     Services.prefs.addObserver("ignifox.", this);
     Services.prefs.addObserver("extensions.activeThemeID", this);
     this.syncNativeLayout();
+
+    // Day/night themes: when the hour changes, nudge a pref so every window repaints.
+    this._hour = new Date().getHours();
+    setInterval(() => {
+      const hour = new Date().getHours();
+      if (hour != this._hour) {
+        this._hour = hour;
+        if (Services.prefs.getStringPref("ignifox.theme.auto", "off") == "time") {
+          Services.prefs.setIntPref("ignifox.theme.tick", hour);
+        }
+      }
+    }, 60000);
   },
 
   observe(subject, topic, data) {

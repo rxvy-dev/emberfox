@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="62%">
+      <stop offset="0" stop-color="#2a0b0d"/>
+      <stop offset="0.65" stop-color="#120708"/>
+      <stop offset="1" stop-color="#050303"/>
+    </radialGradient>
+    <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffb02e"/>
+      <stop offset="0.28" stop-color="#ff5a1f"/>
+      <stop offset="0.62" stop-color="#e3121b"/>
+      <stop offset="1" stop-color="#7a0610"/>
+    </linearGradient>
+    <linearGradient id="crest" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#ff3b1f"/>
+      <stop offset="1" stop-color="#ffd25a"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff4a1f"/>
+      <stop offset="0.5" stop-color="#9c0712"/>
+      <stop offset="1" stop-color="#ff4a1f"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- badge -->
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#bg)"/>
+  <rect x="24" y="24" width="464" height="464" rx="104" fill="none" stroke="url(#ring)" stroke-width="6" opacity="0.85"/>
+
+  <!-- rising sparks -->
+  <g fill="#ff7a2a">
+    <path d="M96 150 l7 -14 l7 14 l-7 14z" opacity="0.85"/>
+    <path d="M412 168 l6 -12 l6 12 l-6 12z" opacity="0.8"/>
+    <path d="M72 300 l5 -10 l5 10 l-5 10z" opacity="0.55"/>
+    <path d="M436 318 l5 -10 l5 10 l-5 10z" opacity="0.55"/>
+    <path d="M118 84 l4 -8 l4 8 l-4 8z" opacity="0.6"/>
+    <path d="M388 96 l4 -8 l4 8 l-4 8z" opacity="0.6"/>
+  </g>
+
+  <g filter="url(#glow)">
+    <!-- flame crest between the ears -->
+    <path d="M258 52 C268 92 304 104 296 146 C292 166 274 178 256 180 C236 178 218 166 216 146 C212 116 232 106 236 80 C246 98 252 110 252 124 C258 104 262 82 258 52 Z" fill="url(#crest)"/>
+    <path d="M258 108 C266 128 280 138 274 156 C270 168 262 172 256 172 C246 170 238 162 240 150 C242 138 250 132 252 122 C256 130 258 120 258 108 Z" fill="#ffe7a8"/>
+
+    <!-- head -->
+    <path fill="url(#fur)" d="
+      M140 70
+      L214 168 L256 158 L298 168
+      L372 70
+      L392 236 L424 262
+      L372 318 L256 450 L140 318
+      L88 262 L120 236 Z"/>
+  </g>
+
+  <!-- inner ears -->
+  <path d="M152 112 L198 176 L162 214 Z" fill="#1a0507"/>
+  <path d="M360 112 L314 176 L350 214 Z" fill="#1a0507"/>
+
+  <!-- black-metal face mask -->
+  <path fill="#0c0405" d="
+    M256 196
+    L300 232 L352 250 L320 300 L282 312
+    L256 420
+    L230 312 L192 300 L160 250 L212 232 Z"/>
+
+  <!-- cheek spikes -->
+  <path d="M120 236 L176 272 L104 270 Z" fill="#ffcf6a" opacity="0.9"/>
+  <path d="M392 236 L336 272 L408 270 Z" fill="#ffcf6a" opacity="0.9"/>
+
+  <!-- eyes -->
+  <path d="M176 254 L240 276 L198 288 Z" fill="#ff2a1a"/>
+  <path d="M336 254 L272 276 L314 288 Z" fill="#ff2a1a"/>
+  <path d="M206 268 L232 277 L212 282 Z" fill="#ffe3a0"/>
+  <path d="M306 268 L280 277 L300 282 Z" fill="#ffe3a0"/>
+
+  <!-- muzzle ridge + nose -->
+  <path d="M256 236 L264 330 L256 352 L248 330 Z" fill="#2a0a0c"/>
+  <path d="M236 392 L276 392 L256 420 Z" fill="#ff3b1f"/>
+</svg>

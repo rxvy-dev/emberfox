@@ -105,6 +105,14 @@ jobs:
             dist/*.AppImage
           if-no-files-found: error
 
+  android:
+    name: Android
+    needs: meta
+    uses: ./.github/workflows/android.yml
+    with:
+      version: ${{ needs.meta.outputs.version }}
+    secrets: inherit
+
   flatpak:
     name: Flatpak
     needs: [meta, build]
@@ -140,7 +148,7 @@ jobs:
 
   publish:
     name: Publish release
-    needs: [meta, build, flatpak]
+    needs: [meta, build, flatpak, android]
     if: ${{ !cancelled() && needs.build.result == 'success' }}
     runs-on: ubuntu-24.04
     steps:
@@ -177,6 +185,7 @@ jobs:
           | Fedora · openSUSE · RHEL | \`ignifox-*.x86_64.rpm\` |
           | Arch / Void / Gentoo | recipes in \`packaging/\` (updated automatically) |
           | ARM64 (Pi 5, Asahi, Snapdragon) | the \`aarch64\` / \`arm64\` files |
+          | **Android phone** | \`ignifox-android-arm64.apk\` (32-bit phones: \`arm32\`) |
 
           Every file is listed in \`SHA256SUMS\`. Each build passed \`./build.sh audit\` (no telemetry binaries, all data-upload prefs locked off).
           NOTES

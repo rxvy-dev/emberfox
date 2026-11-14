@@ -1,0 +1,11 @@
+{
+  "manifest_version": 2,
+  "name": "Ignifox New Tab",
+  "version": "1.0",
+  "description": "The Ignifox new tab page. Built in; it has no permissions.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "newtab@ignifox"
+    }
+  }
+}

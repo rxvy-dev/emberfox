@@ -118,3 +118,27 @@ test("every browser root has at least one directory and the staged items list fi
   for (const r of D.BROWSER_ROOTS) assert.ok(r.dirs.length, r.browser);
   for (const it of Object.values(D.STAGED_ITEMS)) assert.ok(it.files.length);
 });
+
+// ---------------------------------------------------------------- day/night themes
+import { activePreset, isDayHour, resolvePalette as resolvePal, THEMES as ALL_THEMES, WALLPAPERS as WALLS } from "../studio/content/prefs.sys.mjs";
+
+test("day/night: hours fall on the right side, including a day that wraps midnight", () => {
+  assert.equal(isDayHour(7, 7, 19), true);
+  assert.equal(isDayHour(18, 7, 19), true);
+  assert.equal(isDayHour(19, 7, 19), false);
+  assert.equal(isDayHour(3, 7, 19), false);
+  assert.equal(isDayHour(23, 22, 6), true);
+  assert.equal(isDayHour(2, 22, 6), true);
+  assert.equal(isDayHour(12, 22, 6), false);
+  assert.equal(isDayHour(12, 99, "x"), true, "bad hours fall back to 7-19");
+});
+
+test("day/night: off uses the preset, time uses the day or night theme", () => {
+  const v = { "ignifox.theme.preset": "toxic", "ignifox.theme.auto": "off", "ignifox.theme.day": "frost", "ignifox.theme.night": "void", "ignifox.theme.dayStart": 7, "ignifox.theme.nightStart": 19 };
+  assert.equal(activePreset(v, 12), "toxic");
+  v["ignifox.theme.auto"] = "time";
+  assert.equal(activePreset(v, 12), "frost");
+  assert.equal(activePreset(v, 23), "void");
+  assert.equal(resolvePal(v, 12).bg, ALL_THEMES.frost.bg);
+  assert.equal(resolvePal(v, 23).bg, ALL_THEMES.void.bg);
+});

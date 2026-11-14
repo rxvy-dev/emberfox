@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources,MissingTranslation">
+    <string name="igni_studio">Ignifox Studio</string>
+    <string name="igni_studio_summary">Themes, toolbar, new tab, search, privacy</string>
+
+    <string name="igni_cat_look">Look</string>
+    <string name="igni_cat_newtab">New tab</string>
+    <string name="igni_cat_search">Search</string>
+    <string name="igni_cat_privacy">Privacy</string>
+    <string name="igni_cat_reading">Reading</string>
+    <string name="igni_cat_freedom">Freedom</string>
+
+    <string name="igni_look">One-click looks</string>
+    <string name="igni_look_summary">Theme, toolbar and new tab in one tap</string>
+    <string name="igni_theme">Theme</string>
+    <string name="igni_accent">Accent colour</string>
+    <string name="igni_accent_summary">Any colour as #rrggbb. Leave empty for the theme\'s own.</string>
+    <string name="igni_theme_code">Use a theme from Ignifox on Linux</string>
+    <string name="igni_theme_code_summary">Paste the igni: code from Studio → Look → Palette editor</string>
+    <string name="igni_theme_code_bad">That is not an Ignifox theme code</string>
+    <string name="igni_theme_code_copy">Copy this theme as a code</string>
+    <string name="igni_theme_code_copy_summary">Paste it into Ignifox on Linux, or send it to a friend</string>
+    <string name="igni_theme_custom">Custom (from a code)</string>
+    <string name="igni_surprise">🎲 Surprise me</string>
+    <string name="igni_surprise_summary">Random theme and accent that stay readable</string>
+    <string name="igni_bar_position">Toolbar position</string>
+    <string name="igni_bar_shape">Address bar shape</string>
+    <string name="igni_web_scheme">Websites appear</string>
+
+    <string name="igni_nt_enabled">Ignifox New Tab</string>
+    <string name="igni_nt_enabled_summary">Off opens a blank page instead</string>
+    <string name="igni_nt_wallpaper">Wallpaper</string>
+    <string name="igni_nt_wallpaper_pick">Use a picture as wallpaper</string>
+    <string name="igni_nt_dim">Darken wallpaper</string>
+    <string name="igni_nt_blur">Blur wallpaper</string>
+    <string name="igni_nt_layout">Layout</string>
+    <string name="igni_nt_clock">Clock</string>
+    <string name="igni_nt_clock24">24-hour clock</string>
+    <string name="igni_nt_seconds">Show seconds</string>
+    <string name="igni_nt_date">Date</string>
+    <string name="igni_nt_greeting">Greeting</string>
+    <string name="igni_nt_name">Your name for the greeting</string>
+    <string name="igni_nt_metal">Black-metal lettering for clock and greeting</string>
+    <string name="igni_nt_search">Search box</string>
+    <string name="igni_nt_links">Shortcuts</string>
+    <string name="igni_nt_links_summary">One per line: Name | address</string>
+    <string name="igni_nt_tiles">Shortcut shape</string>
+    <string name="igni_nt_notes">Notes panel</string>
+
+    <string name="igni_search_engine">Search engine</string>
+    <string name="igni_search_add">Add a search engine</string>
+    <string name="igni_search_add_summary" formatted="false">Any site, using %s where the search words go</string>
+    <string name="igni_search_name_hint">Name</string>
+    <string name="igni_search_url_hint" formatted="false">https://example.com/search?q=%s</string>
+    <string name="igni_search_bad" formatted="false">That address needs %s where the search words go</string>
+    <string name="igni_search_added">Added %1$s</string>
+
+    <string name="igni_tp_level">Tracker blocking</string>
+    <string name="igni_https_only">HTTPS-only mode</string>
+    <string name="igni_https_only_summary">Warn before opening sites without encryption</string>
+    <string name="igni_gpc">Tell sites not to sell or share my data</string>
+    <string name="igni_doh">Secure DNS</string>
+    <string name="igni_clear_now">Clear browsing data now</string>
+    <string name="igni_clear_now_summary">History, cookies, cache and site data</string>
+    <string name="igni_clear_done">Browsing data cleared</string>
+    <string name="igni_clear_on_quit">Clear browsing data when the last tab closes</string>
+
+    <string name="igni_zoom_any">Zoom on every site</string>
+    <string name="igni_zoom_any_summary">Even where the site tries to block pinch-zoom</string>
+    <string name="igni_font_scale">Text size on websites (percent)</string>
+
+    <string name="igni_addons">Add-ons</string>
+    <string name="igni_addons_summary">uBlock Origin, Dark Reader and more</string>
+    <string name="igni_addons_more">Find more add-ons</string>
+    <string name="igni_addons_more_summary">Anything on addons.mozilla.org can be installed</string>
+    <string name="igni_addon_file">Install an add-on from a file</string>
+    <string name="igni_addon_file_summary">Pick an .xpi file from your phone</string>
+    <string name="igni_addon_installed">Installed %1$s</string>
+    <string name="igni_addon_failed">Could not install that add-on: %1$s</string>
+    <string name="igni_unsigned">Allow add-ons that Mozilla has not signed</string>
+    <string name="igni_unsigned_summary">For your own or modified add-ons. Only install ones you trust.</string>
+    <string name="igni_about_config">Advanced settings (about:config)</string>
+    <string name="igni_about_config_summary">Every engine setting, unlocked</string>
+    <string name="igni_wallpaper_failed">Could not read that picture</string>
+    <string name="igni_source">Source code</string>
+    <string name="igni_source_summary">github.com/rxvy-dev/ignifox · MPL 2.0 · no telemetry</string>
+
+    <string name="igni_menu_new_tab">New tab</string>
+    <string name="igni_menu_private_tab">New private tab</string>
+
+    <string-array name="igni_look_names">
+        <item>Classic: bar on top, Ignis</item>
+        <item>Thumb: bar at the bottom, pill</item>
+        <item>OLED: pure black</item>
+        <item>Minimal</item>
+        <item>Hacker / TTY</item>
+        <item>Neon</item>
+        <item>Daylight</item>
+    </string-array>
+    <string-array name="igni_look_keys" translatable="false">
+        <item>classic</item><item>thumb</item><item>oled</item><item>minimal</item><item>hacker</item><item>neon</item><item>daylight</item>
+    </string-array>
+
+    <string-array name="igni_bar_position_names"><item>Bottom</item><item>Top</item></string-array>
+    <string-array name="igni_bar_position_keys" translatable="false"><item>bottom</item><item>top</item></string-array>
+
+    <string-array name="igni_bar_shape_names"><item>Rounded</item><item>Pill</item><item>Square</item></string-array>
+    <string-array name="igni_bar_shape_keys" translatable="false"><item>rounded</item><item>pill</item><item>square</item></string-array>
+
+    <string-array name="igni_web_scheme_names">
+        <item>Match the Ignifox theme</item><item>Match the phone</item><item>Always dark</item><item>Always light</item>
+    </string-array>
+    <string-array name="igni_web_scheme_keys" translatable="false">
+        <item>theme</item><item>system</item><item>dark</item><item>light</item>
+    </string-array>
+
+    <string-array name="igni_wallpaper_names">
+        <item>Embers (animated)</item><item>Aurora</item><item>Starfield (animated)</item><item>Code rain (animated)</item><item>Snowfall (animated)</item><item>Gradient</item><item>Solid colour</item><item>My picture</item>
+    </string-array>
+    <string-array name="igni_wallpaper_keys" translatable="false">
+        <item>embers</item><item>aurora</item><item>starfield</item><item>matrix</item><item>snow</item><item>gradient</item><item>solid</item><item>image</item>
+    </string-array>
+
+    <string-array name="igni_layout_names"><item>Centred</item><item>Top</item><item>Minimal (search and shortcuts only)</item></string-array>
+    <string-array name="igni_layout_keys" translatable="false"><item>center</item><item>top</item><item>minimal</item></string-array>
+
+    <string-array name="igni_tiles_names"><item>Rounded</item><item>Circle</item><item>Square</item><item>Minimal</item></string-array>
+    <string-array name="igni_tiles_keys" translatable="false"><item>rounded</item><item>circle</item><item>square</item><item>minimal</item></string-array>
+
+    <string-array name="igni_tp_names">
+        <item>Strict: block trackers, fingerprinters, cross-site cookies</item><item>Standard</item><item>Off</item>
+    </string-array>
+    <string-array name="igni_tp_keys" translatable="false"><item>strict</item><item>standard</item><item>off</item></string-array>
+
+    <string-array name="igni_doh_names">
+        <item>Default</item><item>Off (use the phone\'s DNS)</item><item>Quad9</item><item>Mullvad</item><item>Mullvad (blocks ads and trackers)</item><item>AdGuard (blocks ads and trackers)</item><item>Cloudflare</item>
+    </string-array>
+    <string-array name="igni_doh_keys" translatable="false">
+        <item>default</item><item>off</item>
+        <item>https://dns.quad9.net/dns-query</item>
+        <item>https://dns.mullvad.net/dns-query</item>
+        <item>https://adblock.dns.mullvad.net/dns-query</item>
+        <item>https://dns.adguard-dns.com/dns-query</item>
+        <item>https://mozilla.cloudflare-dns.com/dns-query</item>
+    </string-array>
+</resources>
