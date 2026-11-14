@@ -25,5 +25,6 @@ Emberfox-only changes bump the revision.
 - Update notifier (GitHub releases only, no identifiers, can be turned off).
 
 ### Packaging
+- One-line graphical installer: `curl -fsSL https://raw.githubusercontent.com/rxvy-dev/emberfox/main/install.sh | bash`. zenity/kdialog GUI with whiptail/text fallback; just-me, everyone or Flatpak; checksum-verified; update and uninstall on re-run.
 - Universal tarball + `install.sh`, AppImage, Flatpak, `.deb`, `.rpm`, Arch PKGBUILD, Void template, Gentoo ebuild; x86_64 and aarch64.
 - Automatic releases when Mozilla ships a new Firefox.

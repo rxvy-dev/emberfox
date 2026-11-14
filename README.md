@@ -13,7 +13,11 @@ A Firefox-based browser for Linux with telemetry locked out at every layer and t
   <img alt="Linux x86_64 and aarch64" src="https://img.shields.io/badge/linux-x86__64%20%7C%20aarch64-1a0507">
 </p>
 
-<p align="center"><a href="https://github.com/rxvy-dev/emberfox/releases/latest"><b>⬇ Download for Linux</b></a></p>
+<p align="center"><a href="https://github.com/rxvy-dev/emberfox/releases/latest"><b>⬇ Download for Linux</b></a> · or paste this into a terminal:</p>
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/rxvy-dev/emberfox/main/install.sh | bash
+```
 
 ---
 
@@ -43,11 +47,31 @@ A Firefox-based browser for Linux with telemetry locked out at every layer and t
 
 ## Install (every Linux distro)
 
-Grab the files from the [latest release](https://github.com/rxvy-dev/emberfox/releases/latest). Check them with `sha256sum -c SHA256SUMS --ignore-missing`.
+Paste one line into a terminal. A graphical installer opens (GTK on GNOME/XFCE/Cinnamon/Hyprland with zenity, Qt on KDE), downloads the latest release, verifies its checksum and installs it:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/rxvy-dev/emberfox/main/install.sh | bash
+```
+or with wget:
+```bash
+wget -qO- https://raw.githubusercontent.com/rxvy-dev/emberfox/main/install.sh | bash
+```
+
+<p align="center"><img src="docs/installer.png" width="460" alt="Emberfox graphical installer"></p>
+
+- **Just for me** (no password, `~/.local`), **For everyone** (graphical password prompt, `/opt`), or **Flatpak**. musl systems get the Flatpak automatically.
+- Run it again to **update** or **uninstall**. It detects an existing install.
+- No GUI toolkit? It falls back to a terminal UI (whiptail/dialog) or plain prompts.
+- Scripted: `… | bash -s -- --user --yes` · other flags: `--system --flatpak --uninstall --cli --no-launch --version v160.0.1-1`
+
+### Or pick a package
+
+Grab files from the [latest release](https://github.com/rxvy-dev/emberfox/releases/latest). Check them with `sha256sum -c SHA256SUMS --ignore-missing`.
 
 | Distro family | Package |
 |---|---|
-| **Any glibc distro** | `tar xf emberfox-*-linux-x86_64.tar.xz && cd emberfox && ./install.sh` (or `./install.sh --user`, no root) |
+| **Any distro (recommended)** | the one-line installer above |
+| **Any glibc distro, by hand** | `tar xf emberfox-*-linux-x86_64.tar.xz && cd emberfox && ./install.sh` (or `./install.sh --user`, no root) |
 | **Any distro, no install** | `Emberfox-*.AppImage`: `chmod +x` and run |
 | **Any distro, sandboxed** (incl. Alpine, Void-musl, Silverblue, SteamOS, NixOS) | `Emberfox.flatpak`: `flatpak install Emberfox.flatpak` |
 | Debian · Ubuntu · Mint · Pop!_OS · Zorin · Kali | `sudo apt install ./emberfox_*_amd64.deb` |
@@ -120,6 +144,7 @@ Emberfox carries **zero engine patches**. Everything runs through Mozilla's supp
 ## Layout
 
 ```
+install.sh       one-line graphical installer (curl | bash)
 branding/        logo.svg, logo-small.svg (16–32 px), wordmark.svg, icons/, brand strings, emberfox-branding.js (baked defaults)
 settings/        emberfox.cfg (locked telemetry kill + Studio boot), autoconfig.js, policies.json
 ember/content/   boot.sys.mjs   engine: live repaint, about:ember, toolbar button, shortcuts, custom CSS

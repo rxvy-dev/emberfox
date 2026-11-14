@@ -163,6 +163,11 @@ jobs:
 
           ### Download
 
+          **Easiest:** paste into a terminal for the graphical installer:
+          \`\`\`bash
+          curl -fsSL https://raw.githubusercontent.com/rxvy-dev/emberfox/main/install.sh | bash
+          \`\`\`
+
           | You're on | Get |
           |---|---|
           | Any Linux (glibc) | \`emberfox-$V-linux-x86_64.tar.xz\`, extract, run \`./install.sh\` (or \`--user\`) |

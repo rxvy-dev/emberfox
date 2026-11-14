@@ -42,7 +42,7 @@ jobs:
           python3 tests/check_policies.py
 
       - name: Shellcheck
-        run: shellcheck -x -S warning build.sh scripts/*.sh packaging/*.sh packaging/appimage/*.sh tools/preview/run.sh
+        run: shellcheck -x -S warning install.sh build.sh scripts/*.sh packaging/*.sh packaging/appimage/*.sh tools/preview/run.sh
 
       - name: Desktop entry + AppStream
         run: |

@@ -18,7 +18,7 @@ Thanks for helping. Emberfox stays maintainable by following one rule:
 ```bash
 node --test tests/*.test.mjs          # palette, versions, and cross-file consistency
 python3 tests/check_policies.py       # policies.json vs Firefox's schema (pip install jsonschema)
-shellcheck -x -S warning build.sh scripts/*.sh packaging/*.sh
+shellcheck -x -S warning install.sh build.sh scripts/*.sh packaging/*.sh
 ./build.sh repack && ./build.sh audit # full build + telemetry audit
 ```
 
