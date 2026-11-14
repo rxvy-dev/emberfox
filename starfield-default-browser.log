@@ -1,0 +1,9 @@
+[4468] Sandbox: CanCreateUserNamespace() unshare(CLONE_NEWPID): EPERM
+[4783] Sandbox: CanCreateUserNamespace() unshare(CLONE_NEWPID): EPERM
+Crash Annotation GraphicsCriticalError: |[C0][GFX1-]: Managed to allocate after flush. (t=8.23445) [GFX1-]: Managed to allocate after flush.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.

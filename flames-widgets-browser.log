@@ -1,0 +1,16 @@
+[4907] Sandbox: CanCreateUserNamespace() unshare(CLONE_NEWPID): EPERM
+[5281] Sandbox: CanCreateUserNamespace() unshare(CLONE_NEWPID): EPERM
+Crash Annotation GraphicsCriticalError: |[C0][GFX1-]: Managed to allocate after flush. (t=14.3471) [GFX1-]: Managed to allocate after flush.
+[Parent 4905, Main Thread] WARNING: g_dbus_connection_unregister_object: assertion 'G_IS_DBUS_CONNECTION (connection)' failed: 'glib warning', file checkouts/gecko/toolkit/xre/nsSigHandlers.cpp:244
+
+(ignifox:4905): GLib-GIO-CRITICAL **: 21:45:51.581: g_dbus_connection_unregister_object: assertion 'G_IS_DBUS_CONNECTION (connection)' failed
+[Parent 4905, Main Thread] WARNING: nsDBusRemoteServer: Unable to unregister root object from within onNameLost!: 'glib warning', file checkouts/gecko/toolkit/xre/nsSigHandlers.cpp:244
+
+** (ignifox:4905): WARNING **: 21:45:51.581: nsDBusRemoteServer: Unable to unregister root object from within onNameLost!
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.

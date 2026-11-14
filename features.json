@@ -1,0 +1,37 @@
+[
+  {
+    "check": "Command palette opens with Ctrl+K and finds actions",
+    "ok": true,
+    "error": ""
+  },
+  {
+    "check": "Workspaces hide other tabs and paint their own theme",
+    "ok": true,
+    "error": ""
+  },
+  {
+    "check": "Web panel loads a site beside the page",
+    "ok": false,
+    "error": "panel strip (x=404) should be right of the page (ends at x=1280)"
+  },
+  {
+    "check": "Site tint takes the colour of the site's icon",
+    "ok": true,
+    "error": ""
+  },
+  {
+    "check": "Cookie auto-delete clears a closed site, keep-list protects it",
+    "ok": true,
+    "error": ""
+  },
+  {
+    "check": "Unload other tabs frees background tabs",
+    "ok": true,
+    "error": ""
+  },
+  {
+    "check": "New tab widgets and news feed show on the page",
+    "ok": true,
+    "error": ""
+  }
+]
