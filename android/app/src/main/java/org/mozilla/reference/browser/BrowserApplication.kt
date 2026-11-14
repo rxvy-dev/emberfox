@@ -68,6 +68,12 @@ open class BrowserApplication : Application() {
 
         components.core.engine.warmUp()
         Ignifox.applyEngineSettings(this)
+        Ignifox.installNewTab(this, components.core.engine) {
+            // Very first start: the page's address was not known when the tabs were restored.
+            if (tabsRestored) {
+                openHomeIfEmpty()
+            }
+        }
 
         restoreBrowserState()
 
@@ -137,15 +143,24 @@ open class BrowserApplication : Application() {
         }
     }
 
+    private var tabsRestored = false
+
+    /** First start, or every tab was closed: open the Ignifox New Tab instead of nothing. */
+    private fun openHomeIfEmpty() {
+        if (components.core.store.state.tabs.isEmpty()) {
+            components.useCases.tabsUseCases.addTab(Ignifox.homeUrl(this), selectTab = true)
+        }
+    }
+
     private fun restoreBrowserState() = applicationScope.launch {
         val store = components.core.store
         val sessionStorage = components.core.sessionStorage
 
         components.useCases.tabsUseCases.restore(sessionStorage)
 
-        // First start, or every tab was closed: open the Ignifox New Tab instead of nothing.
-        if (store.state.tabs.isEmpty()) {
-            components.useCases.tabsUseCases.addTab(Ignifox.homeUrl(this@BrowserApplication), selectTab = true)
+        tabsRestored = true
+        if (Ignifox.newTabReady(this@BrowserApplication)) {
+            openHomeIfEmpty()
         }
 
         // Now that we have restored our previous state (if there's one) let's setup auto saving the state while

@@ -38,6 +38,6 @@ else
   echo "  (no apkanalyzer found: skipping the bundled-library check)"
 fi
 
-if unzip -l "$apk" | grep -q 'assets/newtab/index.html'; then ok "Ignifox New Tab bundled"; else bad "new tab page missing"; fi
+if unzip -l "$apk" | grep -q 'assets/extensions/ignifox/newtab/index.html'; then ok "Ignifox New Tab bundled"; else bad "new tab page missing"; fi
 
 if [[ $fail == 0 ]]; then echo "APK AUDIT PASSED"; else echo "APK AUDIT FAILED"; exit 1; fi

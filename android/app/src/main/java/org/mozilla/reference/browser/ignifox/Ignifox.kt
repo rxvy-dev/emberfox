@@ -278,22 +278,49 @@ object Ignifox {
 
     // ---------------------------------------------------------------- new tab page
 
-    private const val NEW_TAB_PAGE = "resource://android/assets/newtab/index.html"
+    private const val NEW_TAB_EXTENSION = "newtab@ignifox"
+    private const val NEW_TAB_EXTENSION_URL = "resource://android/assets/extensions/ignifox/"
+    private const val NEW_TAB_PATH = "newtab/index.html"
+    private const val NT_BASE = "igni_nt_base"
     private const val WALLPAPER_FILE = "ignifox-wallpaper.b64"
     private const val WALLPAPER_MAX_SIDE = 960
     private const val WALLPAPER_QUALITY = 60
+
+    /**
+     * The new tab page (the same one the Linux browser uses) ships inside the APK as a tiny
+     * built-in extension with no permissions, because the engine will not open local files
+     * directly. Installing it tells us the page's address; [onReady] runs once that is known.
+     */
+    fun installNewTab(context: Context, engine: Engine, onReady: () -> Unit) {
+        engine.installBuiltInWebExtension(
+            id = NEW_TAB_EXTENSION,
+            url = NEW_TAB_EXTENSION_URL,
+            onSuccess = { extension ->
+                val base = extension.getMetadata()?.baseUrl.orEmpty()
+                if (base.startsWith("moz-extension://")) {
+                    prefs(context).edit { putString(NT_BASE, if (base.endsWith("/")) base else "$base/") }
+                }
+                onReady()
+            },
+            onError = { onReady() },
+        )
+    }
+
+    /** True once [installNewTab] has learned where the page lives. */
+    fun newTabReady(context: Context): Boolean = !prefs(context).getString(NT_BASE, "").isNullOrEmpty()
 
     /** Where new tabs open. A plain blank page when the Ignifox New Tab is switched off. */
     fun homeUrl(context: Context): String =
         if (prefs(context).getBoolean(NT_ENABLED, true)) newTabUrl(context) else "about:blank"
 
-    /**
-     * The page ships inside the APK (it is the same one the Linux browser uses) and cannot
-     * read anything from the app, so its settings travel in the address after "#".
-     */
-    fun newTabUrl(context: Context): String = NEW_TAB_PAGE + "#" + Uri.encode(newTabConfig(context).toString())
+    /** The page cannot read anything from the app, so its settings travel in the address after "#". */
+    fun newTabUrl(context: Context): String {
+        val base = prefs(context).getString(NT_BASE, "").orEmpty()
+        if (base.isEmpty()) return "about:blank"
+        return base + NEW_TAB_PATH + "#" + Uri.encode(newTabConfig(context).toString())
+    }
 
-    fun isNewTab(url: CharSequence): Boolean = url.startsWith(NEW_TAB_PAGE)
+    fun isNewTab(url: CharSequence): Boolean = url.startsWith("moz-extension://") && url.contains(NEW_TAB_PATH)
 
     /** Shrinks a picked picture and keeps it as the new tab wallpaper. False if it could not be read. */
     fun setWallpaper(context: Context, uri: Uri): Boolean =
