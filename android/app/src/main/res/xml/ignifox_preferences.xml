@@ -53,6 +53,10 @@
             android:key="igni_nt_dim" android:title="@string/igni_nt_dim" android:defaultValue="25"
             android:max="90" app:showSeekBarValue="true" app:iconSpaceReserved="false" />
         <androidx.preference.ListPreference
+            android:key="igni_nt_motion" android:title="@string/igni_nt_motion" android:defaultValue="on"
+            android:entries="@array/igni_motion_names" android:entryValues="@array/igni_motion_keys"
+            app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
+        <androidx.preference.ListPreference
             android:key="igni_nt_layout" android:title="@string/igni_nt_layout" android:defaultValue="center"
             android:entries="@array/igni_layout_names" android:entryValues="@array/igni_layout_keys"
             app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />

@@ -78,6 +78,7 @@ export const IGNI_PREFS = {
   "ignifox.newtab.layout":            { type: "string", def: "center" },  // center | top | minimal
   "ignifox.newtab.wallpaper":         { type: "string", def: "embers" },  // see WALLPAPERS
   "ignifox.newtab.wallpaperFile":     { type: "string", def: "" },
+  "ignifox.newtab.motion":            { type: "string", def: "on" },      // on | system | off
   "ignifox.newtab.dim":               { type: "int",    def: 25,  min: 0,   max: 90 },
   "ignifox.newtab.blur":              { type: "int",    def: 0,   min: 0,   max: 30 },
   "ignifox.newtab.clock":             { type: "bool",   def: true },

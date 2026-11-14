@@ -18,6 +18,12 @@ Ignifox-only changes bump the revision.
 - Three more animated new tab wallpapers: Starfield, Code rain and Snowfall (also on Android).
 - Day and night themes: pick two themes and the hours, and Ignifox swaps them by the clock.
 
+### Fixed: new tab animations on desktop
+- Animated wallpapers froze on desktops that ask apps for less motion (GTK's "enable animations" off, or Reduce motion on). They now keep moving; Studio → New Tab → *Wallpaper animation* lets you choose Always, Follow my desktop, or a still picture.
+- The animation could start with no particles when Firefox preloaded the new tab before it had a size; it now builds itself once the page has a size.
+- Studio's wallpaper tiles and the new tab preview run the real animations (shared `newtab/fx.js`), so Starfield, Code rain and Snowfall no longer show as blank tiles.
+- CI now starts the real desktop build on a virtual screen and checks that the new tab wallpaper moves.
+
 ### Import
 - Studio → Import finds Firefox (incl. Snap & Flatpak), LibreWolf, Waterfox, Floorp, Zen, Mullvad Browser and Emberfox profiles.
 - Imports right away: bookmarks (your toolbar comes over as-is if yours is empty), a year of history, settings (Emberfox settings are renamed for Ignifox), userChrome/custom CSS, the Emberfox new tab wallpaper, extensions (reinstalled from addons.mozilla.org).

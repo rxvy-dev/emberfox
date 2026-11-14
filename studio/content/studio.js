@@ -423,19 +423,66 @@ function renderLook() {
 }
 
 // ============================================================== NEW TAB
+/** Static background for each wallpaper, used by the preview and the picker tiles. */
+function wallBackground(id, p) {
+  return {
+    embers: `radial-gradient(120% 90% at 50% 120%, ${p.accent}aa, transparent 70%), ${p.bg}`,
+    aurora: `radial-gradient(70% 70% at 20% 20%, ${p.accent}aa, transparent 60%), radial-gradient(70% 70% at 90% 100%, ${p.accent2}88, transparent 60%), ${p.bg}`,
+    starfield: `radial-gradient(80% 80% at 50% 50%, ${p.accent}33, transparent 70%), ${p.bg}`,
+    matrix: p.bg,
+    snow: `linear-gradient(180deg, ${p.bg2}, ${p.bg} 75%)`,
+    gradient: `radial-gradient(90% 90% at 80% 0%, ${p.accent}88, transparent 60%), linear-gradient(160deg, ${p.bg2}, ${p.bg})`,
+    solid: p.bg2, none: p.bg,
+    image: `repeating-linear-gradient(45deg, ${p.bg2} 0 8px, ${p.bg3} 8px 16px)`,
+  }[id] || p.bg;
+}
+
+/**
+ * Paints a box like wallpaper `id` and, for the animated ones, runs the very same effect the
+ * new tab page runs (newtab/fx.js) in a canvas behind the box's content.
+ */
+function paintWall(el, id, p, motion) {
+  el.style.background = wallBackground(id, p);
+  el.classList.add("fxsw");
+  el.dataset.fx = id;
+  el.dataset.motion = motion;
+  for (const [k, c] of [["--sw-a", p.accent], ["--sw-a2", p.accent2], ["--sw-fg", p.fg]]) {
+    el.style.setProperty(k, c);
+  }
+  const FX = window.IGNI_FX;
+  if (FX && FX.has(id)) {
+    const cv = h("canvas", { class: "fxc", "aria-hidden": "true" });
+    el.prepend(cv);
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+    const still = () => motion == "off" || (motion == "system" && reduce.matches);
+    let draw = null, W = 0, H = 0, frames = 0;
+    const frame = t => {
+      if (!cv.isConnected && frames > 0) return;           // the tile was re-rendered: stop
+      const w = cv.clientWidth, hh = cv.clientHeight;
+      if (w != W || hh != H) {
+        W = w; H = hh;
+        const dpr = window.devicePixelRatio || 1;
+        cv.width = Math.max(1, Math.round(W * dpr)); cv.height = Math.max(1, Math.round(H * dpr));
+        const ctx = cv.getContext("2d");
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        draw = FX.create(id, W, H, p);
+      }
+      if (draw) draw(cv.getContext("2d"), t);
+      frames++;
+      // A still frame needs a few steps to look like the effect, then it stops.
+      if (!still() || frames < 40) requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  }
+  return el;
+}
+
 function newtabPreview() {
   const box = h("div", { class: "nt-preview" });
   bind(() => {
     const v = igniValues();
     const p = M.resolvePalette(v);
     const wall = v["ignifox.newtab.wallpaper"];
-    const bgs = {
-      embers: `radial-gradient(120% 80% at 50% 120%, ${p.accent}88, transparent 70%), ${p.bg}`,
-      aurora: `radial-gradient(60% 70% at 15% 10%, ${p.accent}aa, transparent 60%), radial-gradient(60% 70% at 90% 100%, ${p.accent2}88, transparent 60%), ${p.bg}`,
-      gradient: `radial-gradient(80% 80% at 80% 0%, ${p.accent}66, transparent 60%), linear-gradient(160deg, ${p.bg2}, ${p.bg})`,
-      solid: p.bg, none: p.bg, image: `linear-gradient(135deg, ${p.bg3}, ${p.bg})`,
-    };
-    box.style.background = bgs[wall] || bgs.embers;
     box.style.color = p.fg;
     const links = M.newtabLinks(v).slice(0, v["ignifox.newtab.columns"]);
     const now = new Date();
@@ -453,6 +500,7 @@ function newtabPreview() {
       h("div", { class: "nt-tiles" }, links.map(l => h("i", {
         class: "nt-tile " + v["ignifox.newtab.tileStyle"], style: { background: p.bg2, color: p.accent },
       }, (l.title || "?").charAt(0))))));
+    paintWall(box, wall in M.WALLPAPERS ? wall : "embers", p, v["ignifox.newtab.motion"]);
   }, box);
   return box;
 }
@@ -477,17 +525,11 @@ function wallpaperPicker() {
     const v = igniValues();
     const p = M.resolvePalette(v);
     const cur = v["ignifox.newtab.wallpaper"];
-    const sw = {
-      embers: `radial-gradient(120% 90% at 50% 120%, ${p.accent}, transparent 70%), ${p.bg}`,
-      aurora: `radial-gradient(70% 70% at 20% 20%, ${p.accent}, transparent 60%), radial-gradient(70% 70% at 90% 100%, ${p.accent2}, transparent 60%), ${p.bg}`,
-      gradient: `radial-gradient(90% 90% at 80% 0%, ${p.accent}99, transparent 60%), linear-gradient(160deg, ${p.bg2}, ${p.bg})`,
-      solid: p.bg2, image: `repeating-linear-gradient(45deg, ${p.bg2} 0 8px, ${p.bg3} 8px 16px)`, none: p.bg,
-    };
     grid.replaceChildren(...Object.entries(M.WALLPAPERS).map(([id, label]) =>
       h("button", {
         class: "wall" + (cur == id ? " selected" : ""),
         onclick: () => (id == "image" && !v["ignifox.newtab.wallpaperFile"] ? file.click() : set("ignifox.newtab.wallpaper", id)),
-      }, h("div", { class: "sw", style: { background: sw[id] } }), h("span", {}, label))),
+      }, paintWall(h("div", { class: "sw" }), id, p, v["ignifox.newtab.motion"]), h("span", {}, label))),
       file);
   }, grid);
   return h("div", {}, grid, h("div", { class: "btns", style: { marginTop: "10px" } },
@@ -567,7 +609,9 @@ function renderNewtab() {
     wallpaperPicker(),
     card(
       range("ignifox.newtab.dim", "Darken wallpaper", "Keeps text readable on bright pictures.", 0, 90, 5, v => `${v}%`),
-      range("ignifox.newtab.blur", "Blur wallpaper", null, 0, 30, 1, v => `${v}px`)),
+      range("ignifox.newtab.blur", "Blur wallpaper", null, 0, 30, 1, v => `${v}px`),
+      select("ignifox.newtab.motion", "Wallpaper animation", "Animated wallpapers keep moving unless you pick otherwise.",
+        [["on", "Always animate"], ["system", "Pause when my desktop asks for less motion"], ["off", "Still picture (saves battery)"]])),
     h("h2", {}, "Layout"),
     card(
       select("ignifox.newtab.layout", "Arrangement", null, [["center", "Centered"], ["top", "Near the top"], ["minimal", "Minimal (search + shortcuts only)"]]),

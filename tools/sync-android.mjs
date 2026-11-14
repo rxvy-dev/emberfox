@@ -10,7 +10,7 @@ import { THEMES } from "../studio/content/prefs.sys.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const app = join(root, "android/app/src/main");
-export const NEWTAB_FILES = ["index.html", "newtab.css", "newtab.js", "logo.svg", "MetalMania-Regular.ttf"];
+export const NEWTAB_FILES = ["index.html", "newtab.css", "newtab.js", "fx.js", "logo.svg", "MetalMania-Regular.ttf"];
 
 const argb = hex => "0xFF" + hex.slice(1).toUpperCase() + ".toInt()";
 const lum = hex => {

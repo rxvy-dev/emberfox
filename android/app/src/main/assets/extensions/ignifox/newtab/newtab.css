@@ -43,8 +43,9 @@ html, body { height: 100%; margin: 0; overflow: hidden; }
 :root[data-wall="image"] #wall { background-color: var(--bg); background-position: center; background-size: cover; background-repeat: no-repeat; }
 #dim { position: fixed; inset: 0; z-index: 1; background: #000; opacity: var(--dimness); pointer-events: none; }
 :root[data-wall="none"] #dim, :root[data-wall="solid"] #dim { display: none; }
+:root[data-motion="off"] #wall::before, :root[data-motion="off"] #wall::after { animation: none !important; }
 @media (prefers-reduced-motion: reduce) {
-  #wall::before, #wall::after { animation: none !important; }
+  :root[data-motion="system"] #wall::before, :root[data-motion="system"] #wall::after { animation: none !important; }
 }
 
 /* --------------------------------------------------------------- layout */

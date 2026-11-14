@@ -33,6 +33,7 @@
     <string name="igni_nt_wallpaper_pick">Use a picture as wallpaper</string>
     <string name="igni_nt_dim">Darken wallpaper</string>
     <string name="igni_nt_blur">Blur wallpaper</string>
+    <string name="igni_nt_motion">Wallpaper animation</string>
     <string name="igni_nt_layout">Layout</string>
     <string name="igni_nt_clock">Clock</string>
     <string name="igni_nt_clock24">24-hour clock</string>
@@ -120,6 +121,11 @@
     <string-array name="igni_wallpaper_keys" translatable="false">
         <item>embers</item><item>aurora</item><item>starfield</item><item>matrix</item><item>snow</item><item>gradient</item><item>solid</item><item>image</item>
     </string-array>
+
+    <string-array name="igni_motion_names">
+        <item>Always animate</item><item>Pause when the phone asks for less motion</item><item>Still picture (saves battery)</item>
+    </string-array>
+    <string-array name="igni_motion_keys" translatable="false"><item>on</item><item>system</item><item>off</item></string-array>
 
     <string-array name="igni_layout_names"><item>Centred</item><item>Top</item><item>Minimal (search and shortcuts only)</item></string-array>
     <string-array name="igni_layout_keys" translatable="false"><item>center</item><item>top</item><item>minimal</item></string-array>

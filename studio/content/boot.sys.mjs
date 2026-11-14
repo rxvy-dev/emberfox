@@ -29,7 +29,7 @@ const ABOUT_CID = Components.ID("{6f1b8c7e-3d2a-4e9b-9b8e-1e3b0e000001}");
 const WIDGET_ID = "igni-studio-button";
 const UPDATE_INTERVAL = 24 * 60 * 60; // seconds between automatic checks
 const UPDATE_DELAY_MS = 90 * 1000; // wait after startup so it never slows launch
-const NEWTAB_FILES = ["index.html", "newtab.css", "newtab.js", "logo.svg", "MetalMania-Regular.ttf"];
+const NEWTAB_FILES = ["index.html", "newtab.css", "newtab.js", "fx.js", "logo.svg", "MetalMania-Regular.ttf"];
 const TOPSITES_REFRESH_MS = 15 * 60 * 1000;
 
 let gChromeHandle = null; // keeps chrome://ignifox/ registered for the app's lifetime
@@ -618,6 +618,7 @@ export const IgniBoot = {
       layout: v["ignifox.newtab.layout"],
       wallpaper: v["ignifox.newtab.wallpaper"],
       wallpaperFile,
+      motion: v["ignifox.newtab.motion"],
       dim: v["ignifox.newtab.dim"],
       blur: v["ignifox.newtab.blur"],
       clock: v["ignifox.newtab.clock"],

@@ -48,3 +48,19 @@ test("android: the build keeps Google and crash-upload libraries out", () => {
   assert.doesNotMatch(gradle, /lib\.crash\.sentry|push\.firebase/);
   assert.match(gradle, /applicationId = "dev\.rxvy\.ignifox"/);
 });
+
+test("wallpapers: every canvas effect is a wallpaper, and fx.js ships on Linux and Android", async () => {
+  globalThis.window = {};
+  await import("../studio/content/newtab/fx.js");
+  const FX = globalThis.window.IGNI_FX;
+  for (const name of FX.names) assert.ok(name in WALLPAPERS, `${name} has no Studio entry`);
+  for (const name of ["embers", "starfield", "matrix", "snow"]) {
+    assert.equal(typeof FX.create(name, 120, 60, { bg: "#000", fg: "#fff", accent: "#f00", accent2: "#fa0" }), "function");
+  }
+  assert.equal(FX.create("embers", 0, 0, {}), null, "no effect is built for a page that has no size yet");
+  const boot = readFileSync(join(root, "studio/content/boot.sys.mjs"), "utf8");
+  assert.match(boot, /NEWTAB_FILES = \[[^\]]*"fx\.js"/);
+  const html = readFileSync(join(root, "studio/content/newtab/index.html"), "utf8");
+  assert.ok(html.indexOf('src="fx.js"') < html.indexOf('src="newtab.js"'), "fx.js must load before newtab.js");
+  assert.match(readFileSync(join(root, "studio/content/studio.html"), "utf8"), /newtab\/fx\.js/);
+});

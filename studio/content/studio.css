@@ -420,3 +420,20 @@ input[type="url"] {
 .imp-status { margin-top: 10px; font: 12px/1.7 ui-monospace, monospace; color: var(--dim); }
 .warn { color: var(--accent2); font-size: 13px; }
 .notice { border-color: color-mix(in srgb, var(--accent) 50%, transparent); margin-bottom: 14px; }
+
+/* ---- wallpaper tiles and preview: canvas effects come from newtab/fx.js; aurora is CSS like on the page */
+.fxsw { position: relative; overflow: hidden; isolation: isolate; }
+.fxsw > * { position: relative; z-index: 1; }
+.fxsw > canvas.fxc { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.fxsw[data-fx="aurora"]::before, .fxsw[data-fx="aurora"]::after {
+  content: ""; position: absolute; pointer-events: none; z-index: 0;
+  inset: -30% auto auto -20%; width: 80%; height: 110%; border-radius: 50%;
+  background: radial-gradient(closest-side, var(--sw-a), transparent); opacity: .65;
+  animation: sw-drift 9s ease-in-out infinite alternate;
+}
+.fxsw[data-fx="aurora"]::after {
+  inset: auto -25% -40% auto; background: radial-gradient(closest-side, var(--sw-a2), transparent);
+  animation-duration: 12s; animation-direction: alternate-reverse;
+}
+.fxsw[data-fx="aurora"][data-motion="off"]::before, .fxsw[data-fx="aurora"][data-motion="off"]::after { animation-play-state: paused; }
+@keyframes sw-drift { to { transform: translate(25%, 18%) scale(1.15); } }

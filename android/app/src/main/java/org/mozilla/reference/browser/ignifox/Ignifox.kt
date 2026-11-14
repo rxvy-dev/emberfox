@@ -52,6 +52,7 @@ object Ignifox {
     const val NT_WALLPAPER_FILE = "igni_nt_wallpaper_file"
     const val NT_DIM = "igni_nt_dim"
     const val NT_BLUR = "igni_nt_blur"
+    const val NT_MOTION = "igni_nt_motion"
     const val NT_LAYOUT = "igni_nt_layout"
     const val NT_CLOCK = "igni_nt_clock"
     const val NT_CLOCK24 = "igni_nt_clock24"
@@ -418,6 +419,7 @@ object Ignifox {
             .put("wallpaperData", wallpaperData(context))
             .put("dim", p.getInt(NT_DIM, 25))
             .put("blur", p.getInt(NT_BLUR, 0))
+            .put("motion", p.getString(NT_MOTION, "on"))
             .put("clock", p.getBoolean(NT_CLOCK, true))
             .put("clock24", p.getBoolean(NT_CLOCK24, false))
             .put("seconds", p.getBoolean(NT_SECONDS, false))
