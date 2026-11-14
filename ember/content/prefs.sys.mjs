@@ -57,6 +57,36 @@ export const EMBER_PREFS = {
   "ember.shape.tabMaxWidth":        { type: "int",    def: 225, min: 120, max: 500 },
   "ember.font.family":              { type: "string", def: "" },
   "ember.font.size":                { type: "int",    def: 0,   min: 0,   max: 20 }, // 0 = system default
+  // tabs & window
+  "ember.tabs.style":               { type: "string", def: "default" }, // default | pill | underline | boxy
+  "ember.tabs.height":              { type: "int",    def: 0,   min: 0,   max: 56 }, // 0 = Firefox default
+  "ember.layout.floatingContent":   { type: "bool",   def: false },     // page area as a rounded card
+  "ember.layout.contentGap":        { type: "int",    def: 6,   min: 2,   max: 24 },
+  "ember.layout.urlbarMaxWidth":    { type: "int",    def: 0,   min: 0,   max: 1800 }, // 0 = fill
+  "ember.layout.bookmarksIconsOnly":{ type: "bool",   def: false },
+  "ember.layout.compactMenus":      { type: "bool",   def: false },
+  // Ember New Tab
+  "ember.newtab.enabled":           { type: "bool",   def: true },
+  "ember.newtab.home":              { type: "bool",   def: true },      // also use it as the home page
+  "ember.newtab.layout":            { type: "string", def: "center" },  // center | top | minimal
+  "ember.newtab.wallpaper":         { type: "string", def: "embers" },  // embers | aurora | gradient | solid | image | none
+  "ember.newtab.wallpaperFile":     { type: "string", def: "" },
+  "ember.newtab.dim":               { type: "int",    def: 25,  min: 0,   max: 90 },
+  "ember.newtab.blur":              { type: "int",    def: 0,   min: 0,   max: 30 },
+  "ember.newtab.clock":             { type: "bool",   def: true },
+  "ember.newtab.clock24":           { type: "bool",   def: false },
+  "ember.newtab.seconds":           { type: "bool",   def: false },
+  "ember.newtab.date":              { type: "bool",   def: true },
+  "ember.newtab.greeting":          { type: "bool",   def: true },
+  "ember.newtab.name":              { type: "string", def: "" },
+  "ember.newtab.search":            { type: "bool",   def: true },
+  "ember.newtab.engineSwitcher":    { type: "bool",   def: true },
+  "ember.newtab.links":             { type: "string", def: "" },        // JSON [{title,url}], "" = defaults
+  "ember.newtab.topSites":          { type: "bool",   def: false },     // add most-visited sites from history
+  "ember.newtab.columns":           { type: "int",    def: 6,   min: 3,   max: 10 },
+  "ember.newtab.tileStyle":         { type: "string", def: "rounded" }, // rounded | circle | square | minimal
+  "ember.newtab.favicons":          { type: "bool",   def: false },     // fetch /favicon.ico from each site
+  "ember.newtab.notes":             { type: "bool",   def: false },
   "ember.customcss.enabled":        { type: "bool",   def: true },
   "ember.customcss.rev":            { type: "int",    def: 0 },
   "ember.firstrun.done":            { type: "bool",   def: false },
@@ -110,6 +140,21 @@ export const NATIVE_PREFS = {
   "media.ffmpeg.vaapi.enabled": "bool",
   "dom.ipc.processCount": "int",
   "browser.download.useDownloadDir": "bool",
+  "browser.download.alwaysOpenPanel": "bool",
+  "browser.ctrlTab.sortByRecentlyUsed": "bool",
+  "privacy.userContext.enabled": "bool",
+  "layout.spellcheckDefault": "int",
+  "browser.tabs.loadBookmarksInTabs": "bool",
+  "browser.urlbar.openintab": "bool",
+  "layout.css.devPixelsPerPx": "string",
+  "widget.non-native-theme.scrollbar.style": "int",
+  "widget.gtk.overlay-scrollbars.enabled": "bool",
+  "browser.startup.homepage": "string",
+  // search
+  "browser.search.suggest.enabled.private": "bool",
+  "browser.search.openintab": "bool",
+  "browser.search.separatePrivateDefault": "bool",
+  "browser.search.separatePrivateDefault.ui.enabled": "bool",
   "findbar.highlightAll": "bool",
   // AI
   "browser.ai.control.default": "string",
@@ -420,6 +465,7 @@ export const WIDGETS = {
   "zoom-controls": "Zoom",
   "characterencoding-button": "Text encoding",
   "email-link-button": "Email link",
+  "search-container": "Separate search bar",
 };
 
 // One-click toolbar arrangements. Each lists nav-bar order; listed-but-unknown ids are skipped.
@@ -471,4 +517,87 @@ export function compareVersions(a, b) {
     }
   }
   return A.rel - B.rel;
+}
+
+// ------------------------------------------------------------- new tab
+export const DEFAULT_LINKS = [
+  { title: "GitHub", url: "https://github.com" },
+  { title: "YouTube", url: "https://www.youtube.com" },
+  { title: "Reddit", url: "https://www.reddit.com" },
+  { title: "Wikipedia", url: "https://en.wikipedia.org" },
+  { title: "Arch Wiki", url: "https://wiki.archlinux.org" },
+  { title: "Hacker News", url: "https://news.ycombinator.com" },
+];
+
+export const WALLPAPERS = {
+  embers: "Rising embers (animated)",
+  aurora: "Aurora glow (animated)",
+  gradient: "Theme gradient",
+  solid: "Solid theme color",
+  image: "My own picture",
+  none: "Plain",
+};
+
+export function newtabLinks(values) {
+  const raw = values["ember.newtab.links"];
+  if (!raw) {
+    return DEFAULT_LINKS.map(l => ({ ...l }));
+  }
+  try {
+    const v = JSON.parse(raw);
+    return Array.isArray(v)
+      ? v.filter(l => l && typeof l.url == "string" && /^https?:\/\//i.test(l.url))
+          .map(l => ({ title: String(l.title || "").slice(0, 40), url: l.url.slice(0, 2000) }))
+      : [];
+  } catch (e) {
+    return DEFAULT_LINKS.map(l => ({ ...l }));
+  }
+}
+
+// ------------------------------------------------------------- search
+// One-click engines. url uses {searchTerms}; suggestUrl optional.
+export const POPULAR_ENGINES = [
+  { group: "Private search", name: "DuckDuckGo", url: "https://duckduckgo.com/?q={searchTerms}", alias: "@ddg", suggestUrl: "https://duckduckgo.com/ac/?q={searchTerms}&type=list" },
+  { group: "Private search", name: "Startpage", url: "https://www.startpage.com/sp/search?query={searchTerms}", alias: "@sp" },
+  { group: "Private search", name: "Brave Search", url: "https://search.brave.com/search?q={searchTerms}", alias: "@brave", suggestUrl: "https://search.brave.com/api/suggest?q={searchTerms}" },
+  { group: "Private search", name: "Mojeek", url: "https://www.mojeek.com/search?q={searchTerms}", alias: "@mj" },
+  { group: "Private search", name: "Qwant", url: "https://www.qwant.com/?q={searchTerms}", alias: "@qw" },
+  { group: "Private search", name: "Kagi", url: "https://kagi.com/search?q={searchTerms}", alias: "@kagi" },
+  { group: "Private search", name: "Ecosia", url: "https://www.ecosia.org/search?q={searchTerms}", alias: "@eco" },
+  { group: "Big search", name: "Google", url: "https://www.google.com/search?q={searchTerms}", alias: "@g", suggestUrl: "https://www.google.com/complete/search?client=firefox&q={searchTerms}" },
+  { group: "Big search", name: "Bing", url: "https://www.bing.com/search?q={searchTerms}", alias: "@b" },
+  { group: "Linux", name: "Arch Wiki", url: "https://wiki.archlinux.org/index.php?search={searchTerms}", alias: "@aw" },
+  { group: "Linux", name: "AUR", url: "https://aur.archlinux.org/packages?K={searchTerms}", alias: "@aur" },
+  { group: "Linux", name: "Arch packages", url: "https://archlinux.org/packages/?q={searchTerms}", alias: "@pac" },
+  { group: "Linux", name: "Void packages", url: "https://voidlinux.org/packages/?arch=x86_64&q={searchTerms}", alias: "@void" },
+  { group: "Linux", name: "Flathub", url: "https://flathub.org/apps/search?q={searchTerms}", alias: "@fh" },
+  { group: "Linux", name: "ProtonDB", url: "https://www.protondb.com/search?q={searchTerms}", alias: "@pdb" },
+  { group: "Code", name: "GitHub", url: "https://github.com/search?q={searchTerms}", alias: "@gh" },
+  { group: "Code", name: "MDN", url: "https://developer.mozilla.org/search?q={searchTerms}", alias: "@mdn" },
+  { group: "Code", name: "Stack Overflow", url: "https://stackoverflow.com/search?q={searchTerms}", alias: "@so" },
+  { group: "Code", name: "docs.rs", url: "https://docs.rs/releases/search?query={searchTerms}", alias: "@rs" },
+  { group: "Code", name: "npm", url: "https://www.npmjs.com/search?q={searchTerms}", alias: "@npm" },
+  { group: "Code", name: "PyPI", url: "https://pypi.org/search/?q={searchTerms}", alias: "@pypi" },
+  { group: "Everything else", name: "Wikipedia", url: "https://en.wikipedia.org/wiki/Special:Search?search={searchTerms}", alias: "@wiki" },
+  { group: "Everything else", name: "YouTube", url: "https://www.youtube.com/results?search_query={searchTerms}", alias: "@yt" },
+  { group: "Everything else", name: "Reddit", url: "https://www.reddit.com/search/?q={searchTerms}", alias: "@r" },
+  { group: "Everything else", name: "OpenStreetMap", url: "https://www.openstreetmap.org/search?query={searchTerms}", alias: "@map" },
+];
+
+/** "https://x.com/?q=%s" -> "https://x.com/?q={searchTerms}"; null if unusable */
+export function normalizeEngineURL(url) {
+  let u = String(url || "").trim();
+  if (!/^https?:\/\/[^\s]+$/i.test(u)) {
+    return null;
+  }
+  u = u.replace(/%s/g, "{searchTerms}");
+  return u.includes("{searchTerms}") ? u : null;
+}
+
+export function normalizeAlias(a) {
+  const s = String(a || "").trim().replace(/\s+/g, "");
+  if (!s) {
+    return "";
+  }
+  return s.startsWith("@") ? s : "@" + s;
 }

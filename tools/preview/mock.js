@@ -39,11 +39,33 @@
     "TabsToolbar": ["tabbrowser-tabs","alltabs-button"], "PersonalToolbar": ["personal-bookmarks"], "widget-overflow-fixed-list": [] };
   window.Services = {
     prefs, dirsvc: { get: () => ({ ...file }) },
+    get search() { return window.__searchMock; },
+    get obs() { return window.__obs; },
     appinfo: { version: "160.0", platformVersion: "160.0", appBuildID: "20261104181552", OS: "Linux" },
     sysinfo: { getProperty: () => "x86_64" },
     wm: { getMostRecentWindow: () => ({ gNavToolbox: { palette: {} }, gCustomizeMode: { enter() {} } }) },
   };
   window.Ci = { nsIFile: { DIRECTORY_TYPE: 1 } };
+  // search service mock
+  const mkEngine = (name, alias, url) => ({ name, alias, url, getIconURL: async () => null,
+    getSubmission: q => ({ uri: { spec: url.replace("{searchTerms}", q) }, postData: null }) });
+  const engines = [mkEngine("DuckDuckGo", "@ddg", "https://duckduckgo.com/?q={searchTerms}"),
+    mkEngine("Startpage", "@sp", "https://www.startpage.com/sp/search?query={searchTerms}"),
+    mkEngine("Brave Search", "@brave", "https://search.brave.com/search?q={searchTerms}"),
+    mkEngine("Wikipedia (en)", "@wiki", "https://en.wikipedia.org/wiki/Special:Search?search={searchTerms}"),
+    mkEngine("Arch Wiki", "@aw", "https://wiki.archlinux.org/index.php?search={searchTerms}")];
+  let def = engines[0], priv = engines[0];
+  const sobs = [];
+  const fire = () => sobs.forEach(o => o.observe(null, "browser-search-engine-modified"));
+  window.__searchMock = {
+    CHANGE_REASON: { USER: "user" },
+    init: async () => {}, getVisibleEngines: async () => engines.slice(),
+    getDefault: async () => def, getDefaultPrivate: async () => priv,
+    setDefault: async e => { def = e; fire(); }, setDefaultPrivate: async e => { priv = e; fire(); },
+    addUserEngine: async f => { const e = mkEngine(f.name, f.alias || "", f.url); engines.push(e); fire(); return e; },
+    removeEngine: async e => { engines.splice(engines.indexOf(e), 1); fire(); },
+  };
+  window.__obs = { addObserver: (o, t) => { if (t == "browser-search-engine-modified") sobs.push(o); }, removeObserver() {}, notifyObservers() {} };
   window.PathUtils = { profileDir: "/home/rxvy/.emberfox/emberfox/abcd.default", parent: p => p.replace(/\/[^/]*$/, "") };
   window.IOUtils = { readUTF8: () => Promise.reject(new Error("none")), writeUTF8: async () => {}, makeDirectory: async () => {} };
   const CUI = {
@@ -56,6 +78,8 @@
   window.ChromeUtils = {
     importESModule: url => url.includes("boot") ? { EmberBoot: { customCSSPath: () => "/profile/chrome/ember-custom.css", bumpCustomCSS() {},
         version: async () => "160.0.1-1",
+        newtabURL: () => "./newtab/index.html",
+        setNewtabWallpaper: async () => "wallpaper.jpg",
         checkForUpdate: async () => ({ status: "current", current: "160.0.1-1", latest: "160.0.1-1" }) } }
       : { CustomizableUI: CUI },
   };

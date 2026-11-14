@@ -237,3 +237,72 @@
 :root[ember-contentbg] .browserStack {
   background-color: var(--ember-bg) !important;
 }
+
+/* ============================================================ tab styles */
+:root[ember-tabstyle="pill"] {
+  --tab-border-radius: 999px !important;
+}
+:root[ember-tabstyle="boxy"] {
+  --tab-border-radius: 0 !important;
+}
+:root[ember-tabstyle="underline"] .tabbrowser-tab .tab-background {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+}
+:root[ember-tabstyle="underline"] .tabbrowser-tab:hover .tab-background {
+  background-color: color-mix(in srgb, currentColor 7%, transparent) !important;
+}
+:root[ember-tabstyle="underline"] #tabbrowser-tabs[orient="horizontal"] .tabbrowser-tab[selected] .tab-background {
+  box-shadow: inset 0 -2px 0 var(--ember-accent, AccentColor) !important;
+}
+:root[ember-tabstyle="underline"] #tabbrowser-tabs[orient="vertical"] .tabbrowser-tab[selected] .tab-background {
+  box-shadow: inset 3px 0 0 var(--ember-accent, AccentColor) !important;
+}
+:root[ember-tabheight] {
+  --tab-min-height: var(--ember-tab-height) !important;
+}
+
+/* ===================================================== floating page card */
+:root[ember-floating]:not([inFullscreen]) #tabbrowser-tabbox {
+  margin: var(--ember-gap) !important;
+  margin-top: 0 !important;
+  border-radius: calc(var(--ember-radius, 8px) + 4px) !important;
+  overflow: clip !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.38),
+              0 0 0 1px color-mix(in srgb, var(--ember-accent, gray) 20%, transparent) !important;
+}
+:root[ember-floating] #browser,
+:root[ember-floating] #navigator-toolbox {
+  border-bottom: none !important;
+}
+:root[ember-floating][ember-themed] #browser {
+  background-color: var(--ember-bg) !important;
+}
+:root[ember-floating][ember-themed] #nav-bar {
+  background-color: var(--ember-bg) !important;
+}
+
+/* ====================================================== address bar width */
+:root[ember-urlbar-max] #urlbar-container {
+  max-width: var(--ember-urlbar-max) !important;
+  margin-inline: auto !important;
+}
+
+/* ====================================================== bookmarks & menus */
+:root[ember-bm-icons] #PersonalToolbar .bookmark-item:not([container]) > .toolbarbutton-text {
+  display: none !important;
+}
+:root[ember-bm-icons] #PersonalToolbar .bookmark-item:not([container]) > .toolbarbutton-icon {
+  margin-inline-end: 0 !important;
+}
+:root[ember-compact-menus] menupopup {
+  --menuitem-padding-block: 3px !important;
+  --menuitem-padding-inline: 8px !important;
+}
+:root[ember-compact-menus] menupopup > menuitem,
+:root[ember-compact-menus] menupopup > menu {
+  min-height: 0 !important;
+  padding-block: 2px !important;
+}

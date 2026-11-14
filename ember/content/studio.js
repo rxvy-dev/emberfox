@@ -311,6 +311,8 @@ function paletteEditor() {
 const ICONS = {
   look: "M12 2c1 4 6 5 5 10-.5 2.6-2.6 4-5 4s-4.6-1.4-5-4c-.6-3.6 2.4-4.6 2.8-8 1 2 1.6 3.2 1.6 4.8C12.2 7 12.6 4.6 12 2zM4 20h16v2H4z",
   placement: "M3 4h18v4H3zM3 10h7v10H3zM12 10h9v4h-9zM12 16h9v4h-9z",
+  newtab: "M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm0 2v12h16V6zm7 2h2v3h3v2h-3v3h-2v-3H8v-2h3z",
+  search: "M10 3a7 7 0 015.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1110 3zm0 2a5 5 0 100 10 5 5 0 000-10z",
   browsing: "M4 4h16v16H4zM6 8h12v2H6zM6 12h8v2H6z",
   privacy: "M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5zm0 4a3 3 0 00-3 3v2H8v6h8v-6h-1V9a3 3 0 00-3-3zm0 2a1 1 0 011 1v2h-2V9a1 1 0 011-1z",
   ai: "M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2zM19 16l1 2.5 2.5 1-2.5 1L19 23l-1-2.5-2.5-1 2.5-1z",
@@ -320,6 +322,8 @@ const ICONS = {
 };
 const SECTIONS = [
   ["look", "Look & Color", renderLook],
+  ["newtab", "New Tab", renderNewtab],
+  ["search", "Search", renderSearch],
   ["placement", "Placement", renderPlacement],
   ["browsing", "Tabs & Browsing", renderBrowsing],
   ["privacy", "Privacy", renderPrivacy],
@@ -369,6 +373,17 @@ function renderLook() {
     h("h2", {}, "Shape & type"),
     card(
       range("ember.shape.radius", "Corner roundness", "Tabs, buttons, URL bar and menus.", 0, 20, 1, v => `${v}px`),
+      select("ember.tabs.style", "Tab style", null,
+        [["default", "Default"], ["pill", "Pills"], ["underline", "Underline (flat, accent line)"], ["boxy", "Boxy (square corners)"]]),
+      range("ember.tabs.height", "Tab height", "Leave at auto for Firefox's size.", 0, 56, 1, v => (v < 20 ? "auto" : `${v}px`)),
+      toggle("ember.layout.floatingContent", "Floating page", "Web pages sit in a rounded card with a gap around them."),
+      range("ember.layout.contentGap", "Floating page gap", null, 2, 24, 1, v => `${v}px`),
+      select("layout.css.devPixelsPerPx", "Interface scale", "Scales the whole browser. Handy on HiDPI or TV screens.",
+        [["-1.0", "Auto (follow system)"], ["0.9", "90%"], ["1.0", "100%"], ["1.1", "110%"], ["1.25", "125%"], ["1.5", "150%"], ["1.75", "175%"], ["2.0", "200%"]]),
+      select("widget.non-native-theme.scrollbar.style", "Scrollbar style", null,
+        [[0, "Default"], [1, "Thin rounded (macOS-like)"], [2, "GTK"], [3, "Minimal overlay (Android-like)"], [4, "Classic (Windows 10)"], [5, "Modern (Windows 11)"]]),
+      toggle("widget.gtk.overlay-scrollbars.enabled", "Overlay scrollbars", "Scrollbars float over the page and fade out."),
+      toggle("ember.layout.compactMenus", "Compact menus", "Tighter right-click and app menus."),
       range("browser.tabs.tabMinWidth", "Tab minimum width", "Smaller = more tabs before scrolling.", 40, 250, 5, v => `${v}px`),
       range("ember.shape.tabMaxWidth", "Tab maximum width", null, 120, 500, 5, v => `${v}px`),
       select("browser.uidensity", "Density", "Compact trims padding across all toolbars.", [[0, "Normal"], [1, "Compact"]]),
@@ -381,6 +396,320 @@ function renderLook() {
       range("ember.font.size", "Interface text size", "0 = system default.", 0, 20, 1, v => (v < 9 ? "auto" : `${v}px`)),
       select("layout.css.prefers-color-scheme.content-override", "Websites prefer", "What color scheme sites see when they offer light/dark versions.",
         [[0, "Dark"], [1, "Light"], [2, "Follow system"], [3, "Follow browser theme"]])),
+  ];
+}
+
+// ============================================================== NEW TAB
+function newtabPreview() {
+  const box = h("div", { class: "nt-preview" });
+  bind(() => {
+    const v = emberValues();
+    const p = M.resolvePalette(v);
+    const wall = v["ember.newtab.wallpaper"];
+    const bgs = {
+      embers: `radial-gradient(120% 80% at 50% 120%, ${p.accent}88, transparent 70%), ${p.bg}`,
+      aurora: `radial-gradient(60% 70% at 15% 10%, ${p.accent}aa, transparent 60%), radial-gradient(60% 70% at 90% 100%, ${p.accent2}88, transparent 60%), ${p.bg}`,
+      gradient: `radial-gradient(80% 80% at 80% 0%, ${p.accent}66, transparent 60%), linear-gradient(160deg, ${p.bg2}, ${p.bg})`,
+      solid: p.bg, none: p.bg, image: `linear-gradient(135deg, ${p.bg3}, ${p.bg})`,
+    };
+    box.style.background = bgs[wall] || bgs.embers;
+    box.style.color = p.fg;
+    const links = M.newtabLinks(v).slice(0, v["ember.newtab.columns"]);
+    const now = new Date();
+    let hr = now.getHours();
+    const mm = String(now.getMinutes()).padStart(2, "0");
+    if (!v["ember.newtab.clock24"]) hr = hr % 12 || 12;
+    const top = v["ember.newtab.layout"] == "top";
+    const minimal = v["ember.newtab.layout"] == "minimal";
+    box.replaceChildren(h("div", { class: "nt-col", style: { justifyContent: top ? "flex-start" : "center", paddingTop: top ? "26px" : "0" } },
+      v["ember.newtab.clock"] && !minimal ? h("div", { class: "nt-clock" }, `${hr}:${mm}`) : null,
+      v["ember.newtab.greeting"] && !minimal ? h("div", { class: "nt-greet", style: { color: p.accent2 } },
+        v["ember.newtab.name"] ? `Good evening, ${v["ember.newtab.name"]}` : "Good evening") : null,
+      v["ember.newtab.search"] ? h("div", { class: "nt-search", style: { background: p.bg2, borderColor: p.accent + "66" } },
+        h("span", { class: "nt-chip", style: { background: p.fg + "18" } }, "engine ▾"), h("span", { style: { opacity: .5 } }, "Search…")) : null,
+      h("div", { class: "nt-tiles" }, links.map(l => h("i", {
+        class: "nt-tile " + v["ember.newtab.tileStyle"], style: { background: p.bg2, color: p.accent },
+      }, (l.title || "?").charAt(0))))));
+  }, box);
+  return box;
+}
+
+function wallpaperPicker() {
+  const grid = h("div", { class: "walls" });
+  const file = h("input", { type: "file", accept: "image/png,image/jpeg,image/webp,image/gif,image/avif", hidden: true });
+  file.addEventListener("change", async () => {
+    const f = file.files[0];
+    if (!f) return;
+    if (f.size > 40 * 1024 * 1024) { toast("That picture is over 40 MB"); return; }
+    try {
+      const bytes = new Uint8Array(await f.arrayBuffer());
+      await EmberBoot.setNewtabWallpaper(bytes, (f.name.split(".").pop() || "jpg"));
+      toast("Wallpaper set");
+    } catch (e) {
+      toast("Couldn't use that picture: " + e.message);
+    }
+    file.value = "";
+  });
+  bind(() => {
+    const v = emberValues();
+    const p = M.resolvePalette(v);
+    const cur = v["ember.newtab.wallpaper"];
+    const sw = {
+      embers: `radial-gradient(120% 90% at 50% 120%, ${p.accent}, transparent 70%), ${p.bg}`,
+      aurora: `radial-gradient(70% 70% at 20% 20%, ${p.accent}, transparent 60%), radial-gradient(70% 70% at 90% 100%, ${p.accent2}, transparent 60%), ${p.bg}`,
+      gradient: `radial-gradient(90% 90% at 80% 0%, ${p.accent}99, transparent 60%), linear-gradient(160deg, ${p.bg2}, ${p.bg})`,
+      solid: p.bg2, image: `repeating-linear-gradient(45deg, ${p.bg2} 0 8px, ${p.bg3} 8px 16px)`, none: p.bg,
+    };
+    grid.replaceChildren(...Object.entries(M.WALLPAPERS).map(([id, label]) =>
+      h("button", {
+        class: "wall" + (cur == id ? " selected" : ""),
+        onclick: () => (id == "image" && !v["ember.newtab.wallpaperFile"] ? file.click() : set("ember.newtab.wallpaper", id)),
+      }, h("div", { class: "sw", style: { background: sw[id] } }), h("span", {}, label))),
+      file);
+  }, grid);
+  return h("div", {}, grid, h("div", { class: "btns", style: { marginTop: "10px" } },
+    h("button", { class: "btn", onclick: () => file.click() }, "Choose a picture…")));
+}
+
+function linksEditor() {
+  const wrap = h("div", { class: "card" });
+  const save = list => set("ember.newtab.links", JSON.stringify(list));
+  const fixURL = u => {
+    u = u.trim();
+    if (!u) return "";
+    return /^https?:\/\//i.test(u) ? u : "https://" + u;
+  };
+  function render() {
+    const list = M.newtabLinks(emberValues());
+    const rows = list.map((l, i) => {
+      const t = h("input", { type: "text", value: l.title, placeholder: "Name", "aria-label": "Shortcut name", style: { minWidth: "130px", width: "140px" } });
+      const u = h("input", { type: "url", value: l.url, placeholder: "https://…", "aria-label": "Shortcut address", style: { minWidth: "260px" } });
+      const commit = () => {
+        const next = M.newtabLinks(emberValues());
+        const url = fixURL(u.value);
+        if (!url) return;
+        next[i] = { title: t.value.trim() || new URL(url).hostname.replace(/^www\./, ""), url };
+        save(next);
+      };
+      t.addEventListener("change", commit);
+      u.addEventListener("change", commit);
+      const move = d => () => {
+        const next = M.newtabLinks(emberValues());
+        const j = i + d;
+        if (j < 0 || j >= next.length) return;
+        [next[i], next[j]] = [next[j], next[i]];
+        save(next);
+      };
+      return h("div", { class: "row" },
+        h("div", { class: "ctl" }, t, u),
+        h("div", { class: "ctl" },
+          h("button", { class: "btn", title: "Move up", onclick: move(-1) }, "▲"),
+          h("button", { class: "btn", title: "Move down", onclick: move(1) }, "▼"),
+          h("button", { class: "btn danger", title: "Remove", onclick: () => { const n = M.newtabLinks(emberValues()); n.splice(i, 1); save(n); } }, "✕")));
+    });
+    const nt = h("input", { type: "text", placeholder: "Name (optional)", "aria-label": "New shortcut name", style: { minWidth: "130px", width: "140px" } });
+    const nu = h("input", { type: "url", placeholder: "example.com", "aria-label": "New shortcut address", style: { minWidth: "260px" } });
+    const add = () => {
+      const url = fixURL(nu.value);
+      if (!url) { nu.focus(); return; }
+      let host = url;
+      try { host = new URL(url).hostname.replace(/^www\./, ""); } catch (e) { toast("That address doesn't look right"); return; }
+      save([...M.newtabLinks(emberValues()), { title: nt.value.trim() || host, url }]);
+    };
+    nu.addEventListener("keydown", e => { if (e.key == "Enter") add(); });
+    wrap.replaceChildren(...rows,
+      h("div", { class: "row" }, h("div", { class: "ctl" }, nt, nu),
+        h("div", { class: "ctl" },
+          h("button", { class: "btn primary", onclick: add }, "Add shortcut"),
+          h("button", { class: "btn", onclick: () => P.clearUserPref("ember.newtab.links") }, "Defaults"))));
+  }
+  let last = null;
+  bind(() => {
+    const cur = get("ember.newtab.links");
+    if (cur !== last) { last = cur; render(); }
+  }, wrap);
+  return wrap;
+}
+
+function renderNewtab() {
+  return [
+    h("h1", {}, "New Tab"),
+    h("p", { class: "lede" }, "Your own start page: wallpaper, clock, search with your engine, and shortcuts. It's a plain local page: no ads, no tracking, no network requests unless you turn on site icons."),
+    card(
+      toggle("ember.newtab.enabled", "Use the Ember New Tab", "Off = Firefox's standard new tab page."),
+      toggle("ember.newtab.home", "Also use it as my home page", "Only applies if you haven't set a home page yourself."),
+      row(null, "See it", null, h("button", { class: "btn", onclick: () => browserWin()?.openTrustedLinkIn(EmberBoot.newtabURL(), "tab") }, "Open a new tab"))),
+    newtabPreview(),
+    h("h2", {}, "Wallpaper"),
+    wallpaperPicker(),
+    card(
+      range("ember.newtab.dim", "Darken wallpaper", "Keeps text readable on bright pictures.", 0, 90, 5, v => `${v}%`),
+      range("ember.newtab.blur", "Blur wallpaper", null, 0, 30, 1, v => `${v}px`)),
+    h("h2", {}, "Layout"),
+    card(
+      select("ember.newtab.layout", "Arrangement", null, [["center", "Centered"], ["top", "Near the top"], ["minimal", "Minimal (search + shortcuts only)"]]),
+      toggle("ember.newtab.clock", "Clock"),
+      toggle("ember.newtab.clock24", "24-hour time"),
+      toggle("ember.newtab.seconds", "Show seconds"),
+      toggle("ember.newtab.date", "Date"),
+      toggle("ember.newtab.greeting", "Greeting", "\"Good evening\", in black-metal lettering."),
+      text("ember.newtab.name", "Your name for the greeting", null, { placeholder: "e.g. rxvy" }),
+      toggle("ember.newtab.search", "Search box"),
+      toggle("ember.newtab.engineSwitcher", "Engine switcher in the search box", "Pick an engine per search, or type a keyword like @yt first."),
+      toggle("ember.newtab.notes", "Notes", "A small notepad in the corner. Saved only on this computer.")),
+    h("h2", {}, "Shortcuts"),
+    linksEditor(),
+    card(
+      select("ember.newtab.tileStyle", "Tile style", null, [["rounded", "Rounded"], ["circle", "Circles"], ["square", "Square"], ["minimal", "Minimal (no background)"]]),
+      range("ember.newtab.columns", "Shortcuts per row", null, 3, 10, 1, v => `${v}`),
+      toggle("ember.newtab.topSites", "Add my most-visited sites", "Fills in after your shortcuts, from your own history."),
+      toggle("ember.newtab.favicons", "Site icons", "Loads each site's own icon. That contacts the site; off = letter tiles with no network use.")),
+  ];
+}
+
+// ================================================================ SEARCH
+const SEARCH_REASON = () => Services.search.CHANGE_REASON?.USER ?? "user";
+
+async function searchState() {
+  await Services.search.init();
+  const [engines, def, priv] = await Promise.all([
+    Services.search.getVisibleEngines(), Services.search.getDefault(), Services.search.getDefaultPrivate(),
+  ]);
+  return { engines, def, priv };
+}
+
+function engineIcon(e) {
+  const img = h("img", { class: "eng-ico", alt: "", width: 20, height: 20 });
+  e.getIconURL?.(32).then(u => { if (u) img.src = u; }, () => {});
+  return img;
+}
+
+function renderSearch() {
+  const wrap = h("div", {});
+  async function render() {
+    let st;
+    try {
+      st = await searchState();
+    } catch (e) {
+      wrap.replaceChildren(card(row(null, "Search engines unavailable", String(e))));
+      return;
+    }
+    const { engines, def, priv } = st;
+    const installed = new Set(engines.map(e => e.name.toLowerCase()));
+    const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return ""; } };
+    const installedHosts = new Set(engines.map(e => {
+      try { return hostOf(e.getSubmission("x").uri.spec); } catch (err) { return ""; }
+    }).filter(Boolean));
+
+    const grid = h("div", { class: "engines" }, engines.map(e =>
+      h("button", {
+        class: "engine-card" + (def && e.name == def.name ? " selected" : ""),
+        title: `Make ${e.name} the default`,
+        onclick: async () => { await Services.search.setDefault(e, SEARCH_REASON()); toast(`${e.name} is now your search engine`); },
+      }, engineIcon(e), h("b", {}, e.name), h("small", {}, e.alias || ""))));
+
+    const privSel = h("select", { "aria-label": "Private window search engine" },
+      engines.map(e => h("option", { value: e.name }, e.name)));
+    privSel.value = priv?.name || def?.name || "";
+    bind(() => { privSel.disabled = !get("browser.search.separatePrivateDefault"); }, privSel);
+    privSel.addEventListener("change", async () => {
+      const e = engines.find(x => x.name == privSel.value);
+      if (e) { await Services.search.setDefaultPrivate(e, SEARCH_REASON()); toast(`Private windows use ${e.name}`); }
+    });
+
+    const rows = engines.map(e => {
+      const alias = h("input", { type: "text", value: e.alias || "", placeholder: "@keyword", "aria-label": `Keyword for ${e.name}`, style: { minWidth: "120px", width: "130px" } });
+      alias.addEventListener("change", () => {
+        const a = M.normalizeAlias(alias.value);
+        const clash = engines.find(x => x !== e && (x.alias || "").toLowerCase() == a.toLowerCase());
+        if (a && clash) { toast(`${a} is already used by ${clash.name}`); alias.value = e.alias || ""; return; }
+        e.alias = a;
+        alias.value = a;
+        toast(a ? `Type “${a} something” in the address bar to search ${e.name}` : "Keyword removed");
+      });
+      const isDef = def && e.name == def.name;
+      return h("div", { class: "row" },
+        h("div", { class: "label" }, engineIcon(e), e.name, isDef ? h("span", { class: "badge" }, "Default") : null),
+        h("div", { class: "ctl" }, alias,
+          h("button", { class: "btn", disabled: isDef, onclick: () => Services.search.setDefault(e, SEARCH_REASON()) }, "Make default"),
+          h("button", { class: "btn danger", disabled: isDef, title: isDef ? "Pick another default first" : "Remove",
+            onclick: async () => { await Services.search.removeEngine(e, SEARCH_REASON()); toast(`${e.name} removed`); } }, "Remove")));
+    });
+
+    const groups = {};
+    for (const p of M.POPULAR_ENGINES) {
+      if (installed.has(p.name.toLowerCase()) || installedHosts.has(hostOf(p.url))) continue;
+      (groups[p.group] ||= []).push(p);
+    }
+    const addPopular = async (p, makeDefault) => {
+      try {
+        const clash = engines.find(x => (x.alias || "").toLowerCase() == p.alias.toLowerCase());
+        const e = await Services.search.addUserEngine({ name: p.name, url: p.url, alias: clash ? "" : p.alias, suggestUrl: p.suggestUrl });
+        if (makeDefault) await Services.search.setDefault(e, SEARCH_REASON());
+        toast(makeDefault ? `${p.name} added and set as default` : `${p.name} added. Keyword ${clash ? "(pick one below)" : p.alias}`);
+      } catch (e) {
+        toast(`Couldn't add ${p.name}: ${e.message}`);
+      }
+    };
+    const popular = Object.entries(groups).map(([g, list]) => h("div", { class: "pop-group" },
+      h("div", { class: "pop-title" }, g),
+      h("div", { class: "snips" }, list.map(p => h("span", { class: "pop" },
+        h("button", { class: "btn", title: `Add ${p.name} (${p.alias})`, onclick: () => addPopular(p, false) }, "+ " + p.name),
+        h("button", { class: "btn star", title: `Add ${p.name} and make it the default`, onclick: () => addPopular(p, true) }, "★"))))));
+
+    const cn = h("input", { type: "text", placeholder: "Name, e.g. My SearXNG", "aria-label": "Engine name" });
+    const cu = h("input", { type: "url", placeholder: "https://example.org/search?q=%s", "aria-label": "Search URL", style: { minWidth: "300px" } });
+    const ck = h("input", { type: "text", placeholder: "@keyword", "aria-label": "Keyword", style: { minWidth: "110px", width: "120px" } });
+    const addCustom = async () => {
+      const url = M.normalizeEngineURL(cu.value);
+      const name = cn.value.trim();
+      if (!name) { toast("Give the engine a name"); cn.focus(); return; }
+      if (!url) { toast("The address needs %s where the search words go"); cu.focus(); return; }
+      if (installed.has(name.toLowerCase())) { toast(`There's already an engine called ${name}`); return; }
+      try {
+        await Services.search.addUserEngine({ name, url, alias: M.normalizeAlias(ck.value) });
+        toast(`${name} added`);
+      } catch (e) {
+        toast("Couldn't add it: " + e.message);
+      }
+    };
+
+    wrap.replaceChildren(
+      h("h2", {}, "Your search engine"),
+      h("p", { class: "lede" }, "Click one to use it everywhere: address bar, new tab, and right-click › Search."),
+      grid,
+      h("h2", {}, "Private windows"),
+      card(
+        toggle("browser.search.separatePrivateDefault", "Use a different engine in private windows"),
+        row(null, "Private window engine", null, privSel)),
+      h("h2", {}, "Add an engine in one click"),
+      h("p", { class: "lede" }, "+ adds it with a keyword, ★ adds it and makes it your default."),
+      ...popular,
+      h("h2", {}, "Add any site"),
+      h("div", { class: "card" },
+        h("div", { class: "row" }, h("div", { class: "ctl", style: { flexWrap: "wrap" } }, cn, cu, ck),
+          h("div", { class: "ctl" }, h("button", { class: "btn primary", onclick: addCustom }, "Add"))),
+        h("div", { class: "row" }, h("div", { class: "desc" },
+          "Tip: search a site once, copy the results address, and swap your search words for %s."))),
+      h("h2", {}, "Installed engines & keywords"),
+      h("p", { class: "lede" }, "Type a keyword before your search in the address bar, like “@yt lofi”, to use that engine just once."),
+      h("div", { class: "card" }, rows),
+      h("h2", {}, "Suggestions"),
+      card(
+        toggle("browser.search.suggest.enabled", "Search suggestions while typing", "Sends what you type to your search engine."),
+        toggle("browser.search.suggest.enabled.private", "Suggestions in private windows"),
+        toggle("browser.search.openintab", "Open search results in a new tab")));
+    // the private-engine toggle also needs Firefox's UI switch
+    if (!get("browser.search.separatePrivateDefault.ui.enabled")) set("browser.search.separatePrivateDefault.ui.enabled", true);
+  }
+  render();
+  const obs = { observe: () => { if (wrap.isConnected) render(); } };
+  Services.obs.addObserver(obs, "browser-search-engine-modified");
+  window.addEventListener("unload", () => Services.obs.removeObserver(obs, "browser-search-engine-modified"));
+  return [
+    h("h1", {}, "Search"),
+    h("p", { class: "lede" }, "Switch engines in one click, add the ones you actually use, and give each a keyword."),
+    wrap,
   ];
 }
 
@@ -515,6 +844,8 @@ function renderPlacement() {
       toggle("ember.layout.autohide", "Focus mode", "Toolbars slide away and come back when you point at the top edge. Ctrl+Alt+Z toggles it."),
       toggle("ember.layout.urlbarCentered", "Center the address", "URL text sits in the middle until you click in."),
       toggle("ember.layout.compactNavbar", "Slim navigation bar", "Less padding around buttons and the URL bar."),
+      range("ember.layout.urlbarMaxWidth", "Address bar width", "Cap the URL bar and center it, for wide screens.", 0, 1800, 50, v => (v < 300 ? "full" : `${v}px`)),
+      toggle("ember.layout.bookmarksIconsOnly", "Bookmarks bar: icons only", "Hide bookmark names, keep folders labelled."),
       toggle("ember.layout.tabCloseHover", "Close buttons on hover only", "Cleaner tabs: × appears on the active or hovered tab.")),
 
     h("h2", {}, "Toolbar arrangement"),
@@ -557,7 +888,13 @@ function renderBrowsing() {
       toggle("browser.tabs.groups.enabled", "Tab groups"),
       toggle("browser.tabs.splitView.enabled", "Split view", "Two tabs side by side."),
       toggle("browser.tabs.unloadOnLowMemory", "Unload idle tabs when memory is low"),
-      toggle("browser.tabs.warnOnClose", "Warn before closing many tabs")),
+      toggle("browser.tabs.warnOnClose", "Warn before closing many tabs"),
+      toggle("browser.ctrlTab.sortByRecentlyUsed", "Ctrl+Tab cycles in recently-used order"),
+      toggle("privacy.userContext.enabled", "Container tabs", "Keep work, shopping and social logins in separate color-coded tabs."),
+      toggle("browser.tabs.loadBookmarksInTabs", "Open bookmarks in a new tab")),
+    h("h2", {}, "Keyboard"),
+    card(row(null, "Keyboard shortcuts", "Change or turn off any shortcut, Firefox's or Emberfox's.",
+      h("button", { class: "btn", onclick: () => browserWin()?.openTrustedLinkIn("about:keyboard", "tab") }, "Edit shortcuts"))),
     h("h2", {}, "Scrolling & mouse"),
     card(
       toggle("general.smoothScroll", "Smooth scrolling"),
@@ -572,7 +909,8 @@ function renderBrowsing() {
       toggle("browser.urlbar.suggest.history", "Suggest history"),
       toggle("browser.urlbar.suggest.bookmark", "Suggest bookmarks"),
       toggle("browser.urlbar.suggest.openpage", "Suggest open tabs"),
-      toggle("browser.urlbar.suggest.topsites", "Show shortcuts when the bar is empty")),
+      toggle("browser.urlbar.suggest.topsites", "Show shortcuts when the bar is empty"),
+      toggle("browser.urlbar.openintab", "Address bar results open in a new tab")),
     h("h2", {}, "Media & performance (Linux)"),
     card(
       select("media.autoplay.default", "Autoplay", null, [[0, "Allow audio and video"], [1, "Block audio"], [5, "Block audio and video"]]),
@@ -582,7 +920,9 @@ function renderBrowsing() {
       select("dom.ipc.processCount", "Content processes", "More = better isolation and speed with many tabs, more RAM.",
         [[4, "4 (low RAM)"], [8, "8 (default)"], [12, "12"], [16, "16 (lots of RAM)"]]),
       toggle("browser.download.useDownloadDir", "Save downloads without asking", "Off = choose a folder every time."),
-      toggle("findbar.highlightAll", "Find bar highlights every match")),
+      toggle("findbar.highlightAll", "Find bar highlights every match"),
+      toggle("browser.download.alwaysOpenPanel", "Show the downloads panel when a download starts"),
+      select("layout.spellcheckDefault", "Spell check", null, [[0, "Off"], [1, "Multi-line boxes"], [2, "All text boxes"]])),
   ];
 }
 

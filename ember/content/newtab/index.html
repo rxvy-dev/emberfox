@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Ember New Tab: an ordinary unprivileged page. It can't touch the browser;
+       its settings arrive in config.js, written by Ember Studio's engine. -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: https: data:; font-src 'self' file:; connect-src 'none'; form-action 'none'">
+  <meta name="color-scheme" content="dark light">
+  <meta name="referrer" content="no-referrer">
+  <title>New Tab</title>
+  <link rel="icon" href="logo.svg">
+  <link rel="stylesheet" href="newtab.css">
+  <script src="config.js"></script>
+  <script src="newtab.js" defer></script>
+</head>
+<body>
+  <div id="wall" aria-hidden="true"><canvas id="fx"></canvas></div>
+  <div id="dim" aria-hidden="true"></div>
+
+  <main id="center">
+    <div id="clock" hidden></div>
+    <div id="date" hidden></div>
+    <h1 id="greeting" hidden></h1>
+
+    <form id="search" role="search" hidden>
+      <div class="engine">
+        <button type="button" id="engine-btn" aria-haspopup="listbox" aria-expanded="false" title="Search engine"></button>
+        <ul id="engine-menu" role="listbox" hidden></ul>
+      </div>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" aria-label="Search or enter address">
+      <button type="submit" class="go" aria-label="Search">
+        <svg viewBox="0 0 24 24"><path d="M5 12h12m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </form>
+    <p id="hint" hidden>Tip: start with a keyword like <kbd>@yt</kbd> to search somewhere else · <kbd>/</kbd> focuses search</p>
+
+    <nav id="tiles" aria-label="Shortcuts"></nav>
+  </main>
+
+  <aside id="notes" hidden>
+    <div class="nhead">Notes</div>
+    <textarea id="notes-text" spellcheck="false" placeholder="Jot something down… (stays on this computer)"></textarea>
+  </aside>
+
+  <button id="gear" title="Customize this page in Ember Studio">
+    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.6 7.6 0 0 0-1.7-1l-.4-2.7h-4l-.4 2.7a7.6 7.6 0 0 0-1.7 1l-2.5-1-2 3.5L4.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1c.5.4 1.1.7 1.7 1l.4 2.7h4l.4-2.7c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.5zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg>
+  </button>
+  <div id="gear-tip" hidden>
+    <b>Make it yours</b>
+    Wallpaper, clock, shortcuts, search engine and layout all live in
+    <b>Ember Studio → New Tab</b>.<br>Open it with <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>E</kbd>.
+  </div>
+</body>
+</html>

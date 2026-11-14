@@ -33,6 +33,11 @@ assert p.get("DisableTelemetry") and p.get("DisableFirefoxStudies") and p.get("D
 PY
 [[ -e "$INST/distribution/distribution.ini" ]] && bad "Mozilla distribution.ini present" || ok "no Mozilla distribution.ini"
 
+echo "Ember layer"
+for f in ember/content/boot.sys.mjs ember/content/studio.html ember/content/newtab/index.html ember/content/newtab/newtab.js; do
+  [[ -f "$INST/$f" ]] && ok "$f" || bad "$f missing"
+done
+
 echo "Identity"
 if [[ -f "$INST/browser/application.ini" ]]; then
   grep -q '^Name=Emberfox' "$INST/browser/application.ini" && ok "app name Emberfox" || bad "app name not Emberfox"

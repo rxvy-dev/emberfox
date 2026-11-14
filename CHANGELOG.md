@@ -24,6 +24,19 @@ Emberfox-only changes bump the revision.
 - First-run welcome wizard.
 - Update notifier (GitHub releases only, no identifiers, can be turned off).
 
+### Ember New Tab
+- Custom start page with clock, date, greeting, search box with engine switcher and `@keyword` routing, editable shortcut tiles, optional most-visited sites, notes.
+- Wallpapers: animated embers, aurora, gradient, solid, or your own picture (dim + blur); 3 layouts; 4 tile styles. Also usable as the home page.
+- Runs as an unprivileged local page; settings are written into it by the engine. No network use unless site icons are enabled.
+
+### Search
+- Studio → Search: one-click default engine, separate private-window engine, 25 one-click engines (★ to add and make default), custom engines from any `%s` URL, editable keywords, suggestion toggles.
+
+### More customization
+- Tab styles (pills, underline, boxy), tab height, floating page card, interface scale, scrollbar styles, overlay scrollbars, compact menus, address bar max width, icon-only bookmarks.
+- Container tabs, recently-used Ctrl+Tab, spell check mode, downloads panel, open bookmarks/address-bar results in new tabs, link to keyboard shortcut editor (about:keyboard).
+- Separate search bar available in the Placement button list.
+
 ### Packaging
 - One-line graphical installer: `curl -fsSL https://raw.githubusercontent.com/rxvy-dev/emberfox/main/install.sh | bash`. zenity/kdialog GUI with whiptail/text fallback; just-me, everyone or Flatpak; checksum-verified; update and uninstall on re-run.
 - Universal tarball + `install.sh`, AppImage, Flatpak, `.deb`, `.rpm`, Arch PKGBUILD, Void template, Gentoo ebuild; x86_64 and aarch64.

@@ -27,16 +27,21 @@ curl -fsSL https://raw.githubusercontent.com/rxvy-dev/emberfox/main/install.sh |
 |---|---|
 | **Telemetry** | Every telemetry, study, experiment, attribution and crash-upload switch is **locked** off at the engine level (autoconfig `lockPref`), backed by enterprise policies. The crash reporter, ping sender and updater binaries are **deleted**. In source builds they're compiled out. A live **proof panel** in Studio shows each lock. |
 | **Ember Studio** (`about:ember`) | A built-in control center. Every change applies **instantly** to all windows, no restart and no add-on. |
+| **Ember New Tab** | Your own start page: big clock, date and a black-metal greeting with your name · search box with a per-search **engine switcher** and `@keyword` shortcuts · editable shortcut tiles (4 styles), optionally topped up from your most-visited sites · **wallpapers**: rising embers, aurora, gradient, solid, or your own picture with dim and blur · notes pad · 3 layouts. A plain local page: no ads, no tracking, no network requests unless you turn on site icons. Doubles as your home page. |
+| **Search** | Switch your engine in **one click** · a different engine for private windows · **25 one-click engines** (Startpage, Brave, Kagi, Mojeek, Arch Wiki, AUR, Void packages, Flathub, ProtonDB, GitHub, MDN, docs.rs, YouTube…) with ★ to add-and-make-default · add any site with a `%s` URL · edit every engine's `@keyword` · suggestion and new-tab toggles |
 | **Color** | 10 hand-tuned themes · a full **7-surface palette editor** (frame, toolbar, URL bar, text, dim text, accent, glow) · **save unlimited named themes** · **share themes as a one-line code** (`ember:0b0607,…`) · a quick accent swap · light and dark · steps aside for AMO themes if you want |
 | **Placement** | Tabs **top / below the bar / vertical / hidden** · sidebar left or right · collapsed-on-hover sidebar · bookmarks bar modes · **move any toolbar button** to the nav bar, tab strip, bookmarks bar, overflow menu or hidden, with ◀ ▶ reordering · one-click toolbar layouts (Classic / Minimal / Power) · hide 6 kinds of clutter |
-| **Shape & feel** | Corner radius 0–20px · tab min and max width · density · interface font and size · ember glow · ember strip · ember loading bar · **focus mode** (toolbars slide away, Ctrl+Alt+Z) · centered URL · slim nav bar |
+| **Shape & feel** | Tab styles (pills, underline, boxy) · tab height · **floating page** (rounded card with a gap, Zen-style) · interface scale (90–200%) · 6 scrollbar styles · overlay scrollbars · compact menus · address bar max width · icon-only bookmarks · corner radius 0–20px · tab min and max width · density · interface font and size · ember glow · ember strip · ember loading bar · **focus mode** (toolbars slide away, Ctrl+Alt+Z) · centered URL · slim nav bar |
 | **Privacy levels** | Balanced / Hardened / Fortress in one click, plus 25 fine-tune switches (DoH with Quad9, Mullvad, Cloudflare, NextDNS or custom · RFP · clear on exit · WebRTC · WebGL…) |
 | **No junk** | No Pocket, sponsored tiles or stories, Firefox Suggest ads, VPN promos, "More from Mozilla", or default-browser nags. AI features are **blocked by default** (local translations stay available). |
 | **Power users** | Custom CSS editor with live reload and snippets · `userChrome.css` works out of the box · export and import your whole setup (theme, saved themes, toolbars, privacy) as one JSON file |
 | **Linux** | VA-API hardware video decoding toggles (NVIDIA via nvidia-vaapi-driver) · middle-click paste · X11 + Wayland · own Wayland app-id and window class |
 | **Always current** | A new Emberfox is built and published automatically within hours of every Firefox release, so Mozilla's security fixes arrive fast. A built-in notifier (GitHub only, no identifiers, can be turned off) tells you when one is out. |
 
+<p align="center"><img src="docs/newtab.png" width="98%" alt="Ember New Tab"></p>
 <p align="center">
+  <img src="docs/studio-newtab.png" width="49%" alt="Ember Studio: new tab">
+  <img src="docs/studio-search.png" width="49%" alt="Ember Studio: search">
   <img src="docs/studio-look.png" width="49%" alt="Ember Studio: themes">
   <img src="docs/studio-palette.png" width="49%" alt="Ember Studio: palette editor">
   <img src="docs/studio-placement.png" width="49%" alt="Ember Studio: placement">
