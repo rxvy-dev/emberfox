@@ -18,7 +18,6 @@ import time
 import traceback
 
 from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
@@ -166,9 +165,14 @@ drv.get(f"{BASE}/plain.html")
 def _():
     assert chrome("return document.getElementById('key_search')?.getAttribute('disabled')") == "true", \
         "Firefox's own Ctrl+K should be switched off while the palette is on"
-    body = drv.find_element("tag name", "body")
-    body.click()
-    ActionChains(drv).key_down(Keys.CONTROL).send_keys("k").key_up(Keys.CONTROL).perform()
+    drv.find_element("tag name", "body").click()
+    # A real key press from the X server, so it travels the same path as a person's would
+    # (WebDriver's own key events stay inside the page and never reach browser shortcuts).
+    wid = subprocess.run(["xdotool", "search", "--onlyvisible", "--name", "Plain"], capture_output=True, text=True).stdout.split()
+    assert wid, "couldn't find the browser window"
+    subprocess.run(["xdotool", "windowfocus", "--sync", wid[-1]], check=False)
+    time.sleep(0.5)
+    subprocess.run(["xdotool", "key", "--clearmodifiers", "ctrl+k"], check=True)
     wait_for(lambda: chrome("return !!document.getElementById('igni-palette')"), "the palette to open after Ctrl+K", 5)
     chrome("""const i = document.getElementById('igni-palette-input'); i.value = 'dupl';
               i.dispatchEvent(new Event('input'));""")
@@ -235,14 +239,16 @@ def _():
 
 @check("Cookie auto-delete clears a closed site, keep-list protects it")
 def _():
+    # Its own host: earlier steps leave localhost tabs open, and an open site is never cleaned.
+    site = f"http://127.0.0.1:{PORT}"
     set_prefs({"ignifox.privacy.autoDelete": True, "ignifox.privacy.keepSites": ""})
-    count = "return Services.cookies.getCookiesFromHost('localhost', {}).length"
-    chrome(f"gBrowser.selectedTab = gBrowser.addTrustedTab('{BASE}/cookie.html')")
+    count = "return Services.cookies.getCookiesFromHost('127.0.0.1', {}).length"
+    chrome(f"gBrowser.selectedTab = gBrowser.addTrustedTab('{site}/cookie.html')")
     wait_for(lambda: chrome(count) > 0, "the test cookie")
     chrome("gBrowser.removeTab(gBrowser.selectedTab)")
     wait_for(lambda: chrome(count) == 0, "the cookie to be deleted after the grace period", 40)
-    set_prefs({"ignifox.privacy.keepSites": "localhost"})
-    chrome(f"gBrowser.selectedTab = gBrowser.addTrustedTab('{BASE}/cookie.html')")
+    set_prefs({"ignifox.privacy.keepSites": "127.0.0.1"})
+    chrome(f"gBrowser.selectedTab = gBrowser.addTrustedTab('{site}/cookie.html')")
     wait_for(lambda: chrome(count) > 0, "the test cookie again")
     chrome("gBrowser.removeTab(gBrowser.selectedTab)")
     time.sleep(20)
@@ -272,6 +278,7 @@ def _():
     assert items == 2, f"feeds.js got {items!r} headlines"
     chrome_async("IgniBoot.writeNewtabConfig().then(() => done(1), e => done(String(e)))")
     url = chrome("return IgniBoot.newtabURL()")
+    drv.switch_to.new_window("tab")       # the earlier unload step may have unloaded the old one
     drv.get(url)
     wait_for(lambda: drv.execute_script("return document.querySelectorAll('#feed-list li').length") == 2, "headlines on the page")
     assert drv.execute_script("return !document.getElementById('todo').hidden"), "to-do widget hidden"
@@ -281,8 +288,12 @@ def _():
     shot("newtab-widgets")
 
 
-drv.quit()
 failed = [r for r in results if not r[1]]
+if failed:
+    print("\nIgnifox messages from the browser console:")
+    for line in chrome("return Services.console.getMessageArray().map(m => m.message).filter(m => /Ignifox/.test(m)).slice(-40)") or []:
+        print("   ", line[:400])
+drv.quit()
 print(f"\n{len(results) - len(failed)}/{len(results)} feature checks passed")
 with open(os.path.join(OUT, "features.json"), "w") as f:
     json.dump([{"check": n, "ok": ok, "error": e} for n, ok, e in results], f, indent=2)

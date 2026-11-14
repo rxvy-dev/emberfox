@@ -37,7 +37,8 @@ const pref = (key, type) => readPref(Services.prefs, key, type);
 const browserWindows = () => [...Services.wm.getEnumerator("navigator:browser")].filter(w => w.gBrowser && !w.closed);
 
 function log(...args) {
-  console.log("[Ignifox features]", ...args);
+  const text = "[Ignifox features] " + args.map(a => (a instanceof Error ? `${a.message}\n${a.stack}` : String(a))).join(" ");
+  Services.console.logStringMessage(text);
 }
 
 function hostOf(uri) {

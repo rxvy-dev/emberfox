@@ -18,6 +18,33 @@ Ignifox-only changes bump the revision.
 - Three more animated new tab wallpapers: Starfield, Code rain and Snowfall (also on Android).
 - Day and night themes: pick two themes and the hours, and Ignifox swaps them by the clock.
 
+### New on the desktop
+- **Command palette (Ctrl+K)**: open tabs (every window), bookmarks, actions (new private window, reopen closed tab, pin, duplicate, unload other tabs, reader view, screenshot, copy address…), themes, wallpapers, workspaces, web panels and every Studio page. Uses Firefox's own shortcut handling, so sites that use Ctrl+K still get it first.
+- **Workspaces**: separate sets of tabs, each with its own theme, switched from a button in the tab strip, Ctrl+Alt+1…9 or the palette. Pinned tabs are shared; picking a tab from another workspace switches to it. Remembered across restarts.
+- **Web panels**: sites in a side strip (left or right) that stay loaded while you browse; resizable, reload / open in tab / close, middle-click to unload. Quick-add Discord, WhatsApp, Telegram, Spotify, YouTube Music and more.
+- **Site tint**: toolbars take the colour of the current site's icon, with a strength slider.
+- **Cookie auto-delete**: a site's cookies and storage are deleted 15 seconds after its last tab closes, unless it's on your keep-list (Ctrl+K → "Keep cookies for …").
+- **Unload idle tabs** after 15 minutes to 4 hours.
+- **Theme gallery**: 16 community themes in `themes/`, browsable in Studio → Look; share yours through an issue form. Every theme is checked for readable contrast.
+- **QR codes**: any theme as a QR code that opens it in Ignifox for Android.
+
+### New tab page (desktop and Android)
+- Wallpapers: **Flames**, **Thunderstorm** (rain and lightning), **Fireflies**; GIF and video (MP4/WebM, desktop) wallpapers.
+- Widgets column: **to-do list**, **countdown**, notes and **news from RSS/Atom feeds** (fetched by the browser without cookies; the page itself still has no network access).
+
+### New on Android
+- uBlock Origin offered on first start (you confirm its permissions), and from Studio.
+- **Update checker**: once a day, asks GitHub if a newer Ignifox is out.
+- **🔥 Burn**: close every tab and wipe history, cookies, site data and caches, from the menu, Studio, the widget or a launcher shortcut.
+- **Cookie auto-delete** with a keep-list, **fingerprinting protection** and **resist fingerprinting** switches.
+- **Tab grid**, **swipe the address bar** to switch tabs, **site tint** for the toolbar.
+- **Home-screen widget** (search, four shortcuts, burn) and launcher shortcuts (new tab, private tab, burn).
+- **Theme gallery** and **ignifox://theme** links, so the desktop QR code opens straight in the app.
+- To-do, countdown and news widgets on the new tab page; GIF wallpapers.
+
+### Tested in the real browsers
+- CI now drives the real desktop build (Marionette) and checks the palette, workspaces, web panels, site tint, cookie auto-delete, tab unloading and new tab widgets, saving screenshots.
+
 ### Fixed: new tab animations on desktop
 - Animated wallpapers froze on desktops that ask apps for less motion (GTK's "enable animations" off, or Reduce motion on). They now keep moving; Studio → New Tab → *Wallpaper animation* lets you choose Always, Follow my desktop, or a still picture.
 - The animation could start with no particles when Firefox preloaded the new tab before it had a size; it now builds itself once the page has a size.
