@@ -1,0 +1,643 @@
+11-14 20:11:34.051  1461  1483 D MediaGrants: Removed 0 media_grants for 0 user for dev.rxvy.ignifox. Reason: Mode changed: android:read_external_storage
+11-14 20:11:34.052  1461  1483 D MediaGrants: Removed 0 media_grants for 0 user for dev.rxvy.ignifox. Reason: Mode changed: android:read_external_storage
+11-14 20:11:34.093  2305  2305 W ziparchive: Unable to open '/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.dm': No such file or directory
+11-14 20:11:34.093  2305  2305 W ziparchive: Unable to open '/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.dm': No such file or directory
+11-14 20:11:34.098  2305  2305 I artd    : Running dex2oat: /apex/com.android.art/bin/art_exec --drop-capabilities --set-task-profile=Dex2OatBootComplete --set-priority=background --keep-fds=7:8:9:10:11:12 -- /apex/com.android.art/bin/dex2oat64 --zip-fd=7 --zip-location=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk --oat-fd=8 --oat-location=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/oat/x86_64/base.odex --output-vdex-fd=9 --swap-fd=10 --class-loader-context-fds=11:12 --class-loader-context=PCL[]{PCL[/system_ext/frame
+11-14 20:11:34.098  2305  2305 I artd    : Opened FDs: 7:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk 8:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/oat/x86_64/base.odex.5wrxxK.tmp 9:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/oat/x86_64/base.vdex.8yvtEc.tmp 10:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/oat/x86_64/base.odex.swap.Bsjg0f.tmp 11:/system_ext/framework/androidx.window.sidecar.jar 12:/system_ext/framework/androidx.window.extensions.jar 
+11-14 20:11:34.141  2309  2309 W dex2oat64: /apex/com.android.art/bin/dex2oat64 --zip-fd=7 --zip-location=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk --oat-fd=8 --oat-location=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/oat/x86_64/base.odex --output-vdex-fd=9 --swap-fd=10 --class-loader-context-fds=11:12 --class-loader-context=PCL[]{PCL[/system_ext/framework/androidx.window.extensions.jar]#PCL[/system_ext/framework/androidx.window.sidecar.jar]} --classpath-dir=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jn
+11-14 20:11:34.141  2309  2309 I dex2oat64: /apex/com.android.art/bin/dex2oat64 --output-vdex-fd=9 --class-loader-context-fds=11:12 --class-loader-context=PCL[]{PCL[/system_ext/framework/androidx.window.extensions.jar]#PCL[/system_ext/framework/androidx.window.sidecar.jar]} --classpath-dir=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ== --compiler-filter=verify --compilation-reason=install --compact-dex-level=none --max-image-block-size=524288 --resolve-startup-const-strings=true --generate-mini-debug-info --comments=app-version-name:162.0-dev,app-version-code:83
+11-14 20:11:34.583   508   560 I ArtService: Dexopt result: [packageName = dev.rxvy.ignifox] DexContainerFileDexoptResult{dexContainerFile=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk, primaryAbi=true, abi=x86_64, actualCompilerFilter=verify, status=PERFORMED, dex2oatWallTimeMillis=486, dex2oatCpuTimeMillis=660, sizeBytes=10190988, sizeBeforeBytes=0}
+11-14 20:11:34.584   508   560 V BackupManagerService: [UserID:0] restoreAtInstall pkg=dev.rxvy.ignifox token=1 restoreSet=0
+11-14 20:11:34.598  1008  1008 D CarrierSvcBindHelper: onPackageAdded: dev.rxvy.ignifox
+11-14 20:11:34.603  1008  1270 D ImsResolver: maybeAddedImsService, packageName: dev.rxvy.ignifox
+11-14 20:11:34.621   508   768 I SdkSandboxManager: No SDKs used. Skipping SDK data reconcilation for CallingInfo{mUid=10141, mPackageName='dev.rxvy.ignifox, mAppProcessToken='null'}
+11-14 20:11:34.649   801   801 I SafetyLabelChangedBroadcastReceiver: received broadcast packageName: dev.rxvy.ignifox, current user: UserHandle{0}, packageChangeEvent: NEW_INSTALL, intent user: UserHandle{0}
+11-14 20:11:34.665  1008  1008 D CarrierSvcBindHelper: onPackageModified: dev.rxvy.ignifox
+11-14 20:11:34.672  1008  1270 D ImsResolver: maybeAddedImsService, packageName: dev.rxvy.ignifox
+11-14 20:11:34.702  2318  2318 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 0 <<<<<<
+11-14 20:11:34.709  2318  2318 I AndroidRuntime: Using default boot image
+11-14 20:11:34.709  2318  2318 I AndroidRuntime: Leaving lock profiling enabled
+11-14 20:11:34.780   508   536 D AppWidgetServiceImpl: Provider info from ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.ignifox.IgniWidget} won't be persisted.
+11-14 20:11:34.806  2318  2318 D AndroidRuntime: Calling main entry com.android.commands.monkey.Monkey
+11-14 20:11:34.806  2318  2318 W Monkey  : args: [-p, dev.rxvy.ignifox, -c, android.intent.category.LAUNCHER, 1]
+11-14 20:11:34.806  2318  2318 W Monkey  :  arg: "dev.rxvy.ignifox"
+11-14 20:11:34.806  2318  2318 W Monkey  : data="dev.rxvy.ignifox"
+11-14 20:11:34.828   799   834 V WindowManagerShell: Transition requested: android.os.BinderProxy@67d806a TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=8 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10a00000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity } baseActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity} topActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity} origActivity=
+11-14 20:11:34.836   508   879 I ActivityTaskManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity} with LAUNCH_MULTIPLE from uid 0 (BAL_ALLOW_ALLOWLISTED_UID) result code=0
+11-14 20:11:34.851  2318  2318 I AndroidRuntime: VM exiting with result code 0.
+11-14 20:11:34.866   508   538 I ActivityManager: Start proc 2333:dev.rxvy.ignifox/u0a141 for next-top-activity {dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity}
+11-14 20:11:34.888   508  1746 D CoreBackPreview: Window{70576e1 u0 Splash Screen dev.rxvy.ignifox}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@b01a01d, mPriority=0, mIsAnimationCallback=false}
+11-14 20:11:34.892  2333  2333 I ev.rxvy.ignifox: Using CollectorTypeCC GC.
+11-14 20:11:34.895  2333  2333 W ev.rxvy.ignifox: Unexpected CPU variant for x86: x86_64.
+11-14 20:11:34.895  2333  2333 W ev.rxvy.ignifox: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, tremont, kabylake, default
+11-14 20:11:34.897  2333  2333 E ev.rxvy.ignifox: Not starting debugger since process cannot load the jdwp agent.
+11-14 20:11:34.955  2333  2333 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:11:34.968  2333  2333 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:11:34.968  2333  2333 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:11:35.054   508   527 V WindowManager: Sent Transition #7 createdAt=11-14 20:11:34.824 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=8 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10a00000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity } baseActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity} topActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity} origActivit
+11-14 20:11:35.054   508   527 V WindowManager:     info={id=7 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{848fc53 Task{9f63883 #8 type=standard I=dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity}}} m=OPEN f=NONE leash=Surface(name=Task=8)/@0x3efca8d sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{RemoteToken{41b8289 Task{f63607a #1 type=home}}} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0x59f6058 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+11-14 20:11:35.067  2333  2333 D GeckoThread: State changed to LAUNCHED
+11-14 20:11:35.075   508   538 I ActivityManager: Start proc 2354:dev.rxvy.ignifox:crashhelper_disable_art_image_/u0a141 for service {dev.rxvy.ignifox/org.mozilla.gecko.crashhelper.CrashHelper}
+11-14 20:11:35.075  2333  2353 I GeckoThread: preparing to run Gecko
+11-14 20:11:35.077  2333  2333 D GeckoRuntime: Lifecycle: onCreate
+11-14 20:11:35.082  2333  2353 D GeckoThread: State changed to MOZGLUE_READY
+11-14 20:11:35.126  2333  2353 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:35.197  2333  2353 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:35.198  2333  2353 E GeckoLibLoad: Load sqlite start
+11-14 20:11:35.198  2333  2353 E GeckoLibLoad: Load sqlite done
+11-14 20:11:35.199  2333  2353 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:35.199  2333  2353 E GeckoLibLoad: Load nss start
+11-14 20:11:35.199  2333  2353 E GeckoLibLoad: Load nss done
+11-14 20:11:35.199  2333  2353 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:35.208  2333  2353 E GeckoLibLoad: Loaded libs in 9.586410ms total, 8ms(5ms) user, 0ms(2ms) system, 0(0) faults
+11-14 20:11:35.208  2333  2353 D GeckoThread: State changed to LIBS_READY
+11-14 20:11:35.208  2333  2353 W GeckoThread: zerdatime 34062 - runGecko
+11-14 20:11:35.219   508   863 I ActivityTaskManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x200000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} with LAUNCH_SINGLE_TASK from uid 10141 (BAL_ALLOW_VISIBLE_WINDOW) result code=0
+11-14 20:11:35.220   799   834 V WindowManagerShell: Transition requested: android.os.BinderProxy@9df8a96 TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=9 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity } baseActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} topActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} origActivity=null realActivity=Com
+11-14 20:11:35.225  2354  2354 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:11:35.284   508   863 D CoreBackPreview: Window{c8c8cfa u0 Splash Screen dev.rxvy.ignifox}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@844d08, mPriority=0, mIsAnimationCallback=false}
+11-14 20:11:35.286  2354  2354 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:11:35.286  2354  2354 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:11:35.419   508   527 V WindowManager: Sent Transition #8 createdAt=11-14 20:11:35.193 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=9 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity } baseActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} topActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} origActivity=null realActivity=C
+11-14 20:11:35.422   508   527 V WindowManager:     info={id=8 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{d0a09e Task{fed2ba2 #9 type=standard A=10141:dev.rxvy.ignifox}}} m=OPEN f=NONE leash=Surface(name=Task=9)/@0xe47c23 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{RemoteToken{848fc53 Task{9f63883 #8 type=standard I=dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity}}} m=CLOSE f=NONE leash=Surface(name=Task=8)/@0x3efca8d sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+11-14 20:11:35.463  2333  2353 I Gecko:DumpUtils: Fifo watcher disabled via pref.
+11-14 20:11:35.469  2333  2353 W ev.rxvy.ignifox: Accessing hidden field Ljava/lang/Boolean;->value:Z (max-target-p, JNI, denied)
+11-14 20:11:35.469  2333  2353 W ev.rxvy.ignifox: Accessing hidden field Ljava/lang/Integer;->value:I (max-target-p, JNI, denied)
+11-14 20:11:35.469  2333  2353 W ev.rxvy.ignifox: Accessing hidden field Ljava/lang/Long;->value:J (max-target-p, JNI, denied)
+11-14 20:11:35.469  2333  2353 W ev.rxvy.ignifox: Accessing hidden field Ljava/lang/Double;->value:D (max-target-p, JNI, denied)
+11-14 20:11:35.469  2333  2353 D GeckoThread: State changed to JNI_READY
+11-14 20:11:35.514  2333  2404 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab0 updateBindings: BACKGROUND priority, 0 importance, not connected pid, 2 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:11:35.550   508   538 I ActivityManager: Start proc 2410:dev.rxvy.ignifox:sandboxed_tab_disable_art_image_0/u0a141 for service {dev.rxvy.ignifox/org.mozilla.gecko.process.GeckoChildProcessServices$tab0}
+11-14 20:11:35.579  2333  2333 D GeckoRuntime: Lifecycle: onStart
+11-14 20:11:35.580  2333  2333 D GeckoRuntime: Lifecycle: onResume
+11-14 20:11:35.580  2333  2333 D GeckoNetworkManager: Incoming event start for state OffNoListeners -> OnNoListeners
+11-14 20:11:35.581  2333  2333 D GeckoNetworkManager: New network state: UP, WIFI, WIFI
+11-14 20:11:35.588   508   879 D ConnectivityService: requestNetwork for uid/pid:10141/2333 activeRequest: null callbackRequest: 51 [NetworkRequest [ REQUEST id=52, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10141 RequestorUid: 10141 RequestorPkg: dev.rxvy.ignifox UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647
+11-14 20:11:35.589   508   722 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=52, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10141 RequestorUid: 10141 RequestorPkg: dev.rxvy.ignifox UnderlyingNetworks: Null] ]
+11-14 20:11:35.589   508   722 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=52, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10141 RequestorUid: 10141 RequestorPkg: dev.rxvy.ignifox UnderlyingNetworks: Null] ]
+11-14 20:11:35.589   508   722 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=52, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10141 RequestorUid: 10141 RequestorPkg: dev.rxvy.ignifox UnderlyingNetworks: Null] ]
+11-14 20:11:35.589   508   722 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=52, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10141 RequestorUid: 10141 RequestorPkg: dev.rxvy.ignifox UnderlyingNetworks: Null] ]
+11-14 20:11:35.601  2333  2333 D GeckoNetworkManager: Incoming event receivedUpdate for state OnNoListeners -> OnNoListeners
+11-14 20:11:35.603  2333  2333 D GeckoNetworkManager: New network state: UP, WIFI, WIFI
+11-14 20:11:35.604  2333  2418 D FirefoxAccountStateMachine: processQueue: fxaEvent 'Initialize(deviceConfig=DeviceConfig(name=Ignifox on unknown Android SDK built for x86_64, deviceType=MOBILE, capabilities=[SEND_TAB]))'
+11-14 20:11:35.643  2410  2410 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:11:35.647  2410  2410 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:11:35.647  2410  2410 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:11:35.678  2333  2353 I GeckoConsole: No chrome package registered for chrome://browser/content/built_in_addons.json
+11-14 20:11:35.693  2333  2353 D GeckoThread: State changed to PROFILE_READY
+11-14 20:11:35.701  2410  2410 I ServiceChildProcess: onCreate, process name: dev.rxvy.ignifox:sandboxed_tab_disable_art_image_0
+11-14 20:11:35.702  2410  2410 D GeckoThread: State changed to LAUNCHED
+11-14 20:11:35.703  2333  2353 D GeckoThread: State changed to RUNNING
+11-14 20:11:35.708  2410  2448 I GeckoThread: preparing to run Gecko
+11-14 20:11:35.713   508  1746 D CoreBackPreview: Window{6058cb0 u0 dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@6bb6186, mPriority=0, mIsAnimationCallback=false}
+11-14 20:11:35.743  2333  2418 I mozac/CrashReporter: Caught Exception report submitted to 1 services
+11-14 20:11:36.024   508   538 I ActivityManager: Start proc 2461:dev.rxvy.ignifox:gpu_disable_art_image_/u0a141 for service {dev.rxvy.ignifox/org.mozilla.gecko.process.GeckoChildProcessServices$gpu}
+11-14 20:11:36.025  2333  2404 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$gpu updateBindings: FOREGROUND priority, 0 importance, not connected pid, 3 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:11:36.065  2461  2461 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:11:36.083  2461  2461 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:11:36.083  2461  2461 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:11:36.095  2461  2461 I ServiceChildProcess: onCreate, process name: dev.rxvy.ignifox:gpu_disable_art_image_
+11-14 20:11:36.095  2461  2461 D GeckoThread: State changed to LAUNCHED
+11-14 20:11:36.097  2461  2479 I GeckoThread: preparing to run Gecko
+11-14 20:11:36.114  2461  2479 D GeckoThread: State changed to MOZGLUE_READY
+11-14 20:11:36.115  2461  2479 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:36.115  2461  2479 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:36.120  2461  2479 E GeckoLibLoad: Load sqlite start
+11-14 20:11:36.121  2461  2479 E GeckoLibLoad: Load sqlite done
+11-14 20:11:36.121  2461  2479 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:36.121  2461  2479 E GeckoLibLoad: Load nss start
+11-14 20:11:36.121  2461  2479 E GeckoLibLoad: Load nss done
+11-14 20:11:36.121  2461  2479 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:36.126  2461  2479 E GeckoLibLoad: Loaded libs in 5.133917ms total, 0ms(0ms) user, 3ms(4ms) system, 0(0) faults
+11-14 20:11:36.126  2461  2479 D GeckoThread: State changed to LIBS_READY
+11-14 20:11:36.126  2461  2479 W GeckoThread: zerdatime 34980 - runGecko
+11-14 20:11:36.139  2461  2479 D GeckoThread: State changed to RUNNING
+11-14 20:11:36.279   508   527 I ActivityTaskManager: Displayed dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity for user 0: +1s456ms
+11-14 20:11:36.299  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnInstalling
+11-14 20:11:36.300  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnInstalling
+11-14 20:11:36.300  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnInstalling
+11-14 20:11:36.300  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnInstalling
+11-14 20:11:36.300  2333  2333 D GeckoNetworkManager: Incoming event enableNotifications for state OnNoListeners -> OnWithListeners
+11-14 20:11:36.300  2333  2333 D GeckoNetworkManager: New network state: UP, WIFI, WIFI
+11-14 20:11:36.300   508   879 W ActivityManager: Receiver with filter android.content.IntentFilter@211603c already registered for pid 2333, callerPackage is dev.rxvy.ignifox
+11-14 20:11:36.301  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnInstalled
+11-14 20:11:36.301  2333  2333 D mozac-webextensions: onInstalled newtab@ignifox
+11-14 20:11:36.301  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnReady
+11-14 20:11:36.301  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnOptionalPermissionsChanged
+11-14 20:11:36.301  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnOptionalPermissionsChanged
+11-14 20:11:36.301  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnInstalled
+11-14 20:11:36.301  2333  2333 D mozac-webextensions: onInstalled icons@mozac.org
+11-14 20:11:36.302  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnReady
+11-14 20:11:36.302  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnOptionalPermissionsChanged
+11-14 20:11:36.302  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnOptionalPermissionsChanged
+11-14 20:11:36.302  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnOptionalPermissionsChanged
+11-14 20:11:36.302  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnOptionalPermissionsChanged
+11-14 20:11:36.302  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnOptionalPermissionsChanged
+11-14 20:11:36.302  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnOptionalPermissionsChanged
+11-14 20:11:36.302   508  1746 D CoreBackPreview: Window{c8c8cfa u0 Splash Screen dev.rxvy.ignifox EXITING}: Setting back callback null
+11-14 20:11:36.303   508  1746 W InputManager-JNI: Input channel object 'c8c8cfa Splash Screen dev.rxvy.ignifox (client)' was disposed without first being removed with the input manager!
+11-14 20:11:36.303  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnInstalled
+11-14 20:11:36.303  2333  2333 D mozac-webextensions: onInstalled readerview@mozac.org
+11-14 20:11:36.303  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnReady
+11-14 20:11:36.309   508  1746 I ImeTracker: dev.rxvy.ignifox:537abe11: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+11-14 20:11:36.309   508  1746 I ImeTracker: dev.rxvy.ignifox:537abe11: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-14 20:11:36.310  2333  2333 D GeckoNetworkManager: Incoming event receivedUpdate for state OnWithListeners -> OnWithListeners
+11-14 20:11:36.311  2333  2333 D GeckoNetworkManager: New network state: UP, WIFI, WIFI
+11-14 20:11:36.350   508  1746 W InputManager-JNI: Input channel object '70576e1 Splash Screen dev.rxvy.ignifox (client)' was disposed without first being removed with the input manager!
+11-14 20:11:36.454  2333  2333 D mozac-webextensions: onInstalled newtab@ignifox
+11-14 20:11:36.466  2333  2333 D mozac-webextensions: onInstalled icons@mozac.org
+11-14 20:11:36.469  2333  2333 D mozac-webextensions: onInstalled readerview@mozac.org
+11-14 20:11:36.469  2333  2333 D mozac-webextensions: Installed extension: readerview@mozac.org
+11-14 20:11:36.527  2333  2333 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderviewActive session=org.mozilla.geckoview.GeckoSession@8acd63e
+11-14 20:11:36.528  2333  2333 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderview session=org.mozilla.geckoview.GeckoSession@8acd63e
+11-14 20:11:36.540  2333  2333 I WebExtension: releasePendingMessages: extension=icons@mozac.org nativeApp=MozacBrowserIcons session=org.mozilla.geckoview.GeckoSession@8acd63e
+11-14 20:11:36.650  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnInstalled
+11-14 20:11:36.651  2333  2333 D mozac-webextensions: onInstalled webcompat@mozilla.org
+11-14 20:11:36.652  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:OnReady
+11-14 20:11:36.654  2333  2333 D mozac-webextensions: onInstalled webcompat@mozilla.org
+11-14 20:11:36.654  2333  2333 D mozac-webcompat: Installed WebCompat webextension: webcompat@mozilla.org
+11-14 20:11:36.726  2333  2404 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab0 updateBindings: FOREGROUND priority, 0 importance, 2410 pid, 1 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:11:36.729  2410  2448 D GeckoThread: State changed to MOZGLUE_READY
+11-14 20:11:36.730  2333  2404 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab0 updateBindings: FOREGROUND priority, 2 importance, 2410 pid, 1 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:11:36.731  2410  2448 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:36.731  2410  2448 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:36.733  2333  2404 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$rdd updateBindings: FOREGROUND priority, 0 importance, not connected pid, 3 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:11:36.734  2410  2448 E GeckoLibLoad: Load sqlite start
+11-14 20:11:36.735  2410  2448 E GeckoLibLoad: Load sqlite done
+11-14 20:11:36.735  2410  2448 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:36.735  2410  2448 E GeckoLibLoad: Load nss start
+11-14 20:11:36.735  2410  2448 E GeckoLibLoad: Load nss done
+11-14 20:11:36.735  2410  2448 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:36.740   508   538 I ActivityManager: Start proc 2538:dev.rxvy.ignifox:rdd_disable_art_image_/u0a141 for service {dev.rxvy.ignifox/org.mozilla.gecko.process.GeckoChildProcessServices$rdd}
+11-14 20:11:36.744  2410  2448 E GeckoLibLoad: Loaded libs in 8.336769ms total, 1ms(0ms) user, 4ms(5ms) system, 0(0) faults
+11-14 20:11:36.744  2410  2448 D GeckoThread: State changed to LIBS_READY
+11-14 20:11:36.745  2410  2448 W GeckoThread: zerdatime 35599 - runGecko
+11-14 20:11:36.789  2333  2353 I GeckoSession: zerdatime 35640 - chrome startup finished
+11-14 20:11:36.793  2333  2333 D GeckoSession: handleMessage GeckoView:PageStart uri=about:blank
+11-14 20:11:36.794  2333  2333 I GeckoSession: handleMessage GeckoView:PageStart uri=
+11-14 20:11:36.794  2333  2333 D GeckoSession: handleMessage GeckoView:LocationChange uri=about:blank
+11-14 20:11:36.795  2333  2333 D GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:11:36.795  2333  2333 I GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:11:36.806  2538  2538 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:11:36.818  2538  2538 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:11:36.818  2538  2538 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:11:36.841  2538  2538 I ServiceChildProcess: onCreate, process name: dev.rxvy.ignifox:rdd_disable_art_image_
+11-14 20:11:36.842  2538  2538 D GeckoThread: State changed to LAUNCHED
+11-14 20:11:36.846  2538  2568 I GeckoThread: preparing to run Gecko
+11-14 20:11:36.847  2333  2353 D GeckoIdleService: Registering Idle observer callback
+11-14 20:11:36.852  2333  2353 D GeckoIdleService: Register idle observer 0x743ade63c700 for 180 seconds
+11-14 20:11:36.852  2333  2353 D GeckoIdleService: Register: adjusting next switch from -1 to 180 seconds
+11-14 20:11:36.852  2333  2353 D GeckoIdleService: next timeout 179995 msec from now
+11-14 20:11:36.852  2333  2353 D GeckoIdleService: SetTimerExpiryIfBefore: next timeout 179995 msec from now
+11-14 20:11:36.852  2333  2353 D GeckoIdleService: reset timer expiry to 180005 msec from now
+11-14 20:11:36.857  2333  2353 D GeckoIdleService: Get idle time: time since reset 10 msec
+11-14 20:11:36.857  2333  2353 D GeckoIdleService: Register idle observer 0x743ade671a88 for 5 seconds
+11-14 20:11:36.858  2333  2353 D GeckoIdleService: Register: adjusting next switch from 180 to 5 seconds
+11-14 20:11:36.858  2333  2353 D GeckoIdleService: next timeout 4989 msec from now
+11-14 20:11:36.859  2333  2353 D GeckoIdleService: SetTimerExpiryIfBefore: next timeout 4989 msec from now
+11-14 20:11:36.859  2333  2353 D GeckoIdleService: reset timer expiry to 4999 msec from now
+11-14 20:11:36.866  2538  2568 D GeckoThread: State changed to MOZGLUE_READY
+11-14 20:11:36.867  2538  2568 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:36.867  2538  2568 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:36.871  2538  2568 E GeckoLibLoad: Load sqlite start
+11-14 20:11:36.872  2538  2568 E GeckoLibLoad: Load sqlite done
+11-14 20:11:36.872  2538  2568 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:36.872  2538  2568 E GeckoLibLoad: Load nss start
+11-14 20:11:36.872  2538  2568 E GeckoLibLoad: Load nss done
+11-14 20:11:36.872  2538  2568 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:36.885  2538  2568 E GeckoLibLoad: Loaded libs in 12.744424ms total, 6ms(7ms) user, 0ms(0ms) system, 0(0) faults
+11-14 20:11:36.885  2538  2568 D GeckoThread: State changed to LIBS_READY
+11-14 20:11:36.885  2538  2568 W GeckoThread: zerdatime 35739 - runGecko
+11-14 20:11:36.892  2538  2568 D GeckoThread: State changed to RUNNING
+11-14 20:11:36.899  2410  2448 D GeckoThread: State changed to RUNNING
+11-14 20:11:36.966  2333  2333 D GeckoSession: handleMessage GeckoView:ProgressChanged uri=null
+11-14 20:11:36.966  2333  2333 D GeckoSession: handleMessage GeckoView:PageStart uri=moz-extension://a0353532-6df0-4af9-bda7-553e6bb89a0a/newtab/index.html#%7B%22platform%22%3A%22android%22%2C%22noAutofocus%22%3Atrue%2C%22palette%22%3A%7B%22bg%22%3A%22%230b0607%22%2C%22bg2%22%3A%22%23170b0c%22%2C%22bg3%22%3A%22%2324110f%22%2C%22fg%22%3A%22%23f3e6e4%22%2C%22fgDim%22%3A%22%23a08c89%22%2C%22accent%22%3A%22%23ff3b1f%22%2C%22accent2%22%3A%22%23ffb02e%22%2C%22dark%22%3Atrue%7D%2C%22radius%22%3A14%2C%22layout%22%3A%22center%22%2C%22wallpaper%22%3A%22embers%22%2C%22wallpaperFile%22%3A%22%22%2C%22wallp
+11-14 20:11:36.966  2333  2333 I GeckoSession: handleMessage GeckoView:PageStart uri=
+11-14 20:11:37.051  2333  2333 D GeckoSession: handleMessage GeckoView:LocationChange uri=moz-extension://a0353532-6df0-4af9-bda7-553e6bb89a0a/newtab/index.html#%7B%22platform%22%3A%22android%22%2C%22noAutofocus%22%3Atrue%2C%22palette%22%3A%7B%22bg%22%3A%22%230b0607%22%2C%22bg2%22%3A%22%23170b0c%22%2C%22bg3%22%3A%22%2324110f%22%2C%22fg%22%3A%22%23f3e6e4%22%2C%22fgDim%22%3A%22%23a08c89%22%2C%22accent%22%3A%22%23ff3b1f%22%2C%22accent2%22%3A%22%23ffb02e%22%2C%22dark%22%3Atrue%7D%2C%22radius%22%3A14%2C%22layout%22%3A%22center%22%2C%22wallpaper%22%3A%22embers%22%2C%22wallpaperFile%22%3A%22%22%2C%22
+11-14 20:11:37.053  2333  2333 D GeckoSession: handleMessage GeckoView:SecurityChanged uri=null
+11-14 20:11:37.141  2333  2333 D GeckoSession: handleMessage GeckoView:ProgressChanged uri=null
+11-14 20:11:37.555  2333  2333 D GeckoSession: handleMessage GeckoView:ProgressChanged uri=null
+11-14 20:11:37.555  2333  2333 D GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:11:37.555  2333  2333 I GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:11:37.732  2333  2404 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab4 updateBindings: FOREGROUND priority, 0 importance, not connected pid, 3 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:11:37.737   508   538 I ActivityManager: Start proc 2663:dev.rxvy.ignifox:sandboxed_tab_disable_art_image_4/u0a141 for service {dev.rxvy.ignifox/org.mozilla.gecko.process.GeckoChildProcessServices$tab4}
+11-14 20:11:37.800  2663  2663 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:11:37.804  2663  2663 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:11:37.804  2663  2663 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:11:37.821  2663  2663 I ServiceChildProcess: onCreate, process name: dev.rxvy.ignifox:sandboxed_tab_disable_art_image_4
+11-14 20:11:37.821  2663  2663 D GeckoThread: State changed to LAUNCHED
+11-14 20:11:37.822  2663  2689 I GeckoThread: preparing to run Gecko
+11-14 20:11:37.849  2333  2404 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab4 updateBindings: BACKGROUND priority, 3 importance, 2663 pid, 1 successful binds, 0 failed binds, 1 successful unbinds
+11-14 20:11:37.849  2663  2689 D GeckoThread: State changed to MOZGLUE_READY
+11-14 20:11:37.851  2663  2689 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:37.851  2663  2689 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:37.855  2663  2689 E GeckoLibLoad: Load sqlite start
+11-14 20:11:37.856  2663  2689 E GeckoLibLoad: Load sqlite done
+11-14 20:11:37.856  2663  2689 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:37.856  2663  2689 E GeckoLibLoad: Load nss start
+11-14 20:11:37.856  2663  2689 E GeckoLibLoad: Load nss done
+11-14 20:11:37.856  2663  2689 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:11:37.864  2663  2689 E GeckoLibLoad: Loaded libs in 8.258011ms total, 0ms(0ms) user, 7ms(8ms) system, 0(0) faults
+11-14 20:11:37.864  2663  2689 D GeckoThread: State changed to LIBS_READY
+11-14 20:11:37.864  2663  2689 W GeckoThread: zerdatime 36718 - runGecko
+11-14 20:11:37.945  2663  2689 D GeckoThread: State changed to RUNNING
+11-14 20:11:39.737  2333  2404 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab0 updateBindings: IDLE priority, 6 importance, 2410 pid, 1 successful binds, 0 failed binds, 2 successful unbinds
+11-14 20:11:40.372  2333  2718 D ProfileInstaller: Installing profile for dev.rxvy.ignifox
+11-14 20:11:41.052  2333  2353 I GeckoConsole: 1794687101052	addons.webextension.uBlock0@raymondhill.net	WARN	Loading extension 'uBlock0@raymondhill.net': Reading manifest: Warning processing permissions: Error processing permissions.2: Value "menus" must either: must either [must either [must either [be one of ["idle"], be one of ["activeTab"], be one of ["cookies"], be one of ["publicSuffix"], be one of ["scripting"], or be one of ["webRequest", "webRequestAuthProvider", "webRequestBlocking", "webRequestFilterResponse", "webRequestFilterResponse.serviceWorkerScript"]], must either [be one of
+11-14 20:11:41.053  2333  2353 I GeckoConsole: 1794687101053	addons.webextension.uBlock0@raymondhill.net	WARN	Loading extension 'uBlock0@raymondhill.net': Reading manifest: Warning processing commands: An unexpected property was found in the WebExtension manifest.
+11-14 20:11:41.467  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:InstallPrompt
+11-14 20:11:41.490   508  1792 D CoreBackPreview: Window{53514d7 u0 dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@a9972a9, mPriority=0, mIsAnimationCallback=false}
+11-14 20:11:41.857  2333  2353 D GeckoIdleService: Get idle time: time since reset 5009 msec
+11-14 20:11:41.857  2333  2353 D GeckoIdleService: Idle timer callback: current idle time 5009 msec
+11-14 20:11:41.857  2333  2353 D GeckoIdleService: next timeout 174990 msec from now
+11-14 20:11:41.857  2333  2353 D GeckoIdleService: SetTimerExpiryIfBefore: next timeout 174990 msec from now
+11-14 20:11:41.857  2333  2353 D GeckoIdleService: reset timer expiry to 175000 msec from now
+11-14 20:11:41.858  2333  2353 D GeckoIdleService: Idle timer callback: tell observer 0x743ade671a88 user is idle
+11-14 20:11:43.509   508  1726 I ImeTracker: dev.rxvy.ignifox:fc4fc60f: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+11-14 20:11:43.509   508  1726 I ImeTracker: dev.rxvy.ignifox:fc4fc60f: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-14 20:11:45.887  2333  2353 D GeckoIdleService: Get idle time: time since reset 9039 msec
+11-14 20:11:46.730  2333  2353 I Gecko   : [GFX1-]: Managed to allocate after flush.
+11-14 20:11:47.335  2333  2333 D GeckoSession: handleMessage GeckoView:StateUpdated uri=null
+11-14 20:11:47.335  2333  2333 W GeckoSession: No history entries found.
+11-14 20:12:15.535   508  1981 D CoreBackPreview: Window{53514d7 u0 dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity}: Setting back callback null
+11-14 20:12:15.536   508  2093 W InputManager-JNI: Input channel object '53514d7 dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity (client)' was disposed without first being removed with the input manager!
+11-14 20:12:15.634   508  2093 I ImeTracker: dev.rxvy.ignifox:40933089: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+11-14 20:12:15.635   508  2093 I ImeTracker: dev.rxvy.ignifox:40933089: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-14 20:12:21.079   508   958 I ActivityTaskManager: START u0 {act=android.intent.action.VIEW dat=https://example.com/... flg=0x10000000 pkg=dev.rxvy.ignifox cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity} with LAUNCH_MULTIPLE from uid 0 (BAL_ALLOW_ALLOWLISTED_UID) result code=0
+11-14 20:12:21.084   799   834 V WindowManagerShell: Transition requested: android.os.BinderProxy@3671d19 TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=10 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.VIEW dat=https://example.com/... flg=0x10800000 pkg=dev.rxvy.ignifox cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity } baseActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity} topActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity} or
+11-14 20:12:21.151   508  2093 I ActivityTaskManager: START u0 {act=android.intent.action.VIEW dat=https://example.com/... pkg=dev.rxvy.ignifox cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} with LAUNCH_SINGLE_TASK from uid 10141 (BAL_ALLOW_VISIBLE_WINDOW) result code=2
+11-14 20:12:21.215   508  1981 D CoreBackPreview: Window{63220cb u0 Splash Screen dev.rxvy.ignifox}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@9807f54, mPriority=0, mIsAnimationCallback=false}
+11-14 20:12:21.215   799   834 D WindowManagerShell: onActivityRestartAttempt: ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity}
+11-14 20:12:21.646   508   530 W ActivityTaskManager: Activity top resumed state loss timeout for ActivityRecord{869a8af u0 dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity t10 f}}
+11-14 20:12:21.648   508   530 W ActivityTaskManager: Activity pause timeout for ActivityRecord{869a8af u0 dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity t10 f}}
+11-14 20:12:21.653   508   527 V WindowManager: Sent Transition #9 createdAt=11-14 20:12:21.071 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=10 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.VIEW dat=https://example.com/... flg=0x10800000 pkg=dev.rxvy.ignifox cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity } baseActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity} topActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity} 
+11-14 20:12:21.653   508   527 V WindowManager:     info={id=9 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{d0a09e Task{fed2ba2 #9 type=standard A=10141:dev.rxvy.ignifox}}} m=CHANGE f=MOVE_TO_TOP leash=Surface(name=Task=9)/@0xe47c23 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+11-14 20:12:21.846  2333  2333 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderviewActive session=org.mozilla.geckoview.GeckoSession@ea82dc3
+11-14 20:12:21.846  2333  2333 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderview session=org.mozilla.geckoview.GeckoSession@ea82dc3
+11-14 20:12:21.846  2333  2333 I WebExtension: releasePendingMessages: extension=icons@mozac.org nativeApp=MozacBrowserIcons session=org.mozilla.geckoview.GeckoSession@ea82dc3
+11-14 20:12:21.888   508  2093 W InputManager-JNI: Input channel object '63220cb Splash Screen dev.rxvy.ignifox (client)' was disposed without first being removed with the input manager!
+11-14 20:12:21.908  2333  2404 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab0 updateBindings: FOREGROUND priority, 2 importance, 2410 pid, 2 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:12:21.915  2333  2353 I GeckoSession: zerdatime 80768 - chrome startup finished
+11-14 20:12:21.920  2410  2448 W GeckoEditableChild: No editable parent
+11-14 20:12:21.991  2410  2448 W GeckoEditableChild: No editable parent
+11-14 20:12:22.004   508  2093 I ImeTracker: dev.rxvy.ignifox:196039b0: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_SAME_WINDOW_FOCUSED_WITHOUT_EDITOR
+11-14 20:12:22.004   508  2093 I ImeTracker: dev.rxvy.ignifox:196039b0: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-14 20:12:22.009  2333  2333 D GeckoSession: handleMessage GeckoView:PageStart uri=about:blank
+11-14 20:12:22.009  2333  2333 I GeckoSession: handleMessage GeckoView:PageStart uri=
+11-14 20:12:22.009  2333  2333 D GeckoSession: handleMessage GeckoView:LocationChange uri=about:blank
+11-14 20:12:22.009  2333  2333 D GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:12:22.009  2333  2333 I GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:12:22.017  2333  2333 D GeckoSession: handleMessage GeckoView:StateUpdated uri=null
+11-14 20:12:22.041  2333  2333 D GeckoSession: handleMessage GeckoView:ProgressChanged uri=null
+11-14 20:12:22.041  2333  2333 D GeckoSession: handleMessage GeckoView:PageStart uri=https://example.com/
+11-14 20:12:22.041  2333  2333 I GeckoSession: handleMessage GeckoView:PageStart uri=
+11-14 20:12:22.340  2333  2333 D GeckoSession: handleMessage GeckoView:LocationChange uri=https://example.com/
+11-14 20:12:22.340  2333  2333 D GeckoSession: handleMessage GeckoView:SecurityChanged uri=null
+11-14 20:12:22.479  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:Message
+11-14 20:12:22.482  2333  2333 D GeckoSession: handleMessage GeckoView:ProgressChanged uri=null
+11-14 20:12:22.514  2333  2333 D WebExtension: handleMessage GeckoView:WebExtension:Connect
+11-14 20:12:22.675  2333  2333 D GeckoSession: handleMessage GeckoView:ProgressChanged uri=null
+11-14 20:12:22.676  2333  2333 D GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:12:22.676  2333  2333 I GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:12:32.332  2333  2333 D GeckoSession: handleMessage GeckoView:StateUpdated uri=null
+11-14 20:12:32.332  2333  2333 W GeckoSession: No history entries found.
+11-14 20:12:46.381  2333  2333 I ImeTracker: dev.rxvy.ignifox:82a8f1ac: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT_BY_INSETS_API
+11-14 20:12:46.381  2333  2333 I ImeTracker: dev.rxvy.ignifox:82a8f1ac: onCancelled at PHASE_CLIENT_APPLY_ANIMATION
+11-14 20:12:50.638   799   834 V WindowManagerShell: Transition requested: android.os.BinderProxy@d2becb TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=9 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity } baseActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} topActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity} origActivity=null realAct
+11-14 20:12:50.638   508  1812 I ActivityTaskManager: START u0 {flg=0x10000000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity (has extras)} with LAUNCH_MULTIPLE from uid 0 (BAL_ALLOW_ALLOWLISTED_UID) result code=0
+11-14 20:12:50.644   508   958 I ImeTracker: dev.rxvy.ignifox:cbdd616: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_SAME_WINDOW_FOCUSED_WITHOUT_EDITOR
+11-14 20:12:50.645   508   958 I ImeTracker: dev.rxvy.ignifox:cbdd616: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-14 20:12:50.813   508  2093 D CoreBackPreview: Window{3ba7b57 u0 dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@499032d, mPriority=0, mIsAnimationCallback=false}
+11-14 20:12:50.929   508   527 I ActivityTaskManager: Displayed dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity for user 0: +297ms
+11-14 20:12:50.929   508   527 V WindowManager: Sent Transition #10 createdAt=11-14 20:12:50.631 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=9 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity } baseActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} topActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity} origActivity=null rea
+11-14 20:12:50.929   508   527 V WindowManager:     info={id=10 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{null m=OPEN f=FILLS_TASK leash=Surface(name=ActivityRecord{a0e7a0a u0 dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity)/@0xcb37e4f sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) d=-1->0 r=-1->0:-1},{null m=TO_BACK f=FILLS_TASK leash=Surface(name=ActivityRecord{29936d u0 dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity)/@0xd5200ae sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+11-14 20:12:50.931   799   834 V WindowManagerShell: onTransitionReady android.os.BinderProxy@d2becb: {id=10 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{null m=OPEN f=FILLS_TASK leash=Surface(name=ActivityRecord{a0e7a0a u0 dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity)/@0x9412166 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) d=-1->0 r=-1->0:-1},{null m=TO_BACK f=FILLS_TASK leash=Surface(name=ActivityRecord{29936d u0 dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity)/@0x3cc7ca7 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+11-14 20:12:50.931   799   834 V WindowManagerShell: Transition doesn't have explicit remote, search filters for match for {id=10 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{null m=OPEN f=FILLS_TASK leash=Surface(name=ActivityRecord{a0e7a0a u0 dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity)/@0x9412166 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) d=-1->0 r=-1->0:-1},{null m=TO_BACK f=FILLS_TASK leash=Surface(name=ActivityRecord{29936d u0 dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity)/@0x3cc7ca7 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}
+11-14 20:12:50.931   799   834 V WindowManagerShell: start default transition animation, info = {id=10 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{null m=OPEN f=FILLS_TASK leash=Surface(name=ActivityRecord{a0e7a0a u0 dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity)/@0x9412166 sb=Rect(0, 0 - 0, 0) eb=Rect(0, 0 - 1080, 2400) d=-1->0 r=-1->0:-1},{null m=TO_BACK f=FILLS_TASK leash=Surface(name=ActivityRecord{29936d u0 dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity)/@0x3cc7ca7 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+11-14 20:12:51.381   508   958 I ImeTracker: dev.rxvy.ignifox:4f8702ee: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+11-14 20:12:51.382   508   958 I ImeTracker: dev.rxvy.ignifox:4f8702ee: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-14 20:12:51.501  2333  2333 D GeckoSession: handleMessage GeckoView:StateUpdated uri=null
+11-14 20:12:54.462  2333  2404 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab0 updateBindings: IDLE priority, 6 importance, 2410 pid, 1 successful binds, 0 failed binds, 2 successful unbinds
+11-14 20:13:02.456   508  1872 I ActivityManager: Force stopping dev.rxvy.ignifox appid=10141 user=0: from pid 2853
+11-14 20:13:02.457   508  1872 I ActivityManager: Killing 2333:dev.rxvy.ignifox/u0a141 (adj 0): stop dev.rxvy.ignifox due to from pid 2853
+11-14 20:13:02.461   508  1872 W ActivityTaskManager: Force removing ActivityRecord{a0e7a0a u0 dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity t9 f}}: app died, no saved state
+11-14 20:13:02.462   508  1872 W ActivityTaskManager: Force removing ActivityRecord{29936d u0 dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity t9 f}}: app died, no saved state
+11-14 20:13:02.463   508  1872 I ActivityManager: Killing 2538:dev.rxvy.ignifox:rdd_disable_art_image_/u0a141 (adj 0): stop dev.rxvy.ignifox due to from pid 2853
+11-14 20:13:02.465   508  1872 I ActivityManager: Killing 2461:dev.rxvy.ignifox:gpu_disable_art_image_/u0a141 (adj 0): stop dev.rxvy.ignifox due to from pid 2853
+11-14 20:13:02.465   508  1872 I ActivityManager: Killing 2354:dev.rxvy.ignifox:crashhelper_disable_art_image_/u0a141 (adj 0): stop dev.rxvy.ignifox due to from pid 2853
+11-14 20:13:02.466   508  1872 I ActivityManager: Killing 2410:dev.rxvy.ignifox:sandboxed_tab_disable_art_image_0/u0a141 (adj 0): stop dev.rxvy.ignifox due to from pid 2853
+11-14 20:13:02.466   508  1872 I ActivityManager: Killing 2663:dev.rxvy.ignifox:sandboxed_tab_disable_art_image_4/u0a141 (adj 0): stop dev.rxvy.ignifox due to from pid 2853
+11-14 20:13:02.473   508   536 W UsageStatsService: Unexpected activity event reported! (dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity event : 23 instanceId : 210968627)
+11-14 20:13:02.487  1008  1008 D CarrierSvcBindHelper: onHandleForceStop: [dev.rxvy.ignifox]
+11-14 20:13:02.487   508  1872 V ActivityManager: Got obituary of 2410:dev.rxvy.ignifox:sandboxed_tab_disable_art_image_0
+11-14 20:13:02.521   508  2093 V ActivityManager: Got obituary of 2663:dev.rxvy.ignifox:sandboxed_tab_disable_art_image_4
+11-14 20:13:02.525   508  2093 V ActivityManager: Got obituary of 2354:dev.rxvy.ignifox:crashhelper_disable_art_image_
+11-14 20:13:02.528   508  1872 V ActivityManager: Got obituary of 2461:dev.rxvy.ignifox:gpu_disable_art_image_
+11-14 20:13:02.533   508  1812 V ActivityManager: Got obituary of 2538:dev.rxvy.ignifox:rdd_disable_art_image_
+11-14 20:13:02.537   508   862 V ActivityManager: Got obituary of 2333:dev.rxvy.ignifox
+11-14 20:13:02.537   508   958 I WindowManager: WIN DEATH: Window{3ba7b57 u0 dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity}
+11-14 20:13:02.538   508   958 W InputManager-JNI: Input channel object '3ba7b57 dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity (client)' was disposed without first being removed with the input manager!
+11-14 20:13:02.538   508  1792 I ImeTracker: dev.rxvy.ignifox:3c5f4f97: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_REMOVE_CLIENT
+11-14 20:13:02.539   508  1792 I ImeTracker: dev.rxvy.ignifox:3c5f4f97: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-14 20:13:02.539   508   729 D ConnectivityService: releasing NetworkRequest [ REQUEST id=52, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10141 RequestorUid: 10141 RequestorPkg: dev.rxvy.ignifox UnderlyingNetworks: Null] ] (release request)
+11-14 20:13:02.539   508  2217 I WindowManager: WIN DEATH: Window{6058cb0 u0 dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity}
+11-14 20:13:02.539   508  2217 W InputManager-JNI: Input channel object '6058cb0 dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity (client)' was disposed without first being removed with the input manager!
+11-14 20:13:02.636  2866  2866 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 0 <<<<<<
+11-14 20:13:02.639  2866  2866 I AndroidRuntime: Using default boot image
+11-14 20:13:02.639  2866  2866 I AndroidRuntime: Leaving lock profiling enabled
+11-14 20:13:02.704  2866  2866 D AndroidRuntime: Calling main entry com.android.commands.monkey.Monkey
+11-14 20:13:02.704  2866  2866 W Monkey  : args: [-p, dev.rxvy.ignifox, -c, android.intent.category.LAUNCHER, 1]
+11-14 20:13:02.705  2866  2866 W Monkey  :  arg: "dev.rxvy.ignifox"
+11-14 20:13:02.705  2866  2866 W Monkey  : data="dev.rxvy.ignifox"
+11-14 20:13:02.719   508  2859 I ActivityTaskManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity} with LAUNCH_MULTIPLE from uid 0 (BAL_ALLOW_ALLOWLISTED_UID) result code=0
+11-14 20:13:02.725   508   538 I ActivityManager: Start proc 2879:dev.rxvy.ignifox/u0a141 for next-top-activity {dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity}
+11-14 20:13:02.729   508  1981 D CoreBackPreview: Window{2553fc5 u0 Splash Screen dev.rxvy.ignifox}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@b4fea28, mPriority=0, mIsAnimationCallback=false}
+11-14 20:13:02.838  2879  2879 I ev.rxvy.ignifox: Using CollectorTypeCC GC.
+11-14 20:13:02.838  2866  2866 I AndroidRuntime: VM exiting with result code 0.
+11-14 20:13:02.839  2879  2879 W ev.rxvy.ignifox: Unexpected CPU variant for x86: x86_64.
+11-14 20:13:02.839  2879  2879 W ev.rxvy.ignifox: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, tremont, kabylake, default
+11-14 20:13:02.840  2879  2879 E ev.rxvy.ignifox: Not starting debugger since process cannot load the jdwp agent.
+11-14 20:13:02.872  2879  2879 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:13:02.875  2879  2879 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:13:02.875  2879  2879 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:13:02.926   508   538 I ActivityManager: Start proc 2899:dev.rxvy.ignifox:crashhelper_disable_art_image_/u0a141 for service {dev.rxvy.ignifox/org.mozilla.gecko.crashhelper.CrashHelper}
+11-14 20:13:02.926  2879  2879 D GeckoThread: State changed to LAUNCHED
+11-14 20:13:02.927  2879  2900 I GeckoThread: preparing to run Gecko
+11-14 20:13:02.928  2879  2879 D GeckoRuntime: Lifecycle: onCreate
+11-14 20:13:02.931  2879  2900 D GeckoThread: State changed to MOZGLUE_READY
+11-14 20:13:02.942  2879  2900 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:02.955  2899  2899 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:13:02.956  2879  2900 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:02.968  2879  2900 E GeckoLibLoad: Load sqlite start
+11-14 20:13:02.969  2879  2900 E GeckoLibLoad: Load sqlite done
+11-14 20:13:02.969  2879  2900 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:02.969  2879  2900 E GeckoLibLoad: Load nss start
+11-14 20:13:02.970  2879  2900 E GeckoLibLoad: Load nss done
+11-14 20:13:02.970  2879  2900 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:02.982  2899  2899 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:13:02.982  2899  2899 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:13:02.984  2879  2900 E GeckoLibLoad: Loaded libs in 14.126563ms total, 0ms(0ms) user, 10ms(10ms) system, 60(60) faults
+11-14 20:13:02.984  2879  2900 D GeckoThread: State changed to LIBS_READY
+11-14 20:13:02.984  2879  2900 W GeckoThread: zerdatime 121837 - runGecko
+11-14 20:13:03.038  2879  2900 I Gecko:DumpUtils: Fifo watcher disabled via pref.
+11-14 20:13:03.044  2879  2900 W ev.rxvy.ignifox: Accessing hidden field Ljava/lang/Boolean;->value:Z (max-target-p, JNI, denied)
+11-14 20:13:03.044  2879  2900 W ev.rxvy.ignifox: Accessing hidden field Ljava/lang/Integer;->value:I (max-target-p, JNI, denied)
+11-14 20:13:03.044  2879  2900 W ev.rxvy.ignifox: Accessing hidden field Ljava/lang/Long;->value:J (max-target-p, JNI, denied)
+11-14 20:13:03.044  2879  2900 W ev.rxvy.ignifox: Accessing hidden field Ljava/lang/Double;->value:D (max-target-p, JNI, denied)
+11-14 20:13:03.044  2879  2900 D GeckoThread: State changed to JNI_READY
+11-14 20:13:03.063   508   538 I ActivityManager: Start proc 2937:dev.rxvy.ignifox:sandboxed_tab_disable_art_image_25/u0a141 for service {dev.rxvy.ignifox/org.mozilla.gecko.process.GeckoChildProcessServices$tab25}
+11-14 20:13:03.069  2879  2933 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab25 updateBindings: BACKGROUND priority, 0 importance, not connected pid, 2 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:13:03.110  2879  2900 I GeckoConsole: No chrome package registered for chrome://browser/content/built_in_addons.json
+11-14 20:13:03.121  2879  2900 I GeckoConsole: 1794687183121	addons.xpi	WARN	Force scan SCOPE_APPLICATION (app-builtin-addons location missing from XPIStates)
+11-14 20:13:03.144  2937  2937 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:13:03.147  2879  2900 D GeckoThread: State changed to PROFILE_READY
+11-14 20:13:03.148  2937  2937 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:13:03.148  2937  2937 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:13:03.151  2879  2900 D GeckoThread: State changed to RUNNING
+11-14 20:13:03.152   508   527 V WindowManager:     info={id=11 t=CLOSE f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{4d29dcd Task{ffc0910 #11 type=standard I=dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity}}} m=OPEN f=MOVE_TO_TOP leash=Surface(name=Task=11)/@0x322a0f6 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{RemoteToken{d0a09e Task{fed2ba2 #9 type=standard A=10141:dev.rxvy.ignifox}}} m=TO_BACK f=NONE leash=Surface(name=Task=9)/@0xe47c23 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+11-14 20:13:03.153   508   958 W WindowManager: Failed to deliver inset control state change to w=Window{3ba7b57 u0 dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity EXITING}
+11-14 20:13:03.154   508   530 W ProcessStats: Tracking association SourceState{6e62193 dev.rxvy.ignifox/10141 BTop #652} whose proc state 2 is better than process ProcessState{72828e dev.rxvy.ignifox:crashhelper_disable_art_image_/10141 pkg=dev.rxvy.ignifox} proc state 14 (52 skipped)
+11-14 20:13:03.186   508  2859 W WindowManager: Exception thrown during dispatchAppVisibility Window{3ba7b57 u0 dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity EXITING}
+11-14 20:13:03.203   508  2859 W WindowManager: Failed to deliver inset control state change to w=Window{3ba7b57 u0 dev.rxvy.ignifox/org.mozilla.reference.browser.settings.SettingsActivity EXITING}
+11-14 20:13:03.241   508   958 I ActivityTaskManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x200000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} with LAUNCH_SINGLE_TASK from uid 10141 (BAL_ALLOW_VISIBLE_WINDOW) result code=0
+11-14 20:13:03.244   799   834 V WindowManagerShell: Transition requested: android.os.BinderProxy@70b3c4f TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=12 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity } baseActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} topActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} origActivity=null realActivity=Co
+11-14 20:13:03.256  2937  2937 I ServiceChildProcess: onCreate, process name: dev.rxvy.ignifox:sandboxed_tab_disable_art_image_25
+11-14 20:13:03.257  2937  2937 D GeckoThread: State changed to LAUNCHED
+11-14 20:13:03.258  2937  2975 I GeckoThread: preparing to run Gecko
+11-14 20:13:03.296   508  1812 D CoreBackPreview: Window{fee0df5 u0 Splash Screen dev.rxvy.ignifox}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@fef31fb, mPriority=0, mIsAnimationCallback=false}
+11-14 20:13:03.442   508   527 V WindowManager: Sent Transition #12 createdAt=11-14 20:13:03.228 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=12 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity } baseActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} topActivity=ComponentInfo{dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity} origActivity=null realActivity
+11-14 20:13:03.443   508   527 V WindowManager:     info={id=12 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{22be573 Task{9e3117e #12 type=standard A=10141:dev.rxvy.ignifox}}} m=OPEN f=NONE leash=Surface(name=Task=12)/@0x7706ad sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{RemoteToken{4d29dcd Task{ffc0910 #11 type=standard I=dev.rxvy.ignifox/org.mozilla.reference.browser.IntentReceiverActivity}}} m=CLOSE f=NONE leash=Surface(name=Task=11)/@0x322a0f6 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+11-14 20:13:03.653  2879  2879 D GeckoRuntime: Lifecycle: onStart
+11-14 20:13:03.655  2879  2879 D GeckoRuntime: Lifecycle: onResume
+11-14 20:13:03.656  2879  2879 D GeckoNetworkManager: Incoming event start for state OffNoListeners -> OnNoListeners
+11-14 20:13:03.656  2879  2879 D GeckoNetworkManager: New network state: UP, WIFI, WIFI
+11-14 20:13:03.660   508  1981 D ConnectivityService: requestNetwork for uid/pid:10141/2879 activeRequest: null callbackRequest: 53 [NetworkRequest [ REQUEST id=54, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10141 RequestorUid: 10141 RequestorPkg: dev.rxvy.ignifox UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647
+11-14 20:13:03.661   508   722 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=54, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10141 RequestorUid: 10141 RequestorPkg: dev.rxvy.ignifox UnderlyingNetworks: Null] ]
+11-14 20:13:03.661   508   722 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=54, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10141 RequestorUid: 10141 RequestorPkg: dev.rxvy.ignifox UnderlyingNetworks: Null] ]
+11-14 20:13:03.661   508   722 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=54, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10141 RequestorUid: 10141 RequestorPkg: dev.rxvy.ignifox UnderlyingNetworks: Null] ]
+11-14 20:13:03.661   508   722 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=54, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10141 RequestorUid: 10141 RequestorPkg: dev.rxvy.ignifox UnderlyingNetworks: Null] ]
+11-14 20:13:03.666  2879  2879 D WebExtension: handleMessage GeckoView:WebExtension:OnReady
+11-14 20:13:03.667  2879  2879 D WebExtension: handleMessage GeckoView:WebExtension:OnReady
+11-14 20:13:03.667  2879  2879 D WebExtension: handleMessage GeckoView:WebExtension:OnReady
+11-14 20:13:03.667  2879  2879 D WebExtension: handleMessage GeckoView:WebExtension:OnReady
+11-14 20:13:03.668  2879  2986 D FirefoxAccountStateMachine: processQueue: fxaEvent 'Initialize(deviceConfig=DeviceConfig(name=Ignifox on unknown Android SDK built for x86_64, deviceType=MOBILE, capabilities=[SEND_TAB]))'
+11-14 20:13:03.670  2879  2879 D GeckoNetworkManager: Incoming event receivedUpdate for state OnNoListeners -> OnNoListeners
+11-14 20:13:03.670  2879  2879 D GeckoNetworkManager: New network state: UP, WIFI, WIFI
+11-14 20:13:03.718   508  2859 D CoreBackPreview: Window{dd85fcb u0 dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@d77f666, mPriority=0, mIsAnimationCallback=false}
+11-14 20:13:03.787  2879  2986 I mozac/CrashReporter: Caught Exception report submitted to 1 services
+11-14 20:13:03.805   508   538 I ActivityManager: Start proc 3000:dev.rxvy.ignifox:gpu_disable_art_image_/u0a141 for service {dev.rxvy.ignifox/org.mozilla.gecko.process.GeckoChildProcessServices$gpu}
+11-14 20:13:03.806  2879  2933 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$gpu updateBindings: FOREGROUND priority, 0 importance, not connected pid, 3 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:13:03.867  2879  2933 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab25 updateBindings: FOREGROUND priority, 0 importance, 2937 pid, 1 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:13:03.869  2937  2975 D GeckoThread: State changed to MOZGLUE_READY
+11-14 20:13:03.871  2937  2975 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:03.871  2937  2975 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:03.915  3000  3000 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:13:03.919  3000  3000 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:13:03.919  3000  3000 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:13:03.927  2937  2975 E GeckoLibLoad: Load sqlite start
+11-14 20:13:03.929  2937  2975 E GeckoLibLoad: Load sqlite done
+11-14 20:13:03.929  2937  2975 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:03.929  2937  2975 E GeckoLibLoad: Load nss start
+11-14 20:13:03.929  2937  2975 E GeckoLibLoad: Load nss done
+11-14 20:13:03.929  2937  2975 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:03.943  3000  3000 I ServiceChildProcess: onCreate, process name: dev.rxvy.ignifox:gpu_disable_art_image_
+11-14 20:13:03.944  3000  3000 D GeckoThread: State changed to LAUNCHED
+11-14 20:13:03.956  3000  3023 I GeckoThread: preparing to run Gecko
+11-14 20:13:03.957  3000  3023 D GeckoThread: State changed to MOZGLUE_READY
+11-14 20:13:03.964  2937  2975 E GeckoLibLoad: Loaded libs in 34.333649ms total, 1ms(1ms) user, 5ms(6ms) system, 0(0) faults
+11-14 20:13:03.964  2937  2975 D GeckoThread: State changed to LIBS_READY
+11-14 20:13:03.964  2937  2975 W GeckoThread: zerdatime 122818 - runGecko
+11-14 20:13:03.966  3000  3023 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:03.966  3000  3023 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:03.967  3000  3023 E GeckoLibLoad: Load sqlite start
+11-14 20:13:03.967  3000  3023 E GeckoLibLoad: Load sqlite done
+11-14 20:13:03.967  3000  3023 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:03.967  3000  3023 E GeckoLibLoad: Load nss start
+11-14 20:13:03.967  3000  3023 E GeckoLibLoad: Load nss done
+11-14 20:13:03.967  3000  3023 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:03.975  3000  3023 E GeckoLibLoad: Loaded libs in 7.151153ms total, 1ms(3ms) user, 3ms(4ms) system, 0(0) faults
+11-14 20:13:03.975  3000  3023 D GeckoThread: State changed to LIBS_READY
+11-14 20:13:03.975  3000  3023 W GeckoThread: zerdatime 122828 - runGecko
+11-14 20:13:04.027  2937  2975 D GeckoThread: State changed to RUNNING
+11-14 20:13:04.032  3000  3023 D GeckoThread: State changed to RUNNING
+11-14 20:13:04.035  2879  2933 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab25 updateBindings: FOREGROUND priority, 2 importance, 2937 pid, 1 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:13:04.040  2879  2933 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$rdd updateBindings: FOREGROUND priority, 0 importance, not connected pid, 3 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:13:04.044   508   538 I ActivityManager: Start proc 3062:dev.rxvy.ignifox:rdd_disable_art_image_/u0a141 for service {dev.rxvy.ignifox/org.mozilla.gecko.process.GeckoChildProcessServices$rdd}
+11-14 20:13:04.124  3062  3062 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:13:04.127  3062  3062 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:13:04.127  3062  3062 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:13:04.138  3062  3062 I ServiceChildProcess: onCreate, process name: dev.rxvy.ignifox:rdd_disable_art_image_
+11-14 20:13:04.138  3062  3062 D GeckoThread: State changed to LAUNCHED
+11-14 20:13:04.139  3062  3084 I GeckoThread: preparing to run Gecko
+11-14 20:13:04.157  3062  3084 D GeckoThread: State changed to MOZGLUE_READY
+11-14 20:13:04.158  3062  3084 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:04.158  3062  3084 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:04.165  3062  3084 E GeckoLibLoad: Load sqlite start
+11-14 20:13:04.166  3062  3084 E GeckoLibLoad: Load sqlite done
+11-14 20:13:04.166  3062  3084 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:04.166  3062  3084 E GeckoLibLoad: Load nss start
+11-14 20:13:04.166  3062  3084 E GeckoLibLoad: Load nss done
+11-14 20:13:04.166  3062  3084 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:04.171  3062  3084 E GeckoLibLoad: Loaded libs in 5.498841ms total, 2ms(5ms) user, 0ms(0ms) system, 0(0) faults
+11-14 20:13:04.171  3062  3084 D GeckoThread: State changed to LIBS_READY
+11-14 20:13:04.171  3062  3084 W GeckoThread: zerdatime 123025 - runGecko
+11-14 20:13:04.211  3062  3084 D GeckoThread: State changed to RUNNING
+11-14 20:13:04.217   508   527 I ActivityTaskManager: Displayed dev.rxvy.ignifox/org.mozilla.reference.browser.BrowserActivity for user 0: +1s501ms
+11-14 20:13:04.223  2879  2879 D GeckoNetworkManager: Incoming event enableNotifications for state OnNoListeners -> OnWithListeners
+11-14 20:13:04.224  2879  2879 D GeckoNetworkManager: New network state: UP, WIFI, WIFI
+11-14 20:13:04.224   508  2859 W ActivityManager: Receiver with filter android.content.IntentFilter@5305923 already registered for pid 2879, callerPackage is dev.rxvy.ignifox
+11-14 20:13:04.228  2879  2879 D GeckoNetworkManager: Incoming event receivedUpdate for state OnWithListeners -> OnWithListeners
+11-14 20:13:04.228  2879  2879 D GeckoNetworkManager: New network state: UP, WIFI, WIFI
+11-14 20:13:04.232   508  1981 D CoreBackPreview: Window{fee0df5 u0 Splash Screen dev.rxvy.ignifox EXITING}: Setting back callback null
+11-14 20:13:04.232   508  1981 W InputManager-JNI: Input channel object 'fee0df5 Splash Screen dev.rxvy.ignifox (client)' was disposed without first being removed with the input manager!
+11-14 20:13:04.235  2879  2879 D mozac-webextensions: onInstalled webcompat@mozilla.org
+11-14 20:13:04.238  2879  2879 D mozac-webcompat: Installed WebCompat webextension: webcompat@mozilla.org
+11-14 20:13:04.238  2879  2879 D mozac-webextensions: onInstalled newtab@ignifox
+11-14 20:13:04.239  2879  2879 D mozac-webextensions: onInstalled icons@mozac.org
+11-14 20:13:04.331   508  2859 W InputManager-JNI: Input channel object '2553fc5 Splash Screen dev.rxvy.ignifox (client)' was disposed without first being removed with the input manager!
+11-14 20:13:04.333   508  1981 I ImeTracker: dev.rxvy.ignifox:49ceec2f: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+11-14 20:13:04.333   508  1981 I ImeTracker: dev.rxvy.ignifox:49ceec2f: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-14 20:13:04.446  2879  2879 D mozac-webextensions: onInstalled readerview@mozac.org
+11-14 20:13:04.447  2879  2879 D mozac-webextensions: Installed extension: readerview@mozac.org
+11-14 20:13:04.447  2879  2879 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderview session=org.mozilla.geckoview.GeckoSession@b4f5b23
+11-14 20:13:04.448  2879  2879 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderviewActive session=org.mozilla.geckoview.GeckoSession@b4f5b23
+11-14 20:13:04.448  2879  2879 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderview session=org.mozilla.geckoview.GeckoSession@b4f5b23
+11-14 20:13:04.456  2879  2900 I GeckoSession: zerdatime 123309 - chrome startup finished
+11-14 20:13:04.457  2937  2975 W GeckoEditableChild: No editable parent
+11-14 20:13:04.602  2879  2879 I WebExtension: releasePendingMessages: extension=icons@mozac.org nativeApp=MozacBrowserIcons session=org.mozilla.geckoview.GeckoSession@b4f5b23
+11-14 20:13:04.603  2879  2879 D GeckoSession: handleMessage GeckoView:PageStart uri=about:blank
+11-14 20:13:04.603  2879  2879 I GeckoSession: handleMessage GeckoView:PageStart uri=
+11-14 20:13:04.604  2879  2879 D GeckoSession: handleMessage GeckoView:LocationChange uri=about:blank
+11-14 20:13:04.604  2879  2879 D GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:13:04.604  2879  2879 I GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:13:04.604  2879  2879 D GeckoSession: handleMessage GeckoView:ProgressChanged uri=null
+11-14 20:13:04.605  2879  2879 D GeckoSession: handleMessage GeckoView:PageStart uri=https://example.com/
+11-14 20:13:04.605  2879  2879 I GeckoSession: handleMessage GeckoView:PageStart uri=
+11-14 20:13:04.653  2937  2975 W GeckoEditableChild: No editable parent
+11-14 20:13:04.686  2879  2879 D GeckoSession: handleMessage GeckoView:LocationChange uri=https://example.com/
+11-14 20:13:04.687  2879  2879 D GeckoSession: handleMessage GeckoView:SecurityChanged uri=null
+11-14 20:13:04.892  2879  2879 D GeckoSession: handleMessage GeckoView:ProgressChanged uri=null
+11-14 20:13:05.623  2879  2879 D WebExtension: handleMessage GeckoView:WebExtension:Message
+11-14 20:13:05.676  2879  2879 D WebExtension: handleMessage GeckoView:WebExtension:Connect
+11-14 20:13:05.677  2879  2879 D GeckoSession: handleMessage GeckoView:ProgressChanged uri=null
+11-14 20:13:05.804  2879  2879 D GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:13:05.805  2879  2879 I GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:13:05.939  2879  2900 D GeckoIdleService: Registering Idle observer callback
+11-14 20:13:05.939  2879  2900 D GeckoIdleService: Register idle observer 0x743ad5ada5a0 for 180 seconds
+11-14 20:13:05.939  2879  2900 D GeckoIdleService: Register: adjusting next switch from -1 to 180 seconds
+11-14 20:13:05.939  2879  2900 D GeckoIdleService: next timeout 179999 msec from now
+11-14 20:13:05.940  2879  2900 D GeckoIdleService: SetTimerExpiryIfBefore: next timeout 179999 msec from now
+11-14 20:13:05.940  2879  2900 D GeckoIdleService: reset timer expiry to 180009 msec from now
+11-14 20:13:05.945  2879  2933 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab26 updateBindings: FOREGROUND priority, 0 importance, not connected pid, 3 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:13:05.959   508   538 I ActivityManager: Start proc 3133:dev.rxvy.ignifox:sandboxed_tab_disable_art_image_26/u0a141 for service {dev.rxvy.ignifox/org.mozilla.gecko.process.GeckoChildProcessServices$tab26}
+11-14 20:13:05.960  2879  2900 D GeckoIdleService: Register idle observer 0x743adf74ea18 for 5 seconds
+11-14 20:13:05.960  2879  2900 D GeckoIdleService: Register: adjusting next switch from 180 to 5 seconds
+11-14 20:13:05.960  2879  2900 D GeckoIdleService: next timeout 4979 msec from now
+11-14 20:13:05.960  2879  2900 D GeckoIdleService: SetTimerExpiryIfBefore: next timeout 4979 msec from now
+11-14 20:13:05.960  2879  2900 D GeckoIdleService: reset timer expiry to 4989 msec from now
+11-14 20:13:06.029  3133  3133 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:13:06.043  3133  3133 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:13:06.043  3133  3133 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:13:06.056  3133  3133 I ServiceChildProcess: onCreate, process name: dev.rxvy.ignifox:sandboxed_tab_disable_art_image_26
+11-14 20:13:06.056  3133  3133 D GeckoThread: State changed to LAUNCHED
+11-14 20:13:06.057  3133  3150 I GeckoThread: preparing to run Gecko
+11-14 20:13:06.102  3133  3150 D GeckoThread: State changed to MOZGLUE_READY
+11-14 20:13:06.104  3133  3150 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:06.104  3133  3150 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:06.107  3133  3150 E GeckoLibLoad: Load sqlite start
+11-14 20:13:06.108  3133  3150 E GeckoLibLoad: Load sqlite done
+11-14 20:13:06.108  3133  3150 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:06.108  3133  3150 E GeckoLibLoad: Load nss start
+11-14 20:13:06.108  3133  3150 E GeckoLibLoad: Load nss done
+11-14 20:13:06.108  3133  3150 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:06.127  2879  2933 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab26 updateBindings: BACKGROUND priority, 3 importance, 3133 pid, 1 successful binds, 0 failed binds, 1 successful unbinds
+11-14 20:13:06.130  3133  3150 E GeckoLibLoad: Loaded libs in 22.014463ms total, 4ms(6ms) user, 0ms(0ms) system, 0(0) faults
+11-14 20:13:06.136  3133  3150 D GeckoThread: State changed to LIBS_READY
+11-14 20:13:06.136  3133  3150 W GeckoThread: zerdatime 124990 - runGecko
+11-14 20:13:06.195  3133  3150 D GeckoThread: State changed to RUNNING
+11-14 20:13:08.124  2879  3169 D ProfileInstaller: Skipping profile installation for dev.rxvy.ignifox
+11-14 20:13:10.949  2879  2900 D GeckoIdleService: Get idle time: time since reset 5010 msec
+11-14 20:13:10.949  2879  2900 D GeckoIdleService: Idle timer callback: current idle time 5010 msec
+11-14 20:13:10.949  2879  2900 D GeckoIdleService: next timeout 174990 msec from now
+11-14 20:13:10.949  2879  2900 D GeckoIdleService: SetTimerExpiryIfBefore: next timeout 174990 msec from now
+11-14 20:13:10.949  2879  2900 D GeckoIdleService: reset timer expiry to 175000 msec from now
+11-14 20:13:10.949  2879  2900 D GeckoIdleService: Idle timer callback: tell observer 0x743adf74ea18 user is idle
+11-14 20:13:14.671  2879  2879 D GeckoSession: handleMessage GeckoView:StateUpdated uri=null
+11-14 20:13:14.671  2879  2879 W GeckoSession: No history entries found.
+11-14 20:13:33.114  2879  2879 I ImeTracker: dev.rxvy.ignifox:de31eb88: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT_BY_INSETS_API
+11-14 20:13:33.114  2879  2879 I ImeTracker: dev.rxvy.ignifox:de31eb88: onCancelled at PHASE_CLIENT_APPLY_ANIMATION
+11-14 20:13:37.549  2879  2879 I WebExtension: releasePendingMessages: extension=icons@mozac.org nativeApp=MozacBrowserIcons session=org.mozilla.geckoview.GeckoSession@ca53930
+11-14 20:13:37.553  2879  2879 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderviewActive session=org.mozilla.geckoview.GeckoSession@ca53930
+11-14 20:13:37.553  2879  2879 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderview session=org.mozilla.geckoview.GeckoSession@ca53930
+11-14 20:13:37.637   508   787 I ImeTracker: dev.rxvy.ignifox:97bb65c5: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_SAME_WINDOW_FOCUSED_WITHOUT_EDITOR
+11-14 20:13:37.637   508   787 I ImeTracker: dev.rxvy.ignifox:97bb65c5: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-14 20:13:37.642  2879  2879 D GeckoSession: handleMessage GeckoView:StateUpdated uri=null
+11-14 20:13:37.644  2879  2933 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab26 updateBindings: FOREGROUND priority, 2 importance, 3133 pid, 1 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:13:37.734  2879  2900 I GeckoSession: zerdatime 156588 - chrome startup finished
+11-14 20:13:37.744  3133  3150 W GeckoEditableChild: No editable parent
+11-14 20:13:37.786  3133  3133 I ServiceChildProcess: Destroying GeckoServiceChildProcess
+11-14 20:13:37.786  2879  2879 D GeckoSession: handleMessage GeckoView:PageStart uri=about:blank
+11-14 20:13:37.786  2879  2879 I GeckoSession: handleMessage GeckoView:PageStart uri=
+11-14 20:13:37.787  2879  2879 D GeckoSession: handleMessage GeckoView:LocationChange uri=about:blank
+11-14 20:13:37.787  2879  2879 D GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:13:37.787  2879  2879 I GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:13:37.789  2879  2879 D GeckoSession: handleMessage GeckoView:ProgressChanged uri=null
+11-14 20:13:37.789  2879  2879 D GeckoSession: handleMessage GeckoView:PageStart uri=moz-extension://a0353532-6df0-4af9-bda7-553e6bb89a0a/newtab/index.html#%7B%22platform%22%3A%22android%22%2C%22noAutofocus%22%3Atrue%2C%22palette%22%3A%7B%22bg%22%3A%22%230d0618%22%2C%22bg2%22%3A%22%23170b29%22%2C%22bg3%22%3A%22%2323103b%22%2C%22fg%22%3A%22%23f2e6ff%22%2C%22fgDim%22%3A%22%239f8ab8%22%2C%22accent%22%3A%22%23ff2fb9%22%2C%22accent2%22%3A%22%232de2ff%22%2C%22dark%22%3Atrue%7D%2C%22radius%22%3A14%2C%22layout%22%3A%22center%22%2C%22wallpaper%22%3A%22flames%22%2C%22wallpaperFile%22%3A%22%22%2C%22wallp
+11-14 20:13:37.789  2879  2879 I GeckoSession: handleMessage GeckoView:PageStart uri=
+11-14 20:13:37.790  2879  2879 D GeckoSession: handleMessage GeckoView:LocationChange uri=moz-extension://a0353532-6df0-4af9-bda7-553e6bb89a0a/newtab/index.html#%7B%22platform%22%3A%22android%22%2C%22noAutofocus%22%3Atrue%2C%22palette%22%3A%7B%22bg%22%3A%22%230d0618%22%2C%22bg2%22%3A%22%23170b29%22%2C%22bg3%22%3A%22%2323103b%22%2C%22fg%22%3A%22%23f2e6ff%22%2C%22fgDim%22%3A%22%239f8ab8%22%2C%22accent%22%3A%22%23ff2fb9%22%2C%22accent2%22%3A%22%232de2ff%22%2C%22dark%22%3Atrue%7D%2C%22radius%22%3A14%2C%22layout%22%3A%22center%22%2C%22wallpaper%22%3A%22flames%22%2C%22wallpaperFile%22%3A%22%22%2C%22
+11-14 20:13:37.790  2879  2879 D GeckoSession: handleMessage GeckoView:SecurityChanged uri=null
+11-14 20:13:37.853   508  2217 I ActivityManager: Process dev.rxvy.ignifox:sandboxed_tab_disable_art_image_26 (pid 3133) has died: fg  SVC 
+11-14 20:13:37.855   508  2217 W ProcessStats: Tracking association SourceState{6e62193 dev.rxvy.ignifox/10141 BTop #682} whose proc state 2 is better than process ProcessState{72828e dev.rxvy.ignifox:crashhelper_disable_art_image_/10141 pkg=dev.rxvy.ignifox} proc state 14 (13 skipped)
+11-14 20:13:37.979  2879  2879 D GeckoSession: handleMessage GeckoView:ProgressChanged uri=null
+11-14 20:13:38.100  2879  2879 D GeckoSession: handleMessage GeckoView:ProgressChanged uri=null
+11-14 20:13:38.120  2879  2879 D GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:13:38.120  2879  2879 I GeckoSession: handleMessage GeckoView:PageStop uri=null
+11-14 20:13:38.635  2879  2933 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab9 updateBindings: FOREGROUND priority, 0 importance, not connected pid, 3 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:13:38.639   508   538 I ActivityManager: Start proc 3257:dev.rxvy.ignifox:sandboxed_tab_disable_art_image_9/u0a141 for service {dev.rxvy.ignifox/org.mozilla.gecko.process.GeckoChildProcessServices$tab9}
+11-14 20:13:38.681  3257  3257 D nativeloader: Configuring clns-6 for other apk /data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/lib/x86_64:/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/dev.rxvy.ignifox
+11-14 20:13:38.685  3257  3257 V GraphicsEnvironment: ANGLE GameManagerService for dev.rxvy.ignifox: false
+11-14 20:13:38.685  3257  3257 V GraphicsEnvironment: dev.rxvy.ignifox is not listed in per-application setting
+11-14 20:13:38.696  3257  3257 I ServiceChildProcess: onCreate, process name: dev.rxvy.ignifox:sandboxed_tab_disable_art_image_9
+11-14 20:13:38.696  3257  3257 D GeckoThread: State changed to LAUNCHED
+11-14 20:13:38.697  3257  3272 I GeckoThread: preparing to run Gecko
+11-14 20:13:38.719  2879  2933 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab9 updateBindings: BACKGROUND priority, 3 importance, 3257 pid, 1 successful binds, 0 failed binds, 1 successful unbinds
+11-14 20:13:38.720  3257  3272 D GeckoThread: State changed to MOZGLUE_READY
+11-14 20:13:38.722  3257  3272 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:38.722  3257  3272 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:38.722  3257  3272 E GeckoLibLoad: Load sqlite start
+11-14 20:13:38.723  3257  3272 E GeckoLibLoad: Load sqlite done
+11-14 20:13:38.723  3257  3272 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:38.723  3257  3272 E GeckoLibLoad: Load nss start
+11-14 20:13:38.724  3257  3272 E GeckoLibLoad: Load nss done
+11-14 20:13:38.724  3257  3272 D GeckoLoader: Library base=/data/app/~~Z5wC3ZctxX--53KSXmXRAw==/dev.rxvy.ignifox-jnLP1NVLr9ZbEOixEE1sVQ==/base.apk!/lib/x86_64
+11-14 20:13:38.732  3257  3272 E GeckoLibLoad: Loaded libs in 8.087207ms total, 0ms(0ms) user, 7ms(7ms) system, 0(0) faults
+11-14 20:13:38.732  3257  3272 D GeckoThread: State changed to LIBS_READY
+11-14 20:13:38.732  3257  3272 W GeckoThread: zerdatime 157586 - runGecko
+11-14 20:13:38.794  3257  3272 D GeckoThread: State changed to RUNNING
+11-14 20:13:40.616  2879  2933 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab25 updateBindings: IDLE priority, 6 importance, 2937 pid, 1 successful binds, 0 failed binds, 2 successful unbinds
+11-14 20:13:47.800  2879  2879 D GeckoSession: handleMessage GeckoView:StateUpdated uri=null
+11-14 20:13:47.803  2879  2879 W GeckoSession: No history entries found.
+11-14 20:13:50.429  2879  2879 D GeckoSession: handleMessage GeckoView:StateUpdated uri=null
+11-14 20:13:55.086  2879  2879 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderviewActive session=org.mozilla.geckoview.GeckoSession@ca53930
+11-14 20:13:55.086  2879  2879 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderview session=org.mozilla.geckoview.GeckoSession@ca53930
+11-14 20:13:57.461  2879  2879 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderviewActive session=org.mozilla.geckoview.GeckoSession@b4f5b23
+11-14 20:13:57.461  2879  2879 I WebExtension: releasePendingMessages: extension=readerview@mozac.org nativeApp=mozacReaderview session=org.mozilla.geckoview.GeckoSession@b4f5b23
+11-14 20:13:58.038  2879  2879 D GeckoSession: handleMessage GeckoView:StateUpdated uri=null
+11-14 20:13:58.040   508  1981 W ProcessStats: Tracking association SourceState{6162bed dev.rxvy.ignifox/10141 BTop #690} whose proc state 2 is better than process ProcessState{3e1f934 dev.rxvy.ignifox:sandboxed_tab_disable_art_image_25/10141 pkg=dev.rxvy.ignifox} proc state 8 (2 skipped)
+11-14 20:13:58.050  2879  2933 D ServiceAllocator: org.mozilla.gecko.process.GeckoChildProcessServices$tab25 updateBindings: FOREGROUND priority, 2 importance, 2937 pid, 2 successful binds, 0 failed binds, 0 successful unbinds
+11-14 20:14:01.628  2879  2900 D GeckoIdleService: next timeout 5000 msec from now
+11-14 20:14:01.628  2879  2900 D GeckoIdleService: SetTimerExpiryIfBefore: next timeout 5000 msec from now
+11-14 20:14:01.628  2879  2900 D GeckoIdleService: reset timer expiry to 5010 msec from now
+11-14 20:14:01.628  2879  2900 D GeckoIdleService: Reset idle timeout: tell observer 0x743adf74ea18 user is back
+11-14 20:14:01.631  2879  2879 D GeckoSession: handleMessage: GeckoView:DismissClipboardPermissionRequest
+11-14 20:14:06.637  2879  2900 D GeckoIdleService: Get idle time: time since reset 1950 msec
+11-14 20:14:06.637  2879  2900 D GeckoIdleService: Idle timer callback: current idle time 1950 msec
+11-14 20:14:06.637  2879  2900 D GeckoIdleService: next timeout 3049 msec from now
+11-14 20:14:06.637  2879  2900 D GeckoIdleService: SetTimerExpiryIfBefore: next timeout 3049 msec from now
+11-14 20:14:06.637  2879  2900 D GeckoIdleService: reset timer expiry to 3059 msec from now
+11-14 20:14:09.696  2879  2900 D GeckoIdleService: Get idle time: time since reset 5010 msec
+11-14 20:14:09.696  2879  2900 D GeckoIdleService: Idle timer callback: current idle time 5010 msec
+11-14 20:14:09.696  2879  2900 D GeckoIdleService: next timeout 174990 msec from now
+11-14 20:14:09.696  2879  2900 D GeckoIdleService: SetTimerExpiryIfBefore: next timeout 174990 msec from now
+11-14 20:14:09.696  2879  2900 D GeckoIdleService: reset timer expiry to 175000 msec from now
+11-14 20:14:09.696  2879  2900 D GeckoIdleService: Idle timer callback: tell observer 0x743adf74ea18 user is idle

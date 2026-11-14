@@ -1,0 +1,1 @@
+Screenshots from the Android emulator test of 3adde8c6ad54956852bd4ebaff20ee72ec1af7e1
