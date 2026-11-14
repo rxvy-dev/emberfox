@@ -220,6 +220,12 @@ def _():
     assert title == "Panel OK", f"panel title {title!r}"
     w = chrome("return Math.round(document.getElementById('igni-panel-view').getBoundingClientRect().width)")
     assert w > 200, f"panel is only {w}px wide"
+    junk = chrome("return [...document.getElementById('igni-panels').childNodes].filter(n => n.nodeType == 3).map(n => n.data)")
+    assert not junk, f"stray text in the panel box: {junk}"
+    edge = chrome("""const s = document.getElementById('igni-panel-strip').getBoundingClientRect();
+                     const c = gBrowser.selectedBrowser.getBoundingClientRect();
+                     return [Math.round(s.left), Math.round(c.right)]""")
+    assert edge[0] >= edge[1], f"panel strip (x={edge[0]}) should be right of the page (ends at x={edge[1]})"
     shot("web-panel")
     chrome("IgniFeatures.showPanel(win, null)")
     set_prefs({"ignifox.panels.enabled": False})

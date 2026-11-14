@@ -659,16 +659,23 @@ export const IgniFeatures = {
       win._igniPanelBrowsers = new Map();
     }
     // Keep the box on the chosen side of the page; the splitter always sits next to the page.
-    const splitter = doc.getElementById("igni-panel-splitter");
-    const view = doc.getElementById("igni-panel-view"), stripEl = doc.getElementById("igni-panel-strip");
+    // (Look the parts up inside the box: a new box isn't in the document yet.)
+    const splitter = box.querySelector("#igni-panel-splitter");
+    const view = box.querySelector("#igni-panel-view"), stripEl = box.querySelector("#igni-panel-strip");
     box.setAttribute("side", side);
-    if (side == "left") {
+    // Firefox lays #browser out right-to-left when its sidebar is on the right; "first" then
+    // means the right edge, so swap where the box goes.
+    const reversed = win.getComputedStyle(browserBox).flexDirection == "row-reverse";
+    if ((side == "left") != reversed) {
       browserBox.insertBefore(box, browserBox.firstChild);
+    } else {
+      browserBox.append(box);
+    }
+    if (side == "left") {
       box.append(stripEl, view, splitter);
       splitter.setAttribute("resizebefore", "sibling");
       splitter.setAttribute("resizeafter", "flex");
     } else {
-      browserBox.append(box);
       box.append(splitter, view, stripEl);
       splitter.setAttribute("resizebefore", "flex");
       splitter.setAttribute("resizeafter", "sibling");
