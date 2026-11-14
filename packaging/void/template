@@ -1,6 +1,6 @@
-# Template file for 'emberfox-bin'  (Void Linux / Auxo, glibc)
-# Copy to void-packages/srcpkgs/emberfox-bin/template, then: ./xbps-src pkg emberfox-bin
-pkgname=emberfox-bin
+# Template file for 'ignifox-bin'  (Void Linux / Auxo, glibc)
+# Copy to void-packages/srcpkgs/ignifox-bin/template, then: ./xbps-src pkg ignifox-bin
+pkgname=ignifox-bin
 version=160.0
 _emrel=1
 revision=1
@@ -8,25 +8,25 @@ archs="x86_64 aarch64"
 short_desc="Telemetry-free, deeply customizable browser built on Firefox"
 maintainer="rxvy <rxvy@users.noreply.github.com>"
 license="MPL-2.0"
-homepage="https://github.com/rxvy-dev/emberfox"
+homepage="https://github.com/rxvy-dev/ignifox"
 depends="gtk+3 dbus-glib alsa-lib libXt nss"
 nostrip=yes
 noverifyrdeps=yes
-distfiles="${homepage}/releases/download/v${version}-${_emrel}/emberfox-${version}-${_emrel}-linux-${XBPS_TARGET_MACHINE}.tar.xz"
+distfiles="${homepage}/releases/download/v${version}-${_emrel}/ignifox-${version}-${_emrel}-linux-${XBPS_TARGET_MACHINE}.tar.xz"
 case "$XBPS_TARGET_MACHINE" in
 	x86_64) checksum=897501d993c6b49e4b5dbf038e449d1e5b8d70bb223199d74f447e71ec3125fa ;; # x86_64-sum
 	aarch64) checksum=f6a477c37ad69feb88ccef47ebdeb93a24a549005ec875abb4f4c27790a1fc0c ;; # aarch64-sum
 esac
 
 do_install() {
-	vmkdir opt/emberfox
-	vcopy "*" opt/emberfox
-	rm -f ${DESTDIR}/opt/emberfox/install.sh
+	vmkdir opt/ignifox
+	vcopy "*" opt/ignifox
+	rm -f ${DESTDIR}/opt/ignifox/install.sh
 	vmkdir usr/bin
-	ln -s /opt/emberfox/emberfox ${DESTDIR}/usr/bin/emberfox
-	sed 's|^Exec=emberfox|Exec=/usr/bin/emberfox|' emberfox.desktop > emberfox.desktop.sys
-	vinstall emberfox.desktop.sys 644 usr/share/applications emberfox.desktop
+	ln -s /opt/ignifox/ignifox ${DESTDIR}/usr/bin/ignifox
+	sed 's|^Exec=ignifox|Exec=/usr/bin/ignifox|' ignifox.desktop > ignifox.desktop.sys
+	vinstall ignifox.desktop.sys 644 usr/share/applications ignifox.desktop
 	vmkdir usr/share
 	cp -r icons ${DESTDIR}/usr/share/icons
-	vlicense LICENSE.emberfox
+	vlicense LICENSE.ignifox
 }

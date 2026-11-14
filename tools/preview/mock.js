@@ -35,7 +35,7 @@
     getDefaultBranch: () => prefs,
   };
   const file = { append() {}, exists: () => false, create() {}, reveal() {} };
-  const placements = { "nav-bar": ["back-button","forward-button","stop-reload-button","urlbar-container","downloads-button","ember-studio-button","unified-extensions-button","fxa-toolbar-menu-button"],
+  const placements = { "nav-bar": ["back-button","forward-button","stop-reload-button","urlbar-container","downloads-button","igni-studio-button","unified-extensions-button","fxa-toolbar-menu-button"],
     "TabsToolbar": ["tabbrowser-tabs","alltabs-button"], "PersonalToolbar": ["personal-bookmarks"], "widget-overflow-fixed-list": [] };
   window.Services = {
     prefs, dirsvc: { get: () => ({ ...file }) },
@@ -66,7 +66,7 @@
     removeEngine: async e => { engines.splice(engines.indexOf(e), 1); fire(); },
   };
   window.__obs = { addObserver: (o, t) => { if (t == "browser-search-engine-modified") sobs.push(o); }, removeObserver() {}, notifyObservers() {} };
-  window.PathUtils = { profileDir: "/home/rxvy/.emberfox/emberfox/abcd.default", parent: p => p.replace(/\/[^/]*$/, "") };
+  window.PathUtils = { profileDir: "/home/rxvy/.ignifox/ignifox/abcd.default", parent: p => p.replace(/\/[^/]*$/, "") };
   window.IOUtils = { readUTF8: () => Promise.reject(new Error("none")), writeUTF8: async () => {}, makeDirectory: async () => {} };
   const CUI = {
     getWidgetIdsInArea: a => placements[a] || [],
@@ -76,12 +76,12 @@
     addListener() {}, removeListener() {}, addWidgetToArea() {}, removeWidgetFromArea() {}, moveWidgetWithinArea() {}, reset() {},
   };
   window.ChromeUtils = {
-    importESModule: url => url.includes("boot") ? { EmberBoot: { customCSSPath: () => "/profile/chrome/ember-custom.css", bumpCustomCSS() {},
+    importESModule: url => url.includes("boot") ? { IgniBoot: { customCSSPath: () => "/profile/chrome/igni-custom.css", bumpCustomCSS() {},
         version: async () => "160.0.1-1",
         newtabURL: () => "./newtab/index.html",
         setNewtabWallpaper: async () => "wallpaper.jpg",
         checkForUpdate: async () => ({ status: "current", current: "160.0.1-1", latest: "160.0.1-1" }) } }
       : { CustomizableUI: CUI },
   };
-  window.__emberPrefs = prefs;
+  window.__igniPrefs = prefs;
 })();

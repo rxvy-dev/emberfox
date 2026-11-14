@@ -1,15 +1,15 @@
-/* Emberfox — Ember Studio engine.
+/* Ignifox — Ignifox Studio engine.
  *
- * Loaded once, very early, by emberfox.cfg (privileged autoconfig).
- *  - registers default ember.* prefs
- *  - registers about:ember (the Studio page)
- *  - paints every browser window from ember.* prefs, live, no restart
+ * Loaded once, very early, by ignifox.cfg (privileged autoconfig).
+ *  - registers default ignifox.* prefs
+ *  - registers about:ignifox (the Studio page)
+ *  - paints every browser window from ignifox.* prefs, live, no restart
  *  - adds the Studio toolbar button, Tools-menu item and shortcuts
- *  - loads <profile>/chrome/ember-custom.css written by Studio's CSS editor
+ *  - loads <profile>/chrome/igni-custom.css written by Studio's CSS editor
  */
 
 import {
-  EMBER_PREFS,
+  IGNI_PREFS,
   PAINTABLE_THEME_IDS,
   RELEASES_API,
   RELEASES_PAGE,
@@ -17,29 +17,29 @@ import {
   newtabLinks,
   readPref,
   resolvePalette,
-} from "chrome://ember/content/prefs.sys.mjs";
+} from "chrome://ignifox/content/prefs.sys.mjs";
 
 const { setTimeout } = ChromeUtils.importESModule("resource://gre/modules/Timer.sys.mjs");
 
 const BROWSER_URL = "chrome://browser/content/browser.xhtml";
-const UI_SHEET = "chrome://ember/content/ui.css";
-const STUDIO_URL = "chrome://ember/content/studio.html";
+const UI_SHEET = "chrome://ignifox/content/ui.css";
+const STUDIO_URL = "chrome://ignifox/content/studio.html";
 const ABOUT_CID = Components.ID("{6f1b8c7e-3d2a-4e9b-9b8e-1e3b0e000001}");
-const WIDGET_ID = "ember-studio-button";
+const WIDGET_ID = "igni-studio-button";
 const UPDATE_INTERVAL = 24 * 60 * 60; // seconds between automatic checks
 const UPDATE_DELAY_MS = 90 * 1000; // wait after startup so it never slows launch
 const NEWTAB_FILES = ["index.html", "newtab.css", "newtab.js", "logo.svg", "MetalMania-Regular.ttf"];
 const TOPSITES_REFRESH_MS = 15 * 60 * 1000;
 
-let gChromeHandle = null; // keeps chrome://ember/ registered for the app's lifetime
+let gChromeHandle = null; // keeps chrome://ignifox/ registered for the app's lifetime
 const gCustomSheets = new WeakMap(); // window -> loaded custom css url
 
 function log(...args) {
-  console.log("[Emberfox]", ...args);
+  console.log("[Ignifox]", ...args);
 }
 
-// ------------------------------------------------------------ about:ember
-class AboutEmber {
+// ------------------------------------------------------------ about:ignifox
+class AboutIgnifox {
   QueryInterface = ChromeUtils.generateQI(["nsIAboutModule"]);
 
   newChannel(uri, loadInfo) {
@@ -62,24 +62,24 @@ class AboutEmber {
 
 function registerAbout() {
   const registrar = Components.manager.QueryInterface(Ci.nsIComponentRegistrar);
-  const contract = "@mozilla.org/network/protocol/about;1?what=ember";
+  const contract = "@mozilla.org/network/protocol/about;1?what=ignifox";
   if (registrar.isContractIDRegistered(contract)) {
     return;
   }
-  const instance = new AboutEmber();
+  const instance = new AboutIgnifox();
   const factory = {
     createInstance(iid) {
       return instance.QueryInterface(iid);
     },
     QueryInterface: ChromeUtils.generateQI(["nsIFactory"]),
   };
-  registrar.registerFactory(ABOUT_CID, "about:ember (Ember Studio)", contract, factory);
+  registrar.registerFactory(ABOUT_CID, "about:ignifox (Ignifox Studio)", contract, factory);
 }
 
 // ----------------------------------------------------------------- prefs
 function setDefaults() {
   const d = Services.prefs.getDefaultBranch("");
-  for (const [key, spec] of Object.entries(EMBER_PREFS)) {
+  for (const [key, spec] of Object.entries(IGNI_PREFS)) {
     try {
       if (spec.type == "bool") d.setBoolPref(key, spec.def);
       else if (spec.type == "int") d.setIntPref(key, spec.def);
@@ -90,9 +90,9 @@ function setDefaults() {
   }
 }
 
-function emberValues() {
+function igniValues() {
   const out = {};
-  for (const [key, spec] of Object.entries(EMBER_PREFS)) {
+  for (const [key, spec] of Object.entries(IGNI_PREFS)) {
     out[key] = readPref(Services.prefs, key, spec.type) ?? spec.def;
   }
   return out;
@@ -105,7 +105,7 @@ function browserWindows() {
 }
 
 // ---------------------------------------------------------------- engine
-export const EmberBoot = {
+export const IgniBoot = {
   _inited: false,
   _widgetMade: false,
 
@@ -120,12 +120,12 @@ export const EmberBoot = {
     try {
       registerAbout();
     } catch (e) {
-      log("about:ember registration failed", e);
+      log("about:ignifox registration failed", e);
     }
 
     Services.obs.addObserver(this, "browser-delayed-startup-finished");
     Services.obs.addObserver(this, "browser-search-engine-modified");
-    Services.prefs.addObserver("ember.", this);
+    Services.prefs.addObserver("ignifox.", this);
     Services.prefs.addObserver("extensions.activeThemeID", this);
     this.syncNativeLayout();
   },
@@ -136,25 +136,25 @@ export const EmberBoot = {
     } else if (topic == "browser-search-engine-modified") {
       this.queueNewtabConfig();
     } else if (topic == "nsPref:changed") {
-      if (data.startsWith("ember.newtab.") || data.startsWith("ember.theme.") || data == "ember.shape.radius") {
+      if (data.startsWith("ignifox.newtab.") || data.startsWith("ignifox.theme.") || data == "ignifox.shape.radius") {
         this.queueNewtabConfig();
       }
-      if (data == "ember.newtab.enabled" || data == "ember.newtab.home") {
+      if (data == "ignifox.newtab.enabled" || data == "ignifox.newtab.home") {
         this.applyNewtab();
       }
-      if (data == "ember.layout.tabs") {
+      if (data == "ignifox.layout.tabs") {
         this.syncNativeLayout();
       }
-      if (data == "ember.customcss.rev" || data == "ember.customcss.enabled") {
+      if (data == "ignifox.customcss.rev" || data == "ignifox.customcss.enabled") {
         browserWindows().forEach(w => this.loadCustomCSS(w));
       }
       browserWindows().forEach(w => this.paint(w));
     }
   },
 
-  /** Vertical tabs are Firefox-native; keep them in sync with ember.layout.tabs. */
+  /** Vertical tabs are Firefox-native; keep them in sync with ignifox.layout.tabs. */
   syncNativeLayout() {
-    const mode = readPref(Services.prefs, "ember.layout.tabs", "string") || "top";
+    const mode = readPref(Services.prefs, "ignifox.layout.tabs", "string") || "top";
     const wantVertical = mode == "vertical";
     try {
       if (wantVertical && !Services.prefs.getBoolPref("sidebar.revamp", false)) {
@@ -169,10 +169,10 @@ export const EmberBoot = {
   },
 
   setupWindow(win) {
-    if (win.location.href != BROWSER_URL || win._emberReady) {
+    if (win.location.href != BROWSER_URL || win._igniReady) {
       return;
     }
-    win._emberReady = true;
+    win._igniReady = true;
     if (!this._updateScheduled) {
       this._updateScheduled = true;
       setTimeout(() => this.checkForUpdate().catch(e => log("update check", e)), UPDATE_DELAY_MS);
@@ -194,93 +194,93 @@ export const EmberBoot = {
     win.addEventListener("unload", () => mo.disconnect(), { once: true });
   },
 
-  /** Push ember.* prefs onto a window as root attributes + CSS variables. */
+  /** Push ignifox.* prefs onto a window as root attributes + CSS variables. */
   paint(win) {
     const doc = win.document;
     const root = doc.documentElement;
-    const v = emberValues();
+    const v = igniValues();
     const toggle = (attr, on) => (on ? root.setAttribute(attr, "true") : root.removeAttribute(attr));
 
     // ---- theme
     const themeID = readPref(Services.prefs, "extensions.activeThemeID", "string") || "";
     const addonTheme = themeID && !PAINTABLE_THEME_IDS.has(themeID);
-    const themed = v["ember.theme.enabled"] && !(addonTheme && v["ember.theme.respectAddonThemes"]);
+    const themed = v["ignifox.theme.enabled"] && !(addonTheme && v["ignifox.theme.respectAddonThemes"]);
     const pal = resolvePalette(v);
-    toggle("ember-themed", themed);
-    toggle("ember-dark", themed && pal.dark);
-    toggle("ember-light", themed && !pal.dark);
-    toggle("ember-contentbg", themed && v["ember.theme.contentBg"]);
+    toggle("igni-themed", themed);
+    toggle("igni-dark", themed && pal.dark);
+    toggle("igni-light", themed && !pal.dark);
+    toggle("igni-contentbg", themed && v["ignifox.theme.contentBg"]);
     const css = root.style;
     const vars = {
-      "--ember-bg": pal.bg,
-      "--ember-bg-2": pal.bg2,
-      "--ember-bg-3": pal.bg3,
-      "--ember-fg": pal.fg,
-      "--ember-fg-dim": pal.fgDim,
-      "--ember-accent": pal.accent,
-      "--ember-accent-2": pal.accent2,
-      "--ember-radius": `${v["ember.shape.radius"]}px`,
-      "--ember-tab-max": `${v["ember.shape.tabMaxWidth"]}px`,
+      "--igni-bg": pal.bg,
+      "--igni-bg-2": pal.bg2,
+      "--igni-bg-3": pal.bg3,
+      "--igni-fg": pal.fg,
+      "--igni-fg-dim": pal.fgDim,
+      "--igni-accent": pal.accent,
+      "--igni-accent-2": pal.accent2,
+      "--igni-radius": `${v["ignifox.shape.radius"]}px`,
+      "--igni-tab-max": `${v["ignifox.shape.tabMaxWidth"]}px`,
     };
     for (const [k, val] of Object.entries(vars)) {
       css.setProperty(k, val);
     }
 
     // ---- effects
-    toggle("ember-glow", v["ember.fx.glow"]);
-    toggle("ember-strip", v["ember.fx.emberStrip"]);
-    toggle("ember-progress", v["ember.fx.progressBar"]);
+    toggle("igni-glow", v["ignifox.fx.glow"]);
+    toggle("igni-strip", v["ignifox.fx.accentStrip"]);
+    toggle("igni-progress", v["ignifox.fx.progressBar"]);
 
     // ---- layout
-    const tabs = v["ember.layout.tabs"];
-    root.setAttribute("ember-tabs", ["top", "bottom", "vertical", "hidden"].includes(tabs) ? tabs : "top");
-    toggle("ember-autohide", v["ember.layout.autohide"]);
-    toggle("ember-urlbar-centered", v["ember.layout.urlbarCentered"]);
-    toggle("ember-tabclose-hover", v["ember.layout.tabCloseHover"]);
-    toggle("ember-compact-nav", v["ember.layout.compactNavbar"]);
+    const tabs = v["ignifox.layout.tabs"];
+    root.setAttribute("igni-tabs", ["top", "bottom", "vertical", "hidden"].includes(tabs) ? tabs : "top");
+    toggle("igni-autohide", v["ignifox.layout.autohide"]);
+    toggle("igni-urlbar-centered", v["ignifox.layout.urlbarCentered"]);
+    toggle("igni-tabclose-hover", v["ignifox.layout.tabCloseHover"]);
+    toggle("igni-compact-nav", v["ignifox.layout.compactNavbar"]);
 
     // ---- tabs & window
-    const tstyle = v["ember.tabs.style"];
-    if (["pill", "underline", "boxy"].includes(tstyle)) root.setAttribute("ember-tabstyle", tstyle);
-    else root.removeAttribute("ember-tabstyle");
-    const th = v["ember.tabs.height"];
-    toggle("ember-tabheight", th >= 20);
-    css.setProperty("--ember-tab-height", `${th}px`);
-    toggle("ember-floating", v["ember.layout.floatingContent"]);
-    css.setProperty("--ember-gap", `${v["ember.layout.contentGap"]}px`);
-    const uw = v["ember.layout.urlbarMaxWidth"];
-    toggle("ember-urlbar-max", uw >= 300);
-    css.setProperty("--ember-urlbar-max", `${uw}px`);
-    toggle("ember-bm-icons", v["ember.layout.bookmarksIconsOnly"]);
-    toggle("ember-compact-menus", v["ember.layout.compactMenus"]);
+    const tstyle = v["ignifox.tabs.style"];
+    if (["pill", "underline", "boxy"].includes(tstyle)) root.setAttribute("igni-tabstyle", tstyle);
+    else root.removeAttribute("igni-tabstyle");
+    const th = v["ignifox.tabs.height"];
+    toggle("igni-tabheight", th >= 20);
+    css.setProperty("--igni-tab-height", `${th}px`);
+    toggle("igni-floating", v["ignifox.layout.floatingContent"]);
+    css.setProperty("--igni-gap", `${v["ignifox.layout.contentGap"]}px`);
+    const uw = v["ignifox.layout.urlbarMaxWidth"];
+    toggle("igni-urlbar-max", uw >= 300);
+    css.setProperty("--igni-urlbar-max", `${uw}px`);
+    toggle("igni-bm-icons", v["ignifox.layout.bookmarksIconsOnly"]);
+    toggle("igni-compact-menus", v["ignifox.layout.compactMenus"]);
 
     // ---- hide elements
-    toggle("ember-hide-newtab", v["ember.hide.newTabButton"]);
-    toggle("ember-hide-alltabs", v["ember.hide.allTabsButton"]);
-    toggle("ember-hide-urlbar-icons", v["ember.hide.urlbarIcons"]);
-    toggle("ember-hide-extensions", v["ember.hide.extensionsButton"]);
-    toggle("ember-hide-navdisabled", v["ember.hide.disabledNavButtons"]);
-    toggle("ember-hide-tabicons", v["ember.hide.tabIcons"]);
+    toggle("igni-hide-newtab", v["ignifox.hide.newTabButton"]);
+    toggle("igni-hide-alltabs", v["ignifox.hide.allTabsButton"]);
+    toggle("igni-hide-urlbar-icons", v["ignifox.hide.urlbarIcons"]);
+    toggle("igni-hide-extensions", v["ignifox.hide.extensionsButton"]);
+    toggle("igni-hide-navdisabled", v["ignifox.hide.disabledNavButtons"]);
+    toggle("igni-hide-tabicons", v["ignifox.hide.tabIcons"]);
 
     // ---- typography
-    const fam = (v["ember.font.family"] || "").trim();
+    const fam = (v["ignifox.font.family"] || "").trim();
     if (fam) {
-      css.setProperty("--ember-font", fam.replace(/[;{}]/g, ""));
-      root.setAttribute("ember-font", "true");
+      css.setProperty("--igni-font", fam.replace(/[;{}]/g, ""));
+      root.setAttribute("igni-font", "true");
     } else {
-      root.removeAttribute("ember-font");
+      root.removeAttribute("igni-font");
     }
-    const size = v["ember.font.size"];
+    const size = v["ignifox.font.size"];
     if (size >= 9) {
-      css.setProperty("--ember-font-size", `${size}px`);
-      root.setAttribute("ember-font-size", "true");
+      css.setProperty("--igni-font-size", `${size}px`);
+      root.setAttribute("igni-font-size", "true");
     } else {
-      root.removeAttribute("ember-font-size");
+      root.removeAttribute("igni-font-size");
     }
   },
 
   customCSSPath() {
-    return PathUtils.join(PathUtils.profileDir, "chrome", "ember-custom.css");
+    return PathUtils.join(PathUtils.profileDir, "chrome", "igni-custom.css");
   },
 
   async loadCustomCSS(win) {
@@ -292,14 +292,14 @@ export const EmberBoot = {
       } catch (e) {}
       gCustomSheets.delete(win);
     }
-    if (!readPref(Services.prefs, "ember.customcss.enabled", "bool")) {
+    if (!readPref(Services.prefs, "ignifox.customcss.enabled", "bool")) {
       return;
     }
     const path = this.customCSSPath();
     if (!(await IOUtils.exists(path))) {
       return;
     }
-    const rev = readPref(Services.prefs, "ember.customcss.rev", "int") || 0;
+    const rev = readPref(Services.prefs, "ignifox.customcss.rev", "int") || 0;
     const url = `${PathUtils.toFileURI(path)}?rev=${rev}`;
     try {
       wu.loadSheetUsingURIString(url, wu.AUTHOR_SHEET);
@@ -330,14 +330,14 @@ export const EmberBoot = {
     CUI.createWidget({
       id: WIDGET_ID,
       type: "button",
-      label: "Ember Studio",
-      tooltiptext: "Ember Studio — customize Emberfox (Ctrl+Alt+E)",
+      label: "Ignifox Studio",
+      tooltiptext: "Ignifox Studio — customize Ignifox (Ctrl+Alt+I)",
       defaultArea: CUI.AREA_NAVBAR,
       onCreated(node) {
-        node.setAttribute("image", "chrome://ember/content/icons/studio.svg");
+        node.setAttribute("image", "chrome://ignifox/content/icons/studio.svg");
       },
       onCommand(event) {
-        EmberBoot.openStudio(event.target.ownerGlobal);
+        IgniBoot.openStudio(event.target.ownerGlobal);
       },
     });
   },
@@ -347,10 +347,10 @@ export const EmberBoot = {
     if (!win) {
       return;
     }
-    const url = "about:ember" + (hash ? "#" + hash : "");
+    const url = "about:ignifox" + (hash ? "#" + hash : "");
     // Reuse an open Studio tab.
     for (const tab of win.gBrowser.tabs) {
-      if (tab.linkedBrowser.currentURI?.spec.startsWith("about:ember")) {
+      if (tab.linkedBrowser.currentURI?.spec.startsWith("about:ignifox")) {
         win.gBrowser.selectedTab = tab;
         return;
       }
@@ -361,23 +361,23 @@ export const EmberBoot = {
   addMenuAndKeys(win) {
     const doc = win.document;
 
-    // Tools > Ember Studio
+    // Tools > Ignifox Studio
     const tools = doc.getElementById("menu_ToolsPopup");
-    if (tools && !doc.getElementById("ember-menu-studio")) {
+    if (tools && !doc.getElementById("igni-menu-studio")) {
       const mi = doc.createXULElement("menuitem");
-      mi.id = "ember-menu-studio";
-      mi.setAttribute("label", "Ember Studio");
-      mi.setAttribute("accesskey", "E");
-      mi.setAttribute("key", "ember-key-studio");
+      mi.id = "igni-menu-studio";
+      mi.setAttribute("label", "Ignifox Studio");
+      mi.setAttribute("accesskey", "I");
+      mi.setAttribute("key", "igni-key-studio");
       mi.addEventListener("command", () => this.openStudio(win));
       const anchor = doc.getElementById("menu_openAddons");
       tools.insertBefore(mi, anchor ? anchor.nextSibling : tools.firstChild);
     }
 
-    // Shortcuts: Ctrl+Alt+E = Studio, Ctrl+Alt+Z = focus mode
-    if (!doc.getElementById("ember-keyset")) {
+    // Shortcuts: Ctrl+Alt+I = Studio, Ctrl+Alt+Z = focus mode
+    if (!doc.getElementById("igni-keyset")) {
       const keyset = doc.createXULElement("keyset");
-      keyset.id = "ember-keyset";
+      keyset.id = "igni-keyset";
       const mk = (id, key, fn) => {
         const k = doc.createXULElement("key");
         k.id = id;
@@ -386,22 +386,22 @@ export const EmberBoot = {
         k.addEventListener("command", fn);
         keyset.appendChild(k);
       };
-      mk("ember-key-studio", "E", () => this.openStudio(win));
-      mk("ember-key-focus", "Z", () => {
-        const cur = readPref(Services.prefs, "ember.layout.autohide", "bool");
-        Services.prefs.setBoolPref("ember.layout.autohide", !cur);
+      mk("igni-key-studio", "I", () => this.openStudio(win));
+      mk("igni-key-focus", "Z", () => {
+        const cur = readPref(Services.prefs, "ignifox.layout.autohide", "bool");
+        Services.prefs.setBoolPref("ignifox.layout.autohide", !cur);
       });
       doc.documentElement.appendChild(keyset);
     }
   },
 
   // ------------------------------------------------------------ new tab
-  // The Ember New Tab is an ordinary unprivileged file:// page living in the
-  // profile (<profile>/ember-newtab/). It can't touch the browser; the engine
+  // The Ignifox New Tab is an ordinary unprivileged file:// page living in the
+  // profile (<profile>/igni-newtab/). It can't touch the browser; the engine
   // writes its settings into config.js beside it whenever they change.
 
   newtabDir() {
-    return PathUtils.join(PathUtils.profileDir, "ember-newtab");
+    return PathUtils.join(PathUtils.profileDir, "igni-newtab");
   },
 
   newtabURL() {
@@ -412,7 +412,7 @@ export const EmberBoot = {
     const dir = this.newtabDir();
     await IOUtils.makeDirectory(dir, { ignoreExisting: true });
     const gre = Services.dirsvc.get("GreD", Ci.nsIFile).path;
-    const src = PathUtils.join(gre, "ember", "content", "newtab");
+    const src = PathUtils.join(gre, "studio", "content", "newtab");
     for (const f of NEWTAB_FILES) {
       try {
         await IOUtils.copy(PathUtils.join(src, f), PathUtils.join(dir, f));
@@ -423,7 +423,7 @@ export const EmberBoot = {
     await this.writeNewtabConfig();
     this.applyNewtab();
     const refresh = () => {
-      if (readPref(Services.prefs, "ember.newtab.topSites", "bool")) {
+      if (readPref(Services.prefs, "ignifox.newtab.topSites", "bool")) {
         this.writeNewtabConfig().catch(() => {});
       }
       setTimeout(refresh, TOPSITES_REFRESH_MS);
@@ -441,7 +441,7 @@ export const EmberBoot = {
       return;
     }
     const url = this.newtabURL();
-    const on = readPref(Services.prefs, "ember.newtab.enabled", "bool");
+    const on = readPref(Services.prefs, "ignifox.newtab.enabled", "bool");
     if (on) {
       if (AboutNewTab.newTabURL != url) {
         AboutNewTab.newTabURL = url;
@@ -454,7 +454,7 @@ export const EmberBoot = {
     if (this._origHome === undefined) {
       this._origHome = readPref(d, "browser.startup.homepage", "string") || "about:home";
     }
-    const home = on && readPref(Services.prefs, "ember.newtab.home", "bool");
+    const home = on && readPref(Services.prefs, "ignifox.newtab.home", "bool");
     d.setStringPref("browser.startup.homepage", home ? url : this._origHome);
   },
 
@@ -471,7 +471,7 @@ export const EmberBoot = {
     try {
       await Services.search.init();
       const def = await Services.search.getDefault();
-      const SENT = "EMBERQUERYTERMS";
+      const SENT = "IGNIFOXQUERYTERMS";
       for (const e of await Services.search.getVisibleEngines()) {
         const sub = e.getSubmission(SENT);
         if (!sub || sub.postData) {
@@ -502,11 +502,11 @@ export const EmberBoot = {
   },
 
   async writeNewtabConfig() {
-    const v = emberValues();
+    const v = igniValues();
     const pal = resolvePalette(v);
     const { engine, engines } = await this.searchEnginesForNewtab();
     let links = newtabLinks(v);
-    if (v["ember.newtab.topSites"]) {
+    if (v["ignifox.newtab.topSites"]) {
       const host = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return u; } };
       const have = new Set(links.map(l => host(l.url)));
       for (const s of await this.topSites(16)) {
@@ -516,39 +516,39 @@ export const EmberBoot = {
         }
       }
     }
-    links = links.slice(0, Math.max(3, v["ember.newtab.columns"]) * 3);
+    links = links.slice(0, Math.max(3, v["ignifox.newtab.columns"]) * 3);
     const dir = this.newtabDir();
-    let wallpaperFile = v["ember.newtab.wallpaperFile"];
+    let wallpaperFile = v["ignifox.newtab.wallpaperFile"];
     if (wallpaperFile && !(await IOUtils.exists(PathUtils.join(dir, wallpaperFile)))) {
       wallpaperFile = "";
     }
     const cfg = {
       palette: { bg: pal.bg, bg2: pal.bg2, bg3: pal.bg3, fg: pal.fg, fgDim: pal.fgDim, accent: pal.accent, accent2: pal.accent2, dark: pal.dark },
-      radius: v["ember.shape.radius"],
-      layout: v["ember.newtab.layout"],
-      wallpaper: v["ember.newtab.wallpaper"],
+      radius: v["ignifox.shape.radius"],
+      layout: v["ignifox.newtab.layout"],
+      wallpaper: v["ignifox.newtab.wallpaper"],
       wallpaperFile,
-      dim: v["ember.newtab.dim"],
-      blur: v["ember.newtab.blur"],
-      clock: v["ember.newtab.clock"],
-      clock24: v["ember.newtab.clock24"],
-      seconds: v["ember.newtab.seconds"],
-      date: v["ember.newtab.date"],
-      greeting: v["ember.newtab.greeting"],
-      name: String(v["ember.newtab.name"] || "").slice(0, 40),
-      search: v["ember.newtab.search"],
-      engineSwitcher: v["ember.newtab.engineSwitcher"],
+      dim: v["ignifox.newtab.dim"],
+      blur: v["ignifox.newtab.blur"],
+      clock: v["ignifox.newtab.clock"],
+      clock24: v["ignifox.newtab.clock24"],
+      seconds: v["ignifox.newtab.seconds"],
+      date: v["ignifox.newtab.date"],
+      greeting: v["ignifox.newtab.greeting"],
+      name: String(v["ignifox.newtab.name"] || "").slice(0, 40),
+      search: v["ignifox.newtab.search"],
+      engineSwitcher: v["ignifox.newtab.engineSwitcher"],
       engine,
       engines,
       links,
-      columns: v["ember.newtab.columns"],
-      tileStyle: v["ember.newtab.tileStyle"],
-      favicons: v["ember.newtab.favicons"],
-      notes: v["ember.newtab.notes"],
+      columns: v["ignifox.newtab.columns"],
+      tileStyle: v["ignifox.newtab.tileStyle"],
+      favicons: v["ignifox.newtab.favicons"],
+      notes: v["ignifox.newtab.notes"],
     };
-    const js = `window.EMBER_NEWTAB = ${JSON.stringify(cfg).replace(/</g, "\\u003c")};\n`;
+    const js = `window.IGNI_NEWTAB = ${JSON.stringify(cfg).replace(/</g, "\\u003c")};\n`;
     await IOUtils.writeUTF8(PathUtils.join(dir, "config.js"), js, { tmpPath: PathUtils.join(dir, "config.js.tmp") });
-    Services.obs.notifyObservers(null, "ember-newtab-updated");
+    Services.obs.notifyObservers(null, "igni-newtab-updated");
   },
 
   /** Studio hands over a picked image; it's copied next to the page. */
@@ -563,20 +563,20 @@ export const EmberBoot = {
     }
     const name = `wallpaper-${Date.now()}.${ext}`;
     await IOUtils.write(PathUtils.join(dir, name), bytes);
-    Services.prefs.setStringPref("ember.newtab.wallpaperFile", name);
-    Services.prefs.setStringPref("ember.newtab.wallpaper", "image");
+    Services.prefs.setStringPref("ignifox.newtab.wallpaperFile", name);
+    Services.prefs.setStringPref("ignifox.newtab.wallpaper", "image");
     return name;
   },
 
   // ------------------------------------------------------------ updates
   _version: null,
 
-  /** Emberfox release, e.g. "160.0.1-1" (written into the install at build time). */
+  /** Ignifox release, e.g. "160.0.1-1" (written into the install at build time). */
   async version() {
     if (this._version === null) {
       try {
         const gre = Services.dirsvc.get("GreD", Ci.nsIFile).path;
-        this._version = (await IOUtils.readUTF8(PathUtils.join(gre, "EMBERFOX_VERSION"))).trim();
+        this._version = (await IOUtils.readUTF8(PathUtils.join(gre, "IGNIFOX_VERSION"))).trim();
       } catch (e) {
         this._version = `${Services.appinfo.version}-0`;
       }
@@ -585,18 +585,18 @@ export const EmberBoot = {
   },
 
   /**
-   * Ask GitHub's public releases API for the newest Emberfox. No cookies,
+   * Ask GitHub's public releases API for the newest Ignifox. No cookies,
    * no identifiers, no custom headers beyond Accept: GitHub sees an IP and
-   * a generic Firefox user agent, nothing else. Disabled by ember.update.check.
+   * a generic Firefox user agent, nothing else. Disabled by ignifox.update.check.
    * Returns { status: "disabled"|"current"|"available"|"error", latest, current }.
    */
   async checkForUpdate({ manual = false } = {}) {
     const current = await this.version();
     if (!manual) {
-      if (!readPref(Services.prefs, "ember.update.check", "bool")) {
+      if (!readPref(Services.prefs, "ignifox.update.check", "bool")) {
         return { status: "disabled", current };
       }
-      const last = readPref(Services.prefs, "ember.update.lastCheck", "int") || 0;
+      const last = readPref(Services.prefs, "ignifox.update.lastCheck", "int") || 0;
       if (Date.now() / 1000 - last < UPDATE_INTERVAL) {
         return { status: "skipped", current };
       }
@@ -622,11 +622,11 @@ export const EmberBoot = {
       log("update check failed", e);
       return { status: "error", current };
     }
-    Services.prefs.setIntPref("ember.update.lastCheck", Math.floor(Date.now() / 1000));
+    Services.prefs.setIntPref("ignifox.update.lastCheck", Math.floor(Date.now() / 1000));
     if (!latest || compareVersions(latest, current) <= 0) {
       return { status: "current", latest, current };
     }
-    const skipped = readPref(Services.prefs, "ember.update.skipVersion", "string");
+    const skipped = readPref(Services.prefs, "ignifox.update.skipVersion", "string");
     if (!manual && skipped == latest) {
       return { status: "available", latest, current };
     }
@@ -636,13 +636,13 @@ export const EmberBoot = {
 
   showUpdateBar(win, latest, current) {
     const box = win.gNotificationBox;
-    if (!box || box.getNotificationWithValue("ember-update")) {
+    if (!box || box.getNotificationWithValue("igni-update")) {
       return;
     }
     box.appendNotification(
-      "ember-update",
+      "igni-update",
       {
-        label: `Emberfox ${latest} is out (you have ${current}). It includes the latest Firefox security fixes.`,
+        label: `Ignifox ${latest} is out (you have ${current}). It includes the latest Firefox security fixes.`,
         priority: box.PRIORITY_INFO_HIGH,
       },
       [
@@ -657,7 +657,7 @@ export const EmberBoot = {
           label: "Skip this version",
           accessKey: "S",
           callback: () => {
-            Services.prefs.setStringPref("ember.update.skipVersion", latest);
+            Services.prefs.setStringPref("ignifox.update.skipVersion", latest);
           },
         },
       ]
@@ -666,7 +666,7 @@ export const EmberBoot = {
 
   /** Used by Studio after the CSS editor saves. */
   bumpCustomCSS() {
-    const rev = readPref(Services.prefs, "ember.customcss.rev", "int") || 0;
-    Services.prefs.setIntPref("ember.customcss.rev", rev + 1);
+    const rev = readPref(Services.prefs, "ignifox.customcss.rev", "int") || 0;
+    Services.prefs.setIntPref("ignifox.customcss.rev", rev + 1);
   },
 };

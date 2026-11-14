@@ -1,5 +1,5 @@
-/* Emberfox — Ember Studio settings model.
- * Shared by the engine (boot.sys.mjs) and the Studio page (about:ember).
+/* Ignifox — Ignifox Studio settings model.
+ * Shared by the engine (boot.sys.mjs) and the Studio page (about:ignifox).
  * Pure data + tiny helpers: no side effects on import. */
 
 // ---------------------------------------------------------------- themes
@@ -7,7 +7,7 @@
 // bg3 = URL bar & fields              fg / fgDim = text
 // accent / accent2 = highlights, glow, focus rings, progress
 export const THEMES = {
-  ember:     { name: "Ember",      dark: true,  bg: "#0b0607", bg2: "#170b0c", bg3: "#24110f", fg: "#f3e6e4", fgDim: "#a08c89", accent: "#ff3b1f", accent2: "#ffb02e" },
+  ignis:     { name: "Ignis",      dark: true,  bg: "#0b0607", bg2: "#170b0c", bg3: "#24110f", fg: "#f3e6e4", fgDim: "#a08c89", accent: "#ff3b1f", accent2: "#ffb02e" },
   bloodmoon: { name: "Bloodmoon",  dark: true,  bg: "#120203", bg2: "#1f0507", bg3: "#2e080c", fg: "#f6dede", fgDim: "#b08484", accent: "#e3121b", accent2: "#ff6a5c" },
   obsidian:  { name: "Obsidian",   dark: true,  bg: "#050505", bg2: "#0f0f11", bg3: "#1a1a1d", fg: "#e8e8ea", fgDim: "#8a8a92", accent: "#c9c9d1", accent2: "#ffffff" },
   void:      { name: "Void OLED",  dark: true,  bg: "#000000", bg2: "#000000", bg3: "#0e0e0e", fg: "#ffffff", fgDim: "#7a7a7a", accent: "#ff2a2a", accent2: "#ff8a7a" },
@@ -19,82 +19,82 @@ export const THEMES = {
   paper:     { name: "Paper",      dark: false, bg: "#ece6dc", bg2: "#f8f4ec", bg3: "#fffdf8", fg: "#2b241c", fgDim: "#7a6d5c", accent: "#b4261a", accent2: "#e0892b" },
 };
 
-// Built-in Firefox themes that Ember is allowed to paint over.
-// Anything else (an AMO theme) is respected when ember.theme.respectAddonThemes is on.
+// Built-in Firefox themes that Ignifox is allowed to paint over.
+// Anything else (an AMO theme) is respected when ignifox.theme.respectAddonThemes is on.
 export const PAINTABLE_THEME_IDS = new Set([
   "default-theme@mozilla.org",
   "firefox-compact-dark@mozilla.org",
   "firefox-compact-light@mozilla.org",
 ]);
 
-// --------------------------------------------------------- ember.* prefs
+// --------------------------------------------------------- ignifox.* prefs
 // Applied live by the engine to every browser window.
-export const EMBER_PREFS = {
-  "ember.theme.enabled":            { type: "bool",   def: true },
-  "ember.theme.preset":             { type: "string", def: "ember" },
-  "ember.theme.accent":             { type: "string", def: "" },        // "" = use preset accent
+export const IGNI_PREFS = {
+  "ignifox.theme.enabled":            { type: "bool",   def: true },
+  "ignifox.theme.preset":             { type: "string", def: "ignis" },
+  "ignifox.theme.accent":             { type: "string", def: "" },        // "" = use preset accent
   // Full custom palette (preset "custom"): JSON {bg,bg2,bg3,fg,fgDim,accent,accent2}
-  "ember.theme.custom":             { type: "string", def: "" },
+  "ignifox.theme.custom":             { type: "string", def: "" },
   // User-saved themes (preset "user:<name>"): JSON { name: palette, ... }
-  "ember.theme.saved":              { type: "string", def: "{}" },
-  "ember.theme.respectAddonThemes": { type: "bool",   def: true },
-  "ember.theme.contentBg":          { type: "bool",   def: true },      // tint blank/new-tab page background
-  "ember.fx.glow":                  { type: "bool",   def: true },
-  "ember.fx.emberStrip":            { type: "bool",   def: false },     // accent gradient under the tab strip
-  "ember.fx.progressBar":           { type: "bool",   def: true },      // ember progress line on loading tabs
-  "ember.layout.tabs":              { type: "string", def: "top" },     // top | bottom | vertical | hidden
-  "ember.layout.autohide":          { type: "bool",   def: false },     // focus mode: toolbars slide in on hover
-  "ember.layout.urlbarCentered":    { type: "bool",   def: false },
-  "ember.layout.tabCloseHover":     { type: "bool",   def: false },
-  "ember.layout.compactNavbar":     { type: "bool",   def: false },
-  "ember.hide.newTabButton":        { type: "bool",   def: false },
-  "ember.hide.allTabsButton":       { type: "bool",   def: false },
-  "ember.hide.urlbarIcons":         { type: "bool",   def: false },
-  "ember.hide.extensionsButton":    { type: "bool",   def: false },
-  "ember.hide.disabledNavButtons":  { type: "bool",   def: false },
-  "ember.hide.tabIcons":            { type: "bool",   def: false },
-  "ember.shape.radius":             { type: "int",    def: 8,   min: 0,   max: 20 },
-  "ember.shape.tabMaxWidth":        { type: "int",    def: 225, min: 120, max: 500 },
-  "ember.font.family":              { type: "string", def: "" },
-  "ember.font.size":                { type: "int",    def: 0,   min: 0,   max: 20 }, // 0 = system default
+  "ignifox.theme.saved":              { type: "string", def: "{}" },
+  "ignifox.theme.respectAddonThemes": { type: "bool",   def: true },
+  "ignifox.theme.contentBg":          { type: "bool",   def: true },      // tint blank/new-tab page background
+  "ignifox.fx.glow":                  { type: "bool",   def: true },
+  "ignifox.fx.accentStrip":            { type: "bool",   def: false },     // accent gradient line under the tab strip
+  "ignifox.fx.progressBar":           { type: "bool",   def: true },      // animated line on loading tabs
+  "ignifox.layout.tabs":              { type: "string", def: "top" },     // top | bottom | vertical | hidden
+  "ignifox.layout.autohide":          { type: "bool",   def: false },     // focus mode: toolbars slide in on hover
+  "ignifox.layout.urlbarCentered":    { type: "bool",   def: false },
+  "ignifox.layout.tabCloseHover":     { type: "bool",   def: false },
+  "ignifox.layout.compactNavbar":     { type: "bool",   def: false },
+  "ignifox.hide.newTabButton":        { type: "bool",   def: false },
+  "ignifox.hide.allTabsButton":       { type: "bool",   def: false },
+  "ignifox.hide.urlbarIcons":         { type: "bool",   def: false },
+  "ignifox.hide.extensionsButton":    { type: "bool",   def: false },
+  "ignifox.hide.disabledNavButtons":  { type: "bool",   def: false },
+  "ignifox.hide.tabIcons":            { type: "bool",   def: false },
+  "ignifox.shape.radius":             { type: "int",    def: 8,   min: 0,   max: 20 },
+  "ignifox.shape.tabMaxWidth":        { type: "int",    def: 225, min: 120, max: 500 },
+  "ignifox.font.family":              { type: "string", def: "" },
+  "ignifox.font.size":                { type: "int",    def: 0,   min: 0,   max: 20 }, // 0 = system default
   // tabs & window
-  "ember.tabs.style":               { type: "string", def: "default" }, // default | pill | underline | boxy
-  "ember.tabs.height":              { type: "int",    def: 0,   min: 0,   max: 56 }, // 0 = Firefox default
-  "ember.layout.floatingContent":   { type: "bool",   def: false },     // page area as a rounded card
-  "ember.layout.contentGap":        { type: "int",    def: 6,   min: 2,   max: 24 },
-  "ember.layout.urlbarMaxWidth":    { type: "int",    def: 0,   min: 0,   max: 1800 }, // 0 = fill
-  "ember.layout.bookmarksIconsOnly":{ type: "bool",   def: false },
-  "ember.layout.compactMenus":      { type: "bool",   def: false },
-  // Ember New Tab
-  "ember.newtab.enabled":           { type: "bool",   def: true },
-  "ember.newtab.home":              { type: "bool",   def: true },      // also use it as the home page
-  "ember.newtab.layout":            { type: "string", def: "center" },  // center | top | minimal
-  "ember.newtab.wallpaper":         { type: "string", def: "embers" },  // embers | aurora | gradient | solid | image | none
-  "ember.newtab.wallpaperFile":     { type: "string", def: "" },
-  "ember.newtab.dim":               { type: "int",    def: 25,  min: 0,   max: 90 },
-  "ember.newtab.blur":              { type: "int",    def: 0,   min: 0,   max: 30 },
-  "ember.newtab.clock":             { type: "bool",   def: true },
-  "ember.newtab.clock24":           { type: "bool",   def: false },
-  "ember.newtab.seconds":           { type: "bool",   def: false },
-  "ember.newtab.date":              { type: "bool",   def: true },
-  "ember.newtab.greeting":          { type: "bool",   def: true },
-  "ember.newtab.name":              { type: "string", def: "" },
-  "ember.newtab.search":            { type: "bool",   def: true },
-  "ember.newtab.engineSwitcher":    { type: "bool",   def: true },
-  "ember.newtab.links":             { type: "string", def: "" },        // JSON [{title,url}], "" = defaults
-  "ember.newtab.topSites":          { type: "bool",   def: false },     // add most-visited sites from history
-  "ember.newtab.columns":           { type: "int",    def: 6,   min: 3,   max: 10 },
-  "ember.newtab.tileStyle":         { type: "string", def: "rounded" }, // rounded | circle | square | minimal
-  "ember.newtab.favicons":          { type: "bool",   def: false },     // fetch /favicon.ico from each site
-  "ember.newtab.notes":             { type: "bool",   def: false },
-  "ember.customcss.enabled":        { type: "bool",   def: true },
-  "ember.customcss.rev":            { type: "int",    def: 0 },
-  "ember.firstrun.done":            { type: "bool",   def: false },
-  // Update notifier: asks GitHub's public releases API whether a newer Emberfox exists.
+  "ignifox.tabs.style":               { type: "string", def: "default" }, // default | pill | underline | boxy
+  "ignifox.tabs.height":              { type: "int",    def: 0,   min: 0,   max: 56 }, // 0 = Firefox default
+  "ignifox.layout.floatingContent":   { type: "bool",   def: false },     // page area as a rounded card
+  "ignifox.layout.contentGap":        { type: "int",    def: 6,   min: 2,   max: 24 },
+  "ignifox.layout.urlbarMaxWidth":    { type: "int",    def: 0,   min: 0,   max: 1800 }, // 0 = fill
+  "ignifox.layout.bookmarksIconsOnly":{ type: "bool",   def: false },
+  "ignifox.layout.compactMenus":      { type: "bool",   def: false },
+  // Ignifox New Tab
+  "ignifox.newtab.enabled":           { type: "bool",   def: true },
+  "ignifox.newtab.home":              { type: "bool",   def: true },      // also use it as the home page
+  "ignifox.newtab.layout":            { type: "string", def: "center" },  // center | top | minimal
+  "ignifox.newtab.wallpaper":         { type: "string", def: "embers" },  // embers | aurora | gradient | solid | image | none
+  "ignifox.newtab.wallpaperFile":     { type: "string", def: "" },
+  "ignifox.newtab.dim":               { type: "int",    def: 25,  min: 0,   max: 90 },
+  "ignifox.newtab.blur":              { type: "int",    def: 0,   min: 0,   max: 30 },
+  "ignifox.newtab.clock":             { type: "bool",   def: true },
+  "ignifox.newtab.clock24":           { type: "bool",   def: false },
+  "ignifox.newtab.seconds":           { type: "bool",   def: false },
+  "ignifox.newtab.date":              { type: "bool",   def: true },
+  "ignifox.newtab.greeting":          { type: "bool",   def: true },
+  "ignifox.newtab.name":              { type: "string", def: "" },
+  "ignifox.newtab.search":            { type: "bool",   def: true },
+  "ignifox.newtab.engineSwitcher":    { type: "bool",   def: true },
+  "ignifox.newtab.links":             { type: "string", def: "" },        // JSON [{title,url}], "" = defaults
+  "ignifox.newtab.topSites":          { type: "bool",   def: false },     // add most-visited sites from history
+  "ignifox.newtab.columns":           { type: "int",    def: 6,   min: 3,   max: 10 },
+  "ignifox.newtab.tileStyle":         { type: "string", def: "rounded" }, // rounded | circle | square | minimal
+  "ignifox.newtab.favicons":          { type: "bool",   def: false },     // fetch /favicon.ico from each site
+  "ignifox.newtab.notes":             { type: "bool",   def: false },
+  "ignifox.customcss.enabled":        { type: "bool",   def: true },
+  "ignifox.customcss.rev":            { type: "int",    def: 0 },
+  "ignifox.firstrun.done":            { type: "bool",   def: false },
+  // Update notifier: asks GitHub's public releases API whether a newer Ignifox exists.
   // Sends no identifiers or cookies. The updater binary itself is removed.
-  "ember.update.check":             { type: "bool",   def: true },
-  "ember.update.lastCheck":         { type: "int",    def: 0 },       // unix seconds
-  "ember.update.skipVersion":       { type: "string", def: "" },
+  "ignifox.update.check":             { type: "bool",   def: true },
+  "ignifox.update.lastCheck":         { type: "int",    def: 0 },       // unix seconds
+  "ignifox.update.skipVersion":       { type: "string", def: "" },
 };
 
 // Firefox's own prefs that Studio surfaces (types used for read/write + backup).
@@ -201,7 +201,7 @@ export const DOH_PROVIDERS = {
 export const PRIVACY_LEVELS = {
   balanced: {
     name: "Balanced",
-    blurb: "Emberfox defaults. Strict tracking protection, HTTPS-only, no telemetry, nothing breaks.",
+    blurb: "Ignifox defaults. Strict tracking protection, HTTPS-only, no telemetry, nothing breaks.",
     prefs: {
       "browser.contentblocking.category": "strict",
       "dom.security.https_only_mode": true,
@@ -272,7 +272,7 @@ export const PRIVACY_LEVELS = {
   },
 };
 
-// The prefs emberfox.cfg locks. Studio shows these as a live "proof" panel.
+// The prefs ignifox.cfg locks. Studio shows these as a live "proof" panel.
 export const TELEMETRY_LOCKS = [
   ["toolkit.telemetry.enabled", false],
   ["toolkit.telemetry.unified", false],
@@ -314,7 +314,7 @@ export function writePref(prefs, key, type, value) {
 }
 
 export function typeOf(key) {
-  return EMBER_PREFS[key]?.type ?? NATIVE_PREFS[key];
+  return IGNI_PREFS[key]?.type ?? NATIVE_PREFS[key];
 }
 
 const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
@@ -383,15 +383,15 @@ export function completePalette(p = {}, name = "Custom") {
 }
 
 export function savedThemes(values) {
-  return parseJSON(values["ember.theme.saved"] || "{}", {});
+  return parseJSON(values["ignifox.theme.saved"] || "{}", {});
 }
 
-/** Compact share code for a palette: "ember:bg,bg2,bg3,fg,fgDim,accent,accent2" */
+/** Compact share code for a palette: "igni:bg,bg2,bg3,fg,fgDim,accent,accent2" */
 export function paletteToCode(p) {
-  return "ember:" + PALETTE_KEYS.map(k => (p[k] || "").replace("#", "")).join(",");
+  return "igni:" + PALETTE_KEYS.map(k => (p[k] || "").replace("#", "")).join(",");
 }
 export function codeToPalette(code) {
-  const m = /^ember:([0-9a-f,]+)$/i.exec(String(code).trim());
+  const m = /^igni:([0-9a-f,]+)$/i.exec(String(code).trim());
   if (!m) {
     return null;
   }
@@ -404,20 +404,20 @@ export function codeToPalette(code) {
   return PALETTE_KEYS.every(k => isHex(p[k])) ? completePalette(p) : null;
 }
 
-/** Resolve the palette that should be painted, from ember.* pref values. */
+/** Resolve the palette that should be painted, from ignifox.* pref values. */
 export function resolvePalette(values) {
-  const preset = values["ember.theme.preset"] || "ember";
+  const preset = values["ignifox.theme.preset"] || "ignis";
   let pal;
   if (preset == "custom") {
-    pal = completePalette(parseJSON(values["ember.theme.custom"] || "{}", {}), "Custom");
+    pal = completePalette(parseJSON(values["ignifox.theme.custom"] || "{}", {}), "Custom");
   } else if (preset.startsWith("user:")) {
     const name = preset.slice(5);
     const saved = savedThemes(values)[name];
-    pal = saved ? completePalette(saved, name) : { ...THEMES.ember };
+    pal = saved ? completePalette(saved, name) : { ...THEMES.ignis };
   } else {
-    pal = { ...(THEMES[preset] || THEMES.ember) };
+    pal = { ...(THEMES[preset] || THEMES.ignis) };
   }
-  const acc = values["ember.theme.accent"];
+  const acc = values["ignifox.theme.accent"];
   if (isHex(acc) && preset != "custom" && !preset.startsWith("user:")) {
     pal.accent = acc;
     pal.accent2 = mix(acc, "#ffffff", 0.35);
@@ -447,7 +447,7 @@ export const WIDGETS = {
   "unified-extensions-button": "Extensions",
   "fxa-toolbar-menu-button": "Account & Sync",
   "sidebar-button": "Sidebar",
-  "ember-studio-button": "Ember Studio",
+  "igni-studio-button": "Ignifox Studio",
   "alltabs-button": "List all tabs",
   "firefox-view-button": "Tab overview",
   "bookmarks-menu-button": "Bookmarks menu",
@@ -474,7 +474,7 @@ export const TOOLBAR_PRESETS = {
     name: "Classic",
     blurb: "Back, forward, reload, address bar, downloads, extensions, account.",
     navbar: ["back-button", "forward-button", "stop-reload-button", "home-button", "urlbar-container",
-             "downloads-button", "ember-studio-button", "unified-extensions-button", "fxa-toolbar-menu-button"],
+             "downloads-button", "igni-studio-button", "unified-extensions-button", "fxa-toolbar-menu-button"],
   },
   minimal: {
     name: "Minimal",
@@ -485,14 +485,14 @@ export const TOOLBAR_PRESETS = {
     name: "Power",
     blurb: "Sidebar, navigation, address bar, downloads, screenshot, dev tools, Studio.",
     navbar: ["sidebar-button", "back-button", "forward-button", "stop-reload-button", "urlbar-container",
-             "downloads-button", "screenshot-button", "developer-button", "ember-studio-button",
+             "downloads-button", "screenshot-button", "developer-button", "igni-studio-button",
              "unified-extensions-button"],
   },
 };
 
 // ---------------------------------------------------------- versions
-export const RELEASES_API = "https://api.github.com/repos/rxvy-dev/emberfox/releases/latest";
-export const RELEASES_PAGE = "https://github.com/rxvy-dev/emberfox/releases/latest";
+export const RELEASES_API = "https://api.github.com/repos/rxvy-dev/ignifox/releases/latest";
+export const RELEASES_PAGE = "https://github.com/rxvy-dev/ignifox/releases/latest";
 
 /** Parse "160.0.1-2" / "v160.0.1-2" -> { ff: [160,0,1], rel: 2 } */
 export function parseVersion(v) {
@@ -539,7 +539,7 @@ export const WALLPAPERS = {
 };
 
 export function newtabLinks(values) {
-  const raw = values["ember.newtab.links"];
+  const raw = values["ignifox.newtab.links"];
   if (!raw) {
     return DEFAULT_LINKS.map(l => ({ ...l }));
   }

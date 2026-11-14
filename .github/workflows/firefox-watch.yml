@@ -1,8 +1,8 @@
 name: Firefox watch
 
 # Every 6 hours: if Mozilla has shipped a Firefox newer than the latest
-# Emberfox release, build and publish a new Emberfox automatically.
-# This is how Firefox security fixes reach Emberfox users fast.
+# Ignifox release, build and publish a new Ignifox automatically.
+# This is how Firefox security fixes reach Ignifox users fast.
 
 on:
   schedule:
@@ -26,7 +26,7 @@ jobs:
           latest=$(curl -fsSL https://product-details.mozilla.org/1.0/firefox_versions.json | jq -r .LATEST_FIREFOX_VERSION)
           tag=$(gh api "repos/${GITHUB_REPOSITORY}/releases/latest" --jq .tag_name 2>/dev/null || echo none)
           have="${tag#v}"; have="${have%-*}"
-          echo "Mozilla: $latest   Emberfox: ${tag}"
+          echo "Mozilla: $latest   Ignifox: ${tag}"
           echo "firefox=$latest" >> "$GITHUB_OUTPUT"
           if [[ "$have" != "$latest" ]]; then echo "new=true" >> "$GITHUB_OUTPUT"; else echo "new=false" >> "$GITHUB_OUTPUT"; fi
 

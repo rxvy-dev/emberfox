@@ -1,4 +1,4 @@
-/* Ember New Tab. Unprivileged: reads window.EMBER_NEWTAB (config.js), nothing else. */
+/* Ignifox New Tab. Unprivileged: reads window.IGNI_NEWTAB (config.js), nothing else. */
 "use strict";
 (() => {
   const C = Object.assign({
@@ -8,7 +8,7 @@
     search: true, engineSwitcher: true,
     engine: { name: "DuckDuckGo", url: "https://duckduckgo.com/?q={searchTerms}", alias: "@ddg" },
     engines: [], links: [], columns: 6, tileStyle: "rounded", favicons: false, notes: false,
-  }, window.EMBER_NEWTAB || {});
+  }, window.IGNI_NEWTAB || {});
 
   const $ = s => document.getElementById(s);
   const root = document.documentElement;
@@ -138,8 +138,8 @@
   const notes = $("notes"), nt = $("notes-text");
   notes.hidden = !C.notes;
   if (C.notes) {
-    try { nt.value = localStorage.getItem("ember-notes") || ""; } catch (e) {}
-    nt.addEventListener("input", () => { try { localStorage.setItem("ember-notes", nt.value); } catch (e) {} });
+    try { nt.value = localStorage.getItem("igni-notes") || ""; } catch (e) {}
+    nt.addEventListener("input", () => { try { localStorage.setItem("igni-notes", nt.value); } catch (e) {} });
   }
 
   // ---- gear tip

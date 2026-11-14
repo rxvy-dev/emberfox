@@ -1,11 +1,11 @@
-/* Ember Studio — about:ember
+/* Ignifox Studio — about:ignifox
  * Privileged page (system principal): talks to Services.prefs and
  * CustomizableUI directly. Every control is live: change it and every
  * browser window repaints immediately, no restart. */
 
-import * as M from "chrome://ember/content/prefs.sys.mjs";
+import * as M from "chrome://ignifox/content/prefs.sys.mjs";
 
-const { EmberBoot } = ChromeUtils.importESModule("chrome://ember/content/boot.sys.mjs");
+const { IgniBoot } = ChromeUtils.importESModule("chrome://ignifox/content/boot.sys.mjs");
 let CUI = null;
 try {
   ({ CustomizableUI: CUI } = ChromeUtils.importESModule(
@@ -15,7 +15,7 @@ try {
   try {
     ({ CustomizableUI: CUI } = ChromeUtils.importESModule("resource:///modules/CustomizableUI.sys.mjs"));
   } catch (e2) {
-    console.warn("[Ember Studio] CustomizableUI unavailable", e2);
+    console.warn("[Ignifox Studio] CustomizableUI unavailable", e2);
   }
 }
 
@@ -56,16 +56,16 @@ function typeOf(key) {
 }
 function get(key) {
   const v = M.readPref(P, key, typeOf(key));
-  return v === undefined ? M.EMBER_PREFS[key]?.def : v;
+  return v === undefined ? M.IGNI_PREFS[key]?.def : v;
 }
 function set(key, value) {
   if (!M.writePref(P, key, typeOf(key), value)) {
     toast("That setting is locked by policy");
   }
 }
-function emberValues() {
+function igniValues() {
   const out = {};
-  for (const key of Object.keys(M.EMBER_PREFS)) out[key] = get(key);
+  for (const key of Object.keys(M.IGNI_PREFS)) out[key] = get(key);
   return out;
 }
 
@@ -92,17 +92,17 @@ function refreshAll() {
 }
 
 const prefObserver = { observe: () => refreshAll() };
-P.addObserver("ember.", prefObserver);
+P.addObserver("ignifox.", prefObserver);
 for (const key of Object.keys(M.NATIVE_PREFS)) P.addObserver(key, prefObserver);
 window.addEventListener("unload", () => {
-  P.removeObserver("ember.", prefObserver);
+  P.removeObserver("ignifox.", prefObserver);
   for (const key of Object.keys(M.NATIVE_PREFS)) P.removeObserver(key, prefObserver);
   if (CUI && placementListener) CUI.removeListener(placementListener);
 });
 
-/** Studio wears the active Ember palette. */
+/** Studio wears the active palette. */
 function paintStudio() {
-  const pal = M.resolvePalette(emberValues());
+  const pal = M.resolvePalette(igniValues());
   const s = document.documentElement.style;
   s.setProperty("--bg", pal.bg);
   s.setProperty("--bg2", pal.bg2);
@@ -177,7 +177,7 @@ function colorPick(key, label, desc) {
   input.addEventListener("input", () => set(key, input.value));
   bind(() => {
     const v = get(key);
-    const pal = M.resolvePalette(emberValues());
+    const pal = M.resolvePalette(igniValues());
     input.value = M.isHex(v) && v.length == 7 ? v : pal.accent;
     clear.hidden = !M.isHex(v);
   }, input);
@@ -204,7 +204,7 @@ function miniBrowser(p) {
 }
 
 function themeCard(id, pal, label) {
-  const btn = h("button", { class: "theme" + (get("ember.theme.preset") == id ? " selected" : ""), title: label, onclick: () => set("ember.theme.preset", id) },
+  const btn = h("button", { class: "theme" + (get("ignifox.theme.preset") == id ? " selected" : ""), title: label, onclick: () => set("ignifox.theme.preset", id) },
     miniBrowser(pal),
     h("div", { class: "name" }, h("span", {}, label),
       h("span", { class: "dots" }, [pal.accent, pal.accent2, pal.fg].map(c => h("i", { style: { background: c } })))));
@@ -216,9 +216,9 @@ function themeGallery() {
   bind(() => {
     grid.replaceChildren(
       ...Object.entries(M.THEMES).map(([id, t]) => themeCard(id, t, t.name)),
-      ...Object.entries(M.savedThemes(emberValues())).map(([name, p]) =>
+      ...Object.entries(M.savedThemes(igniValues())).map(([name, p]) =>
         themeCard("user:" + name, M.completePalette(p, name), "★ " + name)),
-      themeCard("custom", M.completePalette(safeJSON(get("ember.theme.custom")), "Custom"), "✎ Custom"));
+      themeCard("custom", M.completePalette(safeJSON(get("ignifox.theme.custom")), "Custom"), "✎ Custom"));
   }, grid);
   return grid;
 }
@@ -235,20 +235,20 @@ function paletteEditor() {
   });
 
   function editColor(k, value) {
-    const v = emberValues();
+    const v = igniValues();
     const cur = M.resolvePalette(v);
     const next = {};
     M.PALETTE_KEYS.forEach(key => (next[key] = cur[key]));
     next[k] = value;
-    set("ember.theme.custom", JSON.stringify(next));
-    if (v["ember.theme.preset"] != "custom") {
-      P.clearUserPref("ember.theme.accent");
-      set("ember.theme.preset", "custom");
+    set("ignifox.theme.custom", JSON.stringify(next));
+    if (v["ignifox.theme.preset"] != "custom") {
+      P.clearUserPref("ignifox.theme.accent");
+      set("ignifox.theme.preset", "custom");
     }
   }
 
   bind(() => {
-    const pal = M.resolvePalette(emberValues());
+    const pal = M.resolvePalette(igniValues());
     for (const k of M.PALETTE_KEYS) {
       if (document.activeElement != inputs[k].input) inputs[k].input.value = pal[k];
       inputs[k].hex.textContent = pal[k];
@@ -257,51 +257,51 @@ function paletteEditor() {
 
   // save / share / delete
   const nameIn = h("input", { type: "text", placeholder: "Theme name", "aria-label": "Theme name", style: { minWidth: "150px" } });
-  const codeIn = h("input", { type: "text", placeholder: "ember:0b0607,…", "aria-label": "Theme code", style: { minWidth: "220px" } });
+  const codeIn = h("input", { type: "text", placeholder: "igni:0b0607,…", "aria-label": "Theme code", style: { minWidth: "220px" } });
   const delBtn = h("button", { class: "btn danger", onclick: deleteSaved }, "Delete saved theme");
 
   function saveTheme() {
     const name = nameIn.value.trim().replace(/[^\w \-]/g, "").slice(0, 30);
     if (!name) { toast("Give the theme a name first"); return; }
-    const v = emberValues();
+    const v = igniValues();
     const saved = M.savedThemes(v);
     const pal = M.resolvePalette(v);
     saved[name] = Object.fromEntries(M.PALETTE_KEYS.map(k => [k, pal[k]]));
-    set("ember.theme.saved", JSON.stringify(saved));
-    set("ember.theme.preset", "user:" + name);
+    set("ignifox.theme.saved", JSON.stringify(saved));
+    set("ignifox.theme.preset", "user:" + name);
     nameIn.value = "";
     toast(`Saved “${name}”`);
   }
   function deleteSaved() {
-    const preset = get("ember.theme.preset");
+    const preset = get("ignifox.theme.preset");
     if (!preset.startsWith("user:")) return;
-    const saved = M.savedThemes(emberValues());
+    const saved = M.savedThemes(igniValues());
     delete saved[preset.slice(5)];
-    set("ember.theme.saved", JSON.stringify(saved));
-    set("ember.theme.preset", "ember");
+    set("ignifox.theme.saved", JSON.stringify(saved));
+    set("ignifox.theme.preset", "ignis");
     toast("Theme deleted");
   }
   async function copyCode() {
-    const code = M.paletteToCode(M.resolvePalette(emberValues()));
+    const code = M.paletteToCode(M.resolvePalette(igniValues()));
     await navigator.clipboard.writeText(code);
     toast("Theme code copied: " + code);
   }
   function applyCode() {
     const pal = M.codeToPalette(codeIn.value);
-    if (!pal) { toast("That isn't a valid ember: theme code"); return; }
-    set("ember.theme.custom", JSON.stringify(Object.fromEntries(M.PALETTE_KEYS.map(k => [k, pal[k]]))));
-    set("ember.theme.preset", "custom");
+    if (!pal) { toast("That isn't a valid igni: theme code"); return; }
+    set("ignifox.theme.custom", JSON.stringify(Object.fromEntries(M.PALETTE_KEYS.map(k => [k, pal[k]]))));
+    set("ignifox.theme.preset", "custom");
     codeIn.value = "";
     toast("Theme applied");
   }
-  bind(() => { delBtn.hidden = !String(get("ember.theme.preset")).startsWith("user:"); }, delBtn);
+  bind(() => { delBtn.hidden = !String(get("ignifox.theme.preset")).startsWith("user:"); }, delBtn);
 
   return h("div", {},
     card(...rows),
     h("div", { class: "card", style: { marginTop: "14px" } },
       row(null, "Save as my theme", "Keeps the current colors as a named theme in the gallery.",
         [nameIn, h("button", { class: "btn primary", onclick: saveTheme }, "Save")]),
-      row(null, "Share", "Copy a short code anyone can paste into their Emberfox.",
+      row(null, "Share", "Copy a short code anyone can paste into their Ignifox.",
         [h("button", { class: "btn", onclick: copyCode }, "Copy theme code"), delBtn]),
       row(null, "Paste a theme code", null,
         [codeIn, h("button", { class: "btn", onclick: applyCode }, "Apply")])));
@@ -349,15 +349,15 @@ function renderLook() {
     h("h1", {}, "Look & Color"),
     h("p", { class: "lede" }, "Pick a preset, or take any color you like and make it yours. Every change paints the whole browser instantly."),
     card(
-      toggle("ember.theme.enabled", "Ember theming", "Paint the browser with the palette below. Turn off to use plain Firefox colors."),
-      toggle("ember.theme.respectAddonThemes", "Step aside for add-on themes", "If you install a theme from addons.mozilla.org, show it instead of Ember colors."),
-      toggle("ember.theme.contentBg", "Tint blank pages", "New tabs and loading pages use the theme background instead of flashing white.")),
+      toggle("ignifox.theme.enabled", "Theme painting", "Paint the browser with the palette below. Turn off to use plain Firefox colors."),
+      toggle("ignifox.theme.respectAddonThemes", "Step aside for add-on themes", "If you install a theme from addons.mozilla.org, show it instead of Ignifox colors."),
+      toggle("ignifox.theme.contentBg", "Tint blank pages", "New tabs and loading pages use the theme background instead of flashing white.")),
 
     h("h2", {}, "Presets"),
     themeGallery(),
 
     h("h2", {}, "Quick accent"),
-    card(colorPick("ember.theme.accent", "Accent color", "Keep the preset, just swap its highlight color (focus rings, glow, progress).")),
+    card(colorPick("ignifox.theme.accent", "Accent color", "Keep the preset, just swap its highlight color (focus rings, glow, progress).")),
 
     h("h2", {}, "Palette editor"),
     h("p", { class: "lede" }, "Change any surface. Editing switches you to your Custom theme, starting from whatever is active, so you never lose a preset."),
@@ -365,35 +365,35 @@ function renderLook() {
 
     h("h2", {}, "Effects"),
     card(
-      toggle("ember.fx.glow", "Ember glow on the active tab", "A soft accent halo around the selected tab and focused URL bar."),
-      toggle("ember.fx.emberStrip", "Ember strip", "A thin accent gradient line between tabs and toolbar."),
-      toggle("ember.fx.progressBar", "Ember loading bar", "Animated accent line on tabs that are loading."),
+      toggle("ignifox.fx.glow", "Glow on the active tab", "A soft accent halo around the selected tab and focused URL bar."),
+      toggle("ignifox.fx.accentStrip", "Accent strip", "A thin accent gradient line between tabs and toolbar."),
+      toggle("ignifox.fx.progressBar", "Flame loading bar", "Animated accent line on tabs that are loading."),
       toggle("ui.prefersReducedMotion", "Reduce motion", "Turn off UI animations everywhere, including websites that respect it.", { on: 1, off: 0 })),
 
     h("h2", {}, "Shape & type"),
     card(
-      range("ember.shape.radius", "Corner roundness", "Tabs, buttons, URL bar and menus.", 0, 20, 1, v => `${v}px`),
-      select("ember.tabs.style", "Tab style", null,
+      range("ignifox.shape.radius", "Corner roundness", "Tabs, buttons, URL bar and menus.", 0, 20, 1, v => `${v}px`),
+      select("ignifox.tabs.style", "Tab style", null,
         [["default", "Default"], ["pill", "Pills"], ["underline", "Underline (flat, accent line)"], ["boxy", "Boxy (square corners)"]]),
-      range("ember.tabs.height", "Tab height", "Leave at auto for Firefox's size.", 0, 56, 1, v => (v < 20 ? "auto" : `${v}px`)),
-      toggle("ember.layout.floatingContent", "Floating page", "Web pages sit in a rounded card with a gap around them."),
-      range("ember.layout.contentGap", "Floating page gap", null, 2, 24, 1, v => `${v}px`),
+      range("ignifox.tabs.height", "Tab height", "Leave at auto for Firefox's size.", 0, 56, 1, v => (v < 20 ? "auto" : `${v}px`)),
+      toggle("ignifox.layout.floatingContent", "Floating page", "Web pages sit in a rounded card with a gap around them."),
+      range("ignifox.layout.contentGap", "Floating page gap", null, 2, 24, 1, v => `${v}px`),
       select("layout.css.devPixelsPerPx", "Interface scale", "Scales the whole browser. Handy on HiDPI or TV screens.",
         [["-1.0", "Auto (follow system)"], ["0.9", "90%"], ["1.0", "100%"], ["1.1", "110%"], ["1.25", "125%"], ["1.5", "150%"], ["1.75", "175%"], ["2.0", "200%"]]),
       select("widget.non-native-theme.scrollbar.style", "Scrollbar style", null,
         [[0, "Default"], [1, "Thin rounded (macOS-like)"], [2, "GTK"], [3, "Minimal overlay (Android-like)"], [4, "Classic (Windows 10)"], [5, "Modern (Windows 11)"]]),
       toggle("widget.gtk.overlay-scrollbars.enabled", "Overlay scrollbars", "Scrollbars float over the page and fade out."),
-      toggle("ember.layout.compactMenus", "Compact menus", "Tighter right-click and app menus."),
+      toggle("ignifox.layout.compactMenus", "Compact menus", "Tighter right-click and app menus."),
       range("browser.tabs.tabMinWidth", "Tab minimum width", "Smaller = more tabs before scrolling.", 40, 250, 5, v => `${v}px`),
-      range("ember.shape.tabMaxWidth", "Tab maximum width", null, 120, 500, 5, v => `${v}px`),
+      range("ignifox.shape.tabMaxWidth", "Tab maximum width", null, 120, 500, 5, v => `${v}px`),
       select("browser.uidensity", "Density", "Compact trims padding across all toolbars.", [[0, "Normal"], [1, "Compact"]]),
-      text("ember.font.family", "Interface font", "Any installed font. Leave empty for your system font.", {
+      text("ignifox.font.family", "Interface font", "Any installed font. Leave empty for your system font.", {
         placeholder: "e.g. Inter, JetBrains Mono",
         list: h("datalist", { id: "fonts" },
           ["Inter", "Cantarell", "Noto Sans", "Ubuntu", "Fira Sans", "IBM Plex Sans", "JetBrains Mono", "Iosevka", "Hack", "monospace"]
             .map(f => h("option", { value: f }))),
       }),
-      range("ember.font.size", "Interface text size", "0 = system default.", 0, 20, 1, v => (v < 9 ? "auto" : `${v}px`)),
+      range("ignifox.font.size", "Interface text size", "0 = system default.", 0, 20, 1, v => (v < 9 ? "auto" : `${v}px`)),
       select("layout.css.prefers-color-scheme.content-override", "Websites prefer", "What color scheme sites see when they offer light/dark versions.",
         [[0, "Dark"], [1, "Light"], [2, "Follow system"], [3, "Follow browser theme"]])),
   ];
@@ -403,9 +403,9 @@ function renderLook() {
 function newtabPreview() {
   const box = h("div", { class: "nt-preview" });
   bind(() => {
-    const v = emberValues();
+    const v = igniValues();
     const p = M.resolvePalette(v);
-    const wall = v["ember.newtab.wallpaper"];
+    const wall = v["ignifox.newtab.wallpaper"];
     const bgs = {
       embers: `radial-gradient(120% 80% at 50% 120%, ${p.accent}88, transparent 70%), ${p.bg}`,
       aurora: `radial-gradient(60% 70% at 15% 10%, ${p.accent}aa, transparent 60%), radial-gradient(60% 70% at 90% 100%, ${p.accent2}88, transparent 60%), ${p.bg}`,
@@ -414,21 +414,21 @@ function newtabPreview() {
     };
     box.style.background = bgs[wall] || bgs.embers;
     box.style.color = p.fg;
-    const links = M.newtabLinks(v).slice(0, v["ember.newtab.columns"]);
+    const links = M.newtabLinks(v).slice(0, v["ignifox.newtab.columns"]);
     const now = new Date();
     let hr = now.getHours();
     const mm = String(now.getMinutes()).padStart(2, "0");
-    if (!v["ember.newtab.clock24"]) hr = hr % 12 || 12;
-    const top = v["ember.newtab.layout"] == "top";
-    const minimal = v["ember.newtab.layout"] == "minimal";
+    if (!v["ignifox.newtab.clock24"]) hr = hr % 12 || 12;
+    const top = v["ignifox.newtab.layout"] == "top";
+    const minimal = v["ignifox.newtab.layout"] == "minimal";
     box.replaceChildren(h("div", { class: "nt-col", style: { justifyContent: top ? "flex-start" : "center", paddingTop: top ? "26px" : "0" } },
-      v["ember.newtab.clock"] && !minimal ? h("div", { class: "nt-clock" }, `${hr}:${mm}`) : null,
-      v["ember.newtab.greeting"] && !minimal ? h("div", { class: "nt-greet", style: { color: p.accent2 } },
-        v["ember.newtab.name"] ? `Good evening, ${v["ember.newtab.name"]}` : "Good evening") : null,
-      v["ember.newtab.search"] ? h("div", { class: "nt-search", style: { background: p.bg2, borderColor: p.accent + "66" } },
+      v["ignifox.newtab.clock"] && !minimal ? h("div", { class: "nt-clock" }, `${hr}:${mm}`) : null,
+      v["ignifox.newtab.greeting"] && !minimal ? h("div", { class: "nt-greet", style: { color: p.accent2 } },
+        v["ignifox.newtab.name"] ? `Good evening, ${v["ignifox.newtab.name"]}` : "Good evening") : null,
+      v["ignifox.newtab.search"] ? h("div", { class: "nt-search", style: { background: p.bg2, borderColor: p.accent + "66" } },
         h("span", { class: "nt-chip", style: { background: p.fg + "18" } }, "engine ▾"), h("span", { style: { opacity: .5 } }, "Search…")) : null,
       h("div", { class: "nt-tiles" }, links.map(l => h("i", {
-        class: "nt-tile " + v["ember.newtab.tileStyle"], style: { background: p.bg2, color: p.accent },
+        class: "nt-tile " + v["ignifox.newtab.tileStyle"], style: { background: p.bg2, color: p.accent },
       }, (l.title || "?").charAt(0))))));
   }, box);
   return box;
@@ -443,7 +443,7 @@ function wallpaperPicker() {
     if (f.size > 40 * 1024 * 1024) { toast("That picture is over 40 MB"); return; }
     try {
       const bytes = new Uint8Array(await f.arrayBuffer());
-      await EmberBoot.setNewtabWallpaper(bytes, (f.name.split(".").pop() || "jpg"));
+      await IgniBoot.setNewtabWallpaper(bytes, (f.name.split(".").pop() || "jpg"));
       toast("Wallpaper set");
     } catch (e) {
       toast("Couldn't use that picture: " + e.message);
@@ -451,9 +451,9 @@ function wallpaperPicker() {
     file.value = "";
   });
   bind(() => {
-    const v = emberValues();
+    const v = igniValues();
     const p = M.resolvePalette(v);
-    const cur = v["ember.newtab.wallpaper"];
+    const cur = v["ignifox.newtab.wallpaper"];
     const sw = {
       embers: `radial-gradient(120% 90% at 50% 120%, ${p.accent}, transparent 70%), ${p.bg}`,
       aurora: `radial-gradient(70% 70% at 20% 20%, ${p.accent}, transparent 60%), radial-gradient(70% 70% at 90% 100%, ${p.accent2}, transparent 60%), ${p.bg}`,
@@ -463,7 +463,7 @@ function wallpaperPicker() {
     grid.replaceChildren(...Object.entries(M.WALLPAPERS).map(([id, label]) =>
       h("button", {
         class: "wall" + (cur == id ? " selected" : ""),
-        onclick: () => (id == "image" && !v["ember.newtab.wallpaperFile"] ? file.click() : set("ember.newtab.wallpaper", id)),
+        onclick: () => (id == "image" && !v["ignifox.newtab.wallpaperFile"] ? file.click() : set("ignifox.newtab.wallpaper", id)),
       }, h("div", { class: "sw", style: { background: sw[id] } }), h("span", {}, label))),
       file);
   }, grid);
@@ -473,19 +473,19 @@ function wallpaperPicker() {
 
 function linksEditor() {
   const wrap = h("div", { class: "card" });
-  const save = list => set("ember.newtab.links", JSON.stringify(list));
+  const save = list => set("ignifox.newtab.links", JSON.stringify(list));
   const fixURL = u => {
     u = u.trim();
     if (!u) return "";
     return /^https?:\/\//i.test(u) ? u : "https://" + u;
   };
   function render() {
-    const list = M.newtabLinks(emberValues());
+    const list = M.newtabLinks(igniValues());
     const rows = list.map((l, i) => {
       const t = h("input", { type: "text", value: l.title, placeholder: "Name", "aria-label": "Shortcut name", style: { minWidth: "130px", width: "140px" } });
       const u = h("input", { type: "url", value: l.url, placeholder: "https://…", "aria-label": "Shortcut address", style: { minWidth: "260px" } });
       const commit = () => {
-        const next = M.newtabLinks(emberValues());
+        const next = M.newtabLinks(igniValues());
         const url = fixURL(u.value);
         if (!url) return;
         next[i] = { title: t.value.trim() || new URL(url).hostname.replace(/^www\./, ""), url };
@@ -494,7 +494,7 @@ function linksEditor() {
       t.addEventListener("change", commit);
       u.addEventListener("change", commit);
       const move = d => () => {
-        const next = M.newtabLinks(emberValues());
+        const next = M.newtabLinks(igniValues());
         const j = i + d;
         if (j < 0 || j >= next.length) return;
         [next[i], next[j]] = [next[j], next[i]];
@@ -505,7 +505,7 @@ function linksEditor() {
         h("div", { class: "ctl" },
           h("button", { class: "btn", title: "Move up", onclick: move(-1) }, "▲"),
           h("button", { class: "btn", title: "Move down", onclick: move(1) }, "▼"),
-          h("button", { class: "btn danger", title: "Remove", onclick: () => { const n = M.newtabLinks(emberValues()); n.splice(i, 1); save(n); } }, "✕")));
+          h("button", { class: "btn danger", title: "Remove", onclick: () => { const n = M.newtabLinks(igniValues()); n.splice(i, 1); save(n); } }, "✕")));
     });
     const nt = h("input", { type: "text", placeholder: "Name (optional)", "aria-label": "New shortcut name", style: { minWidth: "130px", width: "140px" } });
     const nu = h("input", { type: "url", placeholder: "example.com", "aria-label": "New shortcut address", style: { minWidth: "260px" } });
@@ -514,18 +514,18 @@ function linksEditor() {
       if (!url) { nu.focus(); return; }
       let host = url;
       try { host = new URL(url).hostname.replace(/^www\./, ""); } catch (e) { toast("That address doesn't look right"); return; }
-      save([...M.newtabLinks(emberValues()), { title: nt.value.trim() || host, url }]);
+      save([...M.newtabLinks(igniValues()), { title: nt.value.trim() || host, url }]);
     };
     nu.addEventListener("keydown", e => { if (e.key == "Enter") add(); });
     wrap.replaceChildren(...rows,
       h("div", { class: "row" }, h("div", { class: "ctl" }, nt, nu),
         h("div", { class: "ctl" },
           h("button", { class: "btn primary", onclick: add }, "Add shortcut"),
-          h("button", { class: "btn", onclick: () => P.clearUserPref("ember.newtab.links") }, "Defaults"))));
+          h("button", { class: "btn", onclick: () => P.clearUserPref("ignifox.newtab.links") }, "Defaults"))));
   }
   let last = null;
   bind(() => {
-    const cur = get("ember.newtab.links");
+    const cur = get("ignifox.newtab.links");
     if (cur !== last) { last = cur; render(); }
   }, wrap);
   return wrap;
@@ -536,34 +536,34 @@ function renderNewtab() {
     h("h1", {}, "New Tab"),
     h("p", { class: "lede" }, "Your own start page: wallpaper, clock, search with your engine, and shortcuts. It's a plain local page: no ads, no tracking, no network requests unless you turn on site icons."),
     card(
-      toggle("ember.newtab.enabled", "Use the Ember New Tab", "Off = Firefox's standard new tab page."),
-      toggle("ember.newtab.home", "Also use it as my home page", "Only applies if you haven't set a home page yourself."),
-      row(null, "See it", null, h("button", { class: "btn", onclick: () => browserWin()?.openTrustedLinkIn(EmberBoot.newtabURL(), "tab") }, "Open a new tab"))),
+      toggle("ignifox.newtab.enabled", "Use the Ignifox New Tab", "Off = Firefox's standard new tab page."),
+      toggle("ignifox.newtab.home", "Also use it as my home page", "Only applies if you haven't set a home page yourself."),
+      row(null, "See it", null, h("button", { class: "btn", onclick: () => browserWin()?.openTrustedLinkIn(IgniBoot.newtabURL(), "tab") }, "Open a new tab"))),
     newtabPreview(),
     h("h2", {}, "Wallpaper"),
     wallpaperPicker(),
     card(
-      range("ember.newtab.dim", "Darken wallpaper", "Keeps text readable on bright pictures.", 0, 90, 5, v => `${v}%`),
-      range("ember.newtab.blur", "Blur wallpaper", null, 0, 30, 1, v => `${v}px`)),
+      range("ignifox.newtab.dim", "Darken wallpaper", "Keeps text readable on bright pictures.", 0, 90, 5, v => `${v}%`),
+      range("ignifox.newtab.blur", "Blur wallpaper", null, 0, 30, 1, v => `${v}px`)),
     h("h2", {}, "Layout"),
     card(
-      select("ember.newtab.layout", "Arrangement", null, [["center", "Centered"], ["top", "Near the top"], ["minimal", "Minimal (search + shortcuts only)"]]),
-      toggle("ember.newtab.clock", "Clock"),
-      toggle("ember.newtab.clock24", "24-hour time"),
-      toggle("ember.newtab.seconds", "Show seconds"),
-      toggle("ember.newtab.date", "Date"),
-      toggle("ember.newtab.greeting", "Greeting", "\"Good evening\", in black-metal lettering."),
-      text("ember.newtab.name", "Your name for the greeting", null, { placeholder: "e.g. rxvy" }),
-      toggle("ember.newtab.search", "Search box"),
-      toggle("ember.newtab.engineSwitcher", "Engine switcher in the search box", "Pick an engine per search, or type a keyword like @yt first."),
-      toggle("ember.newtab.notes", "Notes", "A small notepad in the corner. Saved only on this computer.")),
+      select("ignifox.newtab.layout", "Arrangement", null, [["center", "Centered"], ["top", "Near the top"], ["minimal", "Minimal (search + shortcuts only)"]]),
+      toggle("ignifox.newtab.clock", "Clock"),
+      toggle("ignifox.newtab.clock24", "24-hour time"),
+      toggle("ignifox.newtab.seconds", "Show seconds"),
+      toggle("ignifox.newtab.date", "Date"),
+      toggle("ignifox.newtab.greeting", "Greeting", "\"Good evening\", in black-metal lettering."),
+      text("ignifox.newtab.name", "Your name for the greeting", null, { placeholder: "e.g. rxvy" }),
+      toggle("ignifox.newtab.search", "Search box"),
+      toggle("ignifox.newtab.engineSwitcher", "Engine switcher in the search box", "Pick an engine per search, or type a keyword like @yt first."),
+      toggle("ignifox.newtab.notes", "Notes", "A small notepad in the corner. Saved only on this computer.")),
     h("h2", {}, "Shortcuts"),
     linksEditor(),
     card(
-      select("ember.newtab.tileStyle", "Tile style", null, [["rounded", "Rounded"], ["circle", "Circles"], ["square", "Square"], ["minimal", "Minimal (no background)"]]),
-      range("ember.newtab.columns", "Shortcuts per row", null, 3, 10, 1, v => `${v}`),
-      toggle("ember.newtab.topSites", "Add my most-visited sites", "Fills in after your shortcuts, from your own history."),
-      toggle("ember.newtab.favicons", "Site icons", "Loads each site's own icon. That contacts the site; off = letter tiles with no network use.")),
+      select("ignifox.newtab.tileStyle", "Tile style", null, [["rounded", "Rounded"], ["circle", "Circles"], ["square", "Square"], ["minimal", "Minimal (no background)"]]),
+      range("ignifox.newtab.columns", "Shortcuts per row", null, 3, 10, 1, v => `${v}`),
+      toggle("ignifox.newtab.topSites", "Add my most-visited sites", "Fills in after your shortcuts, from your own history."),
+      toggle("ignifox.newtab.favicons", "Site icons", "Loads each site's own icon. That contacts the site; off = letter tiles with no network use.")),
   ];
 }
 
@@ -722,11 +722,11 @@ const LAYOUTS = [
 ];
 function layoutPicker() {
   return h("div", { class: "layouts" }, LAYOUTS.map(([id, name, sub, boxes]) => {
-    const b = h("button", { class: "layout", onclick: () => set("ember.layout.tabs", id) },
+    const b = h("button", { class: "layout", onclick: () => set("ignifox.layout.tabs", id) },
       h("div", { class: "pic" }, boxes.map(([c, x, y, w, hh]) =>
         h("i", { class: c, style: { left: `${x}%`, top: `${y}px`, width: `${w}%`, height: `${hh}px` } }))),
       h("b", {}, name), h("small", {}, sub));
-    bind(() => b.classList.toggle("selected", get("ember.layout.tabs") == id), b);
+    bind(() => b.classList.toggle("selected", get("ignifox.layout.tabs") == id), b);
     return b;
   }));
 }
@@ -841,12 +841,12 @@ function renderPlacement() {
         [["always-show", "Always expanded"], ["expand-on-hover", "Collapsed, expand on hover"], ["hide-sidebar", "Hidden until toggled"]]),
       select("browser.toolbars.bookmarks.visibility", "Bookmarks bar", null,
         [["always", "Always show"], ["newtab", "Only on new tab"], ["never", "Never"]]),
-      toggle("ember.layout.autohide", "Focus mode", "Toolbars slide away and come back when you point at the top edge. Ctrl+Alt+Z toggles it."),
-      toggle("ember.layout.urlbarCentered", "Center the address", "URL text sits in the middle until you click in."),
-      toggle("ember.layout.compactNavbar", "Slim navigation bar", "Less padding around buttons and the URL bar."),
-      range("ember.layout.urlbarMaxWidth", "Address bar width", "Cap the URL bar and center it, for wide screens.", 0, 1800, 50, v => (v < 300 ? "full" : `${v}px`)),
-      toggle("ember.layout.bookmarksIconsOnly", "Bookmarks bar: icons only", "Hide bookmark names, keep folders labelled."),
-      toggle("ember.layout.tabCloseHover", "Close buttons on hover only", "Cleaner tabs: × appears on the active or hovered tab.")),
+      toggle("ignifox.layout.autohide", "Focus mode", "Toolbars slide away and come back when you point at the top edge. Ctrl+Alt+Z toggles it."),
+      toggle("ignifox.layout.urlbarCentered", "Center the address", "URL text sits in the middle until you click in."),
+      toggle("ignifox.layout.compactNavbar", "Slim navigation bar", "Less padding around buttons and the URL bar."),
+      range("ignifox.layout.urlbarMaxWidth", "Address bar width", "Cap the URL bar and center it, for wide screens.", 0, 1800, 50, v => (v < 300 ? "full" : `${v}px`)),
+      toggle("ignifox.layout.bookmarksIconsOnly", "Bookmarks bar: icons only", "Hide bookmark names, keep folders labelled."),
+      toggle("ignifox.layout.tabCloseHover", "Close buttons on hover only", "Cleaner tabs: × appears on the active or hovered tab.")),
 
     h("h2", {}, "Toolbar arrangement"),
     h("div", { class: "levels" }, Object.values(M.TOOLBAR_PRESETS).map(p =>
@@ -862,12 +862,12 @@ function renderPlacement() {
 
     h("h2", {}, "Hide things"),
     card(
-      toggle("ember.hide.newTabButton", "New-tab (+) button", "Ctrl+T still works."),
-      toggle("ember.hide.allTabsButton", "List-all-tabs button"),
-      toggle("ember.hide.extensionsButton", "Extensions puzzle button", "Pinned extension icons stay visible."),
-      toggle("ember.hide.disabledNavButtons", "Back/forward when there's nowhere to go"),
-      toggle("ember.hide.urlbarIcons", "Extra URL bar icons", "Tracking shield and page actions, until you click into the bar."),
-      toggle("ember.hide.tabIcons", "Tab favicons", "Text-only tabs (pinned tabs keep their icons).")),
+      toggle("ignifox.hide.newTabButton", "New-tab (+) button", "Ctrl+T still works."),
+      toggle("ignifox.hide.allTabsButton", "List-all-tabs button"),
+      toggle("ignifox.hide.extensionsButton", "Extensions puzzle button", "Pinned extension icons stay visible."),
+      toggle("ignifox.hide.disabledNavButtons", "Back/forward when there's nowhere to go"),
+      toggle("ignifox.hide.urlbarIcons", "Extra URL bar icons", "Tracking shield and page actions, until you click into the bar."),
+      toggle("ignifox.hide.tabIcons", "Tab favicons", "Text-only tabs (pinned tabs keep their icons).")),
   ];
 }
 
@@ -893,7 +893,7 @@ function renderBrowsing() {
       toggle("privacy.userContext.enabled", "Container tabs", "Keep work, shopping and social logins in separate color-coded tabs."),
       toggle("browser.tabs.loadBookmarksInTabs", "Open bookmarks in a new tab")),
     h("h2", {}, "Keyboard"),
-    card(row(null, "Keyboard shortcuts", "Change or turn off any shortcut, Firefox's or Emberfox's.",
+    card(row(null, "Keyboard shortcuts", "Change or turn off any shortcut, Firefox's or Ignifox's.",
       h("button", { class: "btn", onclick: () => browserWin()?.openTrustedLinkIn("about:keyboard", "tab") }, "Edit shortcuts"))),
     h("h2", {}, "Scrolling & mouse"),
     card(
@@ -996,7 +996,7 @@ function telemetryProof() {
 function renderPrivacy() {
   return [
     h("h1", {}, "Privacy"),
-    h("p", { class: "lede" }, "Emberfox never phones home. Telemetry, studies, experiments and crash uploads are locked off at the engine level. Below is how hard you want to go beyond that."),
+    h("p", { class: "lede" }, "Ignifox never phones home. Telemetry, studies, experiments and crash uploads are locked off at the engine level. Below is how hard you want to go beyond that."),
     levelCards(),
     h("h2", {}, "Fine-tune"),
     card(
@@ -1007,7 +1007,7 @@ function renderPrivacy() {
       toggle("privacy.resistFingerprinting", "Resist fingerprinting (Tor-style)", "Strongest, but sets your timezone to UTC and can break sites."),
       select("network.trr.mode", "Encrypted DNS (DoH)", null, [[0, "Off (system DNS)"], [2, "On, fall back to system"], [3, "On, never fall back"], [5, "Explicitly off"]]),
       dohRow(),
-      toggle("privacy.sanitize.sanitizeOnShutdown", "Clear data when Emberfox closes"),
+      toggle("privacy.sanitize.sanitizeOnShutdown", "Clear data when Ignifox closes"),
       toggle("privacy.clearOnShutdown_v2.cookiesAndStorage", "…cookies & site data"),
       toggle("privacy.clearOnShutdown_v2.historyFormDataAndDownloads", "…history, forms & downloads"),
       toggle("privacy.clearOnShutdown_v2.cache", "…cache"),
@@ -1052,24 +1052,24 @@ const SNIPPETS = {
   "Outline URL bar": `/* see-through URL bar with an accent outline */
 .urlbar-background {
   background: transparent !important;
-  border: 1px solid color-mix(in srgb, var(--ember-accent, currentColor) 45%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--igni-accent, currentColor) 45%, transparent) !important;
 }`,
   "Taller tabs": `:root { --tab-min-height: 40px !important; }`,
   "Monospace URL bar": `.urlbar-input { font-family: "JetBrains Mono", monospace !important; }`,
-  "Accent tab text": `.tabbrowser-tab[selected] .tab-label { color: var(--ember-accent) !important; font-weight: 600; }`,
+  "Accent tab text": `.tabbrowser-tab[selected] .tab-label { color: var(--igni-accent) !important; font-weight: 600; }`,
 };
-const CSS_TEMPLATE = `/* Ember Studio custom CSS
+const CSS_TEMPLATE = `/* Ignifox Studio custom CSS
  * Applied live to the browser UI when you press Save (Ctrl+S).
- * Ember variables you can use:
- *   --ember-bg --ember-bg-2 --ember-bg-3 --ember-fg --ember-fg-dim
- *   --ember-accent --ember-accent-2 --ember-radius
+ * Ignifox variables you can use:
+ *   --igni-bg --igni-bg-2 --igni-bg-3 --igni-fg --igni-fg-dim
+ *   --igni-accent --igni-accent-2 --igni-radius
  * Browser Toolbox (Ctrl+Alt+Shift+I) lets you inspect the UI.
  */
 
 `;
 
 function renderCSS() {
-  const path = EmberBoot.customCSSPath();
+  const path = IgniBoot.customCSSPath();
   const area = h("textarea", { class: "editor", spellcheck: "false", "aria-label": "Custom CSS" });
   const status = h("span", { class: "val", style: { textAlign: "start" } });
   IOUtils.readUTF8(path).then(t => (area.value = t), () => (area.value = CSS_TEMPLATE));
@@ -1078,7 +1078,7 @@ function renderCSS() {
     try {
       await IOUtils.makeDirectory(PathUtils.parent(path), { ignoreExisting: true });
       await IOUtils.writeUTF8(path, area.value);
-      EmberBoot.bumpCustomCSS();
+      IgniBoot.bumpCustomCSS();
       status.textContent = "saved " + new Date().toLocaleTimeString();
       toast("Custom CSS applied");
     } catch (e) {
@@ -1095,8 +1095,8 @@ function renderCSS() {
 
   return [
     h("h1", {}, "Custom CSS"),
-    h("p", { class: "lede" }, "Restyle anything in the browser UI. Stored in your profile as chrome/ember-custom.css. Classic userChrome.css works too."),
-    card(toggle("ember.customcss.enabled", "Apply my custom CSS")),
+    h("p", { class: "lede" }, "Restyle anything in the browser UI. Stored in your profile as chrome/igni-custom.css. Classic userChrome.css works too."),
+    card(toggle("ignifox.customcss.enabled", "Apply my custom CSS")),
     h("div", { class: "snips" }, h("span", { class: "val", style: { textAlign: "start" } }, "Snippets:"),
       Object.entries(SNIPPETS).map(([name, css]) =>
         h("button", { class: "btn", onclick: () => { area.value += (area.value.endsWith("\n") ? "\n" : "\n\n") + css + "\n"; area.focus(); } }, "+ " + name))),
@@ -1115,8 +1115,8 @@ function renderCSS() {
 
 // ============================================================== BACKUP
 function collect() {
-  const data = { emberfox: 1, saved: new Date().toISOString(), prefs: {} };
-  for (const key of [...Object.keys(M.EMBER_PREFS), ...Object.keys(M.NATIVE_PREFS)]) {
+  const data = { ignifox: 1, saved: new Date().toISOString(), prefs: {} };
+  for (const key of [...Object.keys(M.IGNI_PREFS), ...Object.keys(M.NATIVE_PREFS)]) {
     if (P.prefHasUserValue(key)) data.prefs[key] = get(key);
   }
   try { data.toolbars = P.getStringPref("browser.uiCustomization.state", ""); } catch (e) {}
@@ -1127,7 +1127,7 @@ function renderBackup() {
   file.addEventListener("change", async () => {
     try {
       const data = JSON.parse(await file.files[0].text());
-      if (!data || data.emberfox != 1) throw new Error("not an Emberfox settings file");
+      if (!data || data.ignifox != 1) throw new Error("not an Ignifox settings file");
       let n = 0;
       for (const [k, v] of Object.entries(data.prefs || {})) {
         if (M.typeOf(k)) { set(k, v); n++; }
@@ -1147,18 +1147,18 @@ function renderBackup() {
     h("h1", {}, "Backup & Reset"),
     h("p", { class: "lede" }, "Take your whole setup (theme, saved themes, layout, toolbars, privacy) to another machine in one file."),
     card(
-      row(null, "Export settings", "Saves emberfox-settings.json.", h("button", { class: "btn primary", onclick: () => {
+      row(null, "Export settings", "Saves ignifox-settings.json.", h("button", { class: "btn primary", onclick: () => {
         const blob = new Blob([JSON.stringify(collect(), null, 2)], { type: "application/json" });
-        const a = h("a", { href: URL.createObjectURL(blob), download: "emberfox-settings.json" });
+        const a = h("a", { href: URL.createObjectURL(blob), download: "ignifox-settings.json" });
         document.body.append(a);
         a.click();
         a.remove();
       } }, "Export")),
       row(null, "Import settings", null, [file, h("button", { class: "btn", onclick: () => file.click() }, "Import…")]),
-      row(null, "Reset Ember Studio", "Theme, layout and effects back to Emberfox defaults. Saved themes are kept.",
+      row(null, "Reset Ignifox Studio", "Theme, layout and effects back to Ignifox defaults. Saved themes are kept.",
         h("button", { class: "btn danger", onclick: () => {
-          for (const k of Object.keys(M.EMBER_PREFS)) if (k != "ember.theme.saved" && k != "ember.firstrun.done") P.clearUserPref(k);
-          toast("Ember Studio reset");
+          for (const k of Object.keys(M.IGNI_PREFS)) if (k != "ignifox.theme.saved" && k != "ignifox.firstrun.done") P.clearUserPref(k);
+          toast("Ignifox Studio reset");
         } }, "Reset")),
       row(null, "Run the welcome setup again", null,
         h("button", { class: "btn", onclick: () => openWelcome() }, "Start"))),
@@ -1169,13 +1169,13 @@ function renderBackup() {
 function renderAbout() {
   const ai = Services.appinfo;
   const verCell = h("div", {}, ai.version);
-  EmberBoot.version?.().then(v => (verCell.textContent = v), () => {});
+  IgniBoot.version?.().then(v => (verCell.textContent = v), () => {});
   const result = h("span", { class: "val", style: { textAlign: "start", minWidth: "0" } });
   async function checkNow(btn) {
     btn.disabled = true;
     result.textContent = "checking…";
     try {
-      const r = await EmberBoot.checkForUpdate({ manual: true });
+      const r = await IgniBoot.checkForUpdate({ manual: true });
       result.textContent = {
         current: `up to date (${r.current})`,
         available: `${r.latest} available`,
@@ -1188,28 +1188,28 @@ function renderAbout() {
   }
   return [
     h("div", { class: "about-hero" },
-      h("img", { class: "logo", src: "chrome://ember/content/logo.svg", alt: "" }),
+      h("img", { class: "logo", src: "chrome://ignifox/content/logo.svg", alt: "" }),
       h("div", {},
-        h("img", { src: "chrome://ember/content/wordmark.svg", alt: "Emberfox", height: 64 }),
+        h("img", { src: "chrome://ignifox/content/wordmark.svg", alt: "Ignifox", height: 64 }),
         h("p", { class: "lede", style: { margin: "8px 0 0" } }, "Private by force. Yours by design."))),
     h("div", { class: "card kv" },
-      h("div", {}, "Emberfox"), verCell,
+      h("div", {}, "Ignifox"), verCell,
       h("div", {}, "Gecko engine"), h("div", {}, `${ai.platformVersion} (build ${ai.appBuildID})`),
       h("div", {}, "Platform"), h("div", {}, `${ai.OS} ${Services.sysinfo.getProperty("arch")}`),
       h("div", {}, "Profile"), h("div", {}, PathUtils.profileDir),
-      h("div", {}, "Source"), h("div", {}, h("a", { href: "https://github.com/rxvy-dev/emberfox" }, "github.com/rxvy-dev/emberfox"))),
+      h("div", {}, "Source"), h("div", {}, h("a", { href: "https://github.com/rxvy-dev/ignifox" }, "github.com/rxvy-dev/ignifox"))),
     h("h2", {}, "Updates"),
     card(
-      toggle("ember.update.check", "Tell me when a new Emberfox is out",
+      toggle("ignifox.update.check", "Tell me when a new Ignifox is out",
         "Once a day, asks GitHub's public releases page for the latest version. No cookies, no IDs, nothing about you is sent. If you installed from a distro package, update through it instead."),
       row(null, "Check now", null, [result, h("button", { class: "btn", onclick: e => checkNow(e.currentTarget) }, "Check for updates")])),
     h("h2", {}, "Shortcuts"),
     h("div", { class: "card kv" },
-      h("div", {}, "Ctrl+Alt+E"), h("div", {}, "Open Ember Studio"),
+      h("div", {}, "Ctrl+Alt+I"), h("div", {}, "Open Ignifox Studio"),
       h("div", {}, "Ctrl+Alt+Z"), h("div", {}, "Toggle focus mode"),
       h("div", {}, "Ctrl+Alt+Shift+I"), h("div", {}, "Browser Toolbox (inspect the UI for custom CSS)")),
     h("p", { class: "lede", style: { marginTop: "20px", fontSize: "12px" } },
-      "Emberfox is built from Mozilla Firefox source code under the MPL 2.0. Firefox is a trademark of the Mozilla Foundation; Emberfox is not affiliated with or endorsed by Mozilla. Metal Mania font © Open Window, SIL OFL 1.1."),
+      "Ignifox is built from Mozilla Firefox source code under the MPL 2.0. Firefox is a trademark of the Mozilla Foundation; Ignifox is not affiliated with or endorsed by Mozilla. Metal Mania font © Open Window, SIL OFL 1.1."),
   ];
 }
 
@@ -1219,8 +1219,8 @@ function openWelcome() {
   let step = 0;
   const steps = [
     () => h("div", { class: "step" },
-      h("img", { class: "logo", src: "chrome://ember/content/logo.svg", alt: "" }),
-      h("h1", {}, "Welcome to Emberfox"),
+      h("img", { class: "logo", src: "chrome://ignifox/content/logo.svg", alt: "" }),
+      h("h1", {}, "Welcome to Ignifox"),
       h("p", { class: "lede" }, "Firefox's engine with the telemetry ripped out and the customization turned all the way up. Three quick picks and you're done.")),
     () => h("div", { class: "step" }, h("h1", {}, "Pick your fire"), h("p", { class: "lede" }, "You can tweak every color later."), themeGallery()),
     () => h("div", { class: "step" }, h("h1", {}, "Where do tabs go?"), layoutPicker()),
@@ -1236,7 +1236,7 @@ function openWelcome() {
         h("button", { class: "btn primary", onclick: () => (last ? finish() : (step++, render())) }, last ? "Let it burn 🔥" : "Next"))));
   }
   function finish() {
-    set("ember.firstrun.done", true);
+    set("ignifox.firstrun.done", true);
     w.hidden = true;
     if (location.hash == "#welcome") history.replaceState(null, "", "#look");
     route();

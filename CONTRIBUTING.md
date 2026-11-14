@@ -1,15 +1,15 @@
-# Contributing to Emberfox
+# Contributing to Ignifox
 
-Thanks for helping. Emberfox stays maintainable by following one rule:
+Thanks for helping. Ignifox stays maintainable by following one rule:
 **no engine patches**. Everything goes through Firefox's supported layers:
 
 | You want to… | Edit |
 |---|---|
-| change a default (user can still change it) | `branding/emberfox-branding.js` |
-| force something off for privacy (locked) | `settings/emberfox.cfg` and `scripts/audit.sh` |
+| change a default (user can still change it) | `branding/ignifox-branding.js` |
+| force something off for privacy (locked) | `settings/ignifox.cfg` and `scripts/audit.sh` |
 | add an enterprise policy | `settings/distribution/policies.json` (CI validates it against Firefox's schema) |
-| add a built-in theme | `THEMES` in `ember/content/prefs.sys.mjs` |
-| add a Studio setting | `EMBER_PREFS` → `boot.sys.mjs` `paint()` → `ui.css` → a row in `studio.js` |
+| add a built-in theme | `THEMES` in `studio/content/prefs.sys.mjs` |
+| add a Studio setting | `IGNI_PREFS` → `boot.sys.mjs` `paint()` → `ui.css` → a row in `studio.js` |
 | expose a Firefox pref in Studio | `NATIVE_PREFS` + a row in `studio.js` |
 | fix packaging for a distro | `packaging/` |
 
@@ -28,7 +28,7 @@ the engine sets a root attribute that `ui.css` never styles (and vice versa).
 ## Working on Studio's look
 
 `tools/preview/run.sh` serves Studio with Firefox APIs mocked, so you can iterate on
-`studio.css`/`studio.js` in any browser. For the real thing, open `about:ember` and use the
+`studio.css`/`studio.js` in any browser. For the real thing, open `about:ignifox` and use the
 Browser Toolbox (Ctrl+Alt+Shift+I) to inspect the browser UI.
 
 ## Releases

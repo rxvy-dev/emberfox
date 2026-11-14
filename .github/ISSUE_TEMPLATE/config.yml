@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security vulnerability
-    url: https://github.com/rxvy-dev/emberfox/security/advisories/new
+    url: https://github.com/rxvy-dev/ignifox/security/advisories/new
     about: Report privately, please.
   - name: Firefox engine bug
     url: https://bugzilla.mozilla.org/

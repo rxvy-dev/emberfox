@@ -1,10 +1,17 @@
 # Changelog
 
-Emberfox versions are `<Firefox version>-<Emberfox revision>`, e.g. `160.0.1-1`.
-A new Firefox release automatically produces a new Emberfox release (revision 1);
-Emberfox-only changes bump the revision.
+Ignifox versions are `<Firefox version>-<Ignifox revision>`, e.g. `160.0.1-1`.
+A new Firefox release automatically produces a new Ignifox release (revision 1);
+Ignifox-only changes bump the revision.
 
-## Unreleased: first public release
+## Unreleased
+
+### Renamed: Emberfox → Ignifox
+- New name (Latin *ignis*, fire) and IGNIFOX wordmark; "Emberfox" was already used by other creators.
+- Everything renamed: app, packages (`ignifox`, `dev.rxvy.Ignifox`), Studio (`about:ignifox`, Ctrl+Alt+I), prefs (`ignifox.*`), CSS variables (`--igni-*`), default theme (Ignis).
+- Upgrading: the one-line installer removes an Emberfox install, moves its profile, and renames its Studio settings.
+
+## 160.0-1: first public release (as Emberfox)
 
 ### Privacy
 - All telemetry, studies, Normandy/Nimbus experiments, usage pings, attribution and crash-report upload prefs **locked** off via autoconfig, backed by enterprise policies.
@@ -14,7 +21,7 @@ Emberfox-only changes bump the revision.
 - Strict tracking protection, HTTPS-only, Global Privacy Control, cross-site referrer trimming, no speculative connections, BeaconDB geolocation.
 - `./build.sh audit` verifies every build; Studio shows a live no-telemetry proof panel.
 
-### Ember Studio (`about:ember`)
+### Ignifox Studio (`about:ignifox`)
 - 10 themes, a 7-color palette editor, saved themes, shareable theme codes, quick accent swap.
 - Tab strip top / below the bar / vertical / hidden; sidebar side; bookmarks bar modes.
 - Move any toolbar button between areas or hide it; Classic / Minimal / Power toolbar layouts.
@@ -24,7 +31,7 @@ Emberfox-only changes bump the revision.
 - First-run welcome wizard.
 - Update notifier (GitHub releases only, no identifiers, can be turned off).
 
-### Ember New Tab
+### Ignifox New Tab
 - Custom start page with clock, date, greeting, search box with engine switcher and `@keyword` routing, editable shortcut tiles, optional most-visited sites, notes.
 - Wallpapers: animated embers, aurora, gradient, solid, or your own picture (dim + blur); 3 layouts; 4 tile styles. Also usable as the home page.
 - Runs as an unprivileged local page; settings are written into it by the engine. No network use unless site icons are enabled.
@@ -38,6 +45,6 @@ Emberfox-only changes bump the revision.
 - Separate search bar available in the Placement button list.
 
 ### Packaging
-- One-line graphical installer: `curl -fsSL https://raw.githubusercontent.com/rxvy-dev/emberfox/main/install.sh | bash`. zenity/kdialog GUI with whiptail/text fallback; just-me, everyone or Flatpak; checksum-verified; update and uninstall on re-run.
+- One-line graphical installer: `curl -fsSL https://raw.githubusercontent.com/rxvy-dev/ignifox/main/install.sh | bash`. zenity/kdialog GUI with whiptail/text fallback; just-me, everyone or Flatpak; checksum-verified; update and uninstall on re-run.
 - Universal tarball + `install.sh`, AppImage, Flatpak, `.deb`, `.rpm`, Arch PKGBUILD, Void template, Gentoo ebuild; x86_64 and aarch64.
 - Automatic releases when Mozilla ships a new Firefox.

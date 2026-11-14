@@ -9,7 +9,7 @@
     "DontCheckDefaultBrowser": true,
     "SkipTermsOfUse": true,
     "NoDefaultBookmarks": true,
-    "OverrideFirstRunPage": "about:ember#welcome",
+    "OverrideFirstRunPage": "about:ignifox#welcome",
     "OverridePostUpdatePage": "",
 
     "AIControls": {

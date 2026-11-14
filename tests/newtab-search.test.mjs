@@ -1,9 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import * as M from "../ember/content/prefs.sys.mjs";
+import * as M from "../studio/content/prefs.sys.mjs";
 
-const read = f => readFileSync(new URL(`../ember/content/${f}`, import.meta.url), "utf8");
+const read = f => readFileSync(new URL(`../studio/content/${f}`, import.meta.url), "utf8");
 
 test("popular engines are well-formed and unique", () => {
   const names = new Set(), aliases = new Set();
@@ -34,21 +34,21 @@ test("keywords get an @ and lose spaces", () => {
 });
 
 test("new tab shortcuts: defaults, filtering of unsafe URLs, bad JSON", () => {
-  assert.equal(M.newtabLinks({ "ember.newtab.links": "" }).length, M.DEFAULT_LINKS.length);
-  const list = M.newtabLinks({ "ember.newtab.links": JSON.stringify([
+  assert.equal(M.newtabLinks({ "ignifox.newtab.links": "" }).length, M.DEFAULT_LINKS.length);
+  const list = M.newtabLinks({ "ignifox.newtab.links": JSON.stringify([
     { title: "ok", url: "https://a.org" }, { title: "js", url: "javascript:alert(1)" },
     { title: "file", url: "file:///etc/passwd" }, { url: "http://b.org" }, null, "x",
   ]) });
   assert.deepEqual(list.map(l => l.url), ["https://a.org", "http://b.org"]);
-  assert.equal(M.newtabLinks({ "ember.newtab.links": "{nope" }).length, M.DEFAULT_LINKS.length);
-  assert.deepEqual(M.newtabLinks({ "ember.newtab.links": "[]" }), []);
+  assert.equal(M.newtabLinks({ "ignifox.newtab.links": "{nope" }).length, M.DEFAULT_LINKS.length);
+  assert.deepEqual(M.newtabLinks({ "ignifox.newtab.links": "[]" }), []);
 });
 
 test("engine writes every setting the new tab page reads", () => {
   const boot = read("boot.sys.mjs"), page = read("newtab/newtab.js");
-  const cfgBlock = boot.slice(boot.indexOf("const cfg = {"), boot.indexOf("const js = `window.EMBER_NEWTAB"));
+  const cfgBlock = boot.slice(boot.indexOf("const cfg = {"), boot.indexOf("const js = `window.IGNI_NEWTAB"));
   const written = new Set([...cfgBlock.matchAll(/^\s{6}(\w+)[:,]/gm)].map(m => m[1]));
-  const defaults = page.slice(page.indexOf("const C = Object.assign({"), page.indexOf("}, window.EMBER_NEWTAB"));
+  const defaults = page.slice(page.indexOf("const C = Object.assign({"), page.indexOf("}, window.IGNI_NEWTAB"));
   const read_ = new Set([...defaults.matchAll(/\b(\w+): /g)].map(m => m[1]))
     .difference(new Set(["bg", "bg2", "bg3", "fg", "fgDim", "accent", "accent2", "dark", "name", "url", "alias"]));
   for (const k of read_) assert.ok(written.has(k), `new tab reads "${k}" but the engine never writes it`);

@@ -1,12 +1,12 @@
 #!/bin/sh
-# Emberfox universal installer — any glibc Linux distro (Arch, Debian/Ubuntu,
+# Ignifox universal installer — any glibc Linux distro (Arch, Debian/Ubuntu,
 # Fedora, openSUSE, Void, Gentoo, Mint, Pop!_OS, NixOS-with-FHS…).
 #
-#   ./install.sh              install system-wide to /opt/emberfox (needs root)
-#   ./install.sh --user       install for you only, to ~/.local/opt/emberfox
+#   ./install.sh              install system-wide to /opt/ignifox (needs root)
+#   ./install.sh --user       install for you only, to ~/.local/opt/ignifox
 #   ./install.sh --uninstall  [--user]  remove it again
 #
-# Run from inside the extracted emberfox/ folder.
+# Run from inside the extracted ignifox/ folder.
 set -eu
 
 SRC=$(cd "$(dirname "$0")" && pwd)
@@ -22,13 +22,13 @@ for a in "$@"; do
 done
 
 if [ "$MODE" = system ]; then
-  PREFIX=/opt/emberfox; BIN=/usr/local/bin; SHARE=/usr/local/share
+  PREFIX=/opt/ignifox; BIN=/usr/local/bin; SHARE=/usr/local/share
   if [ "$(id -u)" -ne 0 ]; then
     echo "System install needs root. Re-running with sudo… (or use --user)"
     exec sudo "$0" "$@"
   fi
 else
-  PREFIX="$HOME/.local/opt/emberfox"; BIN="$HOME/.local/bin"
+  PREFIX="$HOME/.local/opt/ignifox"; BIN="$HOME/.local/bin"
   SHARE="${XDG_DATA_HOME:-$HOME/.local/share}"
 fi
 
@@ -38,10 +38,10 @@ refresh() {
 }
 
 if [ "$ACTION" = uninstall ]; then
-  rm -rf "$PREFIX" "$BIN/emberfox" "$SHARE/applications/emberfox.desktop"
-  find "$SHARE/icons/hicolor" -name 'emberfox.*' -delete 2>/dev/null || true
+  rm -rf "$PREFIX" "$BIN/ignifox" "$SHARE/applications/ignifox.desktop"
+  find "$SHARE/icons/hicolor" -name 'ignifox.*' -delete 2>/dev/null || true
   refresh
-  echo "Emberfox removed. Your profile is kept (delete ~/.emberfox to wipe it)."
+  echo "Ignifox removed. Your profile is kept (delete ~/.ignifox to wipe it)."
   exit 0
 fi
 
@@ -52,17 +52,17 @@ if ldd --version 2>&1 | grep -qi musl; then
   exit 1
 fi
 
-echo "Installing Emberfox to $PREFIX"
+echo "Installing Ignifox to $PREFIX"
 rm -rf "$PREFIX"
 mkdir -p "$PREFIX" "$BIN" "$SHARE/applications"
 cp -a "$SRC/." "$PREFIX/"
-ln -sf "$PREFIX/emberfox" "$BIN/emberfox"
+ln -sf "$PREFIX/ignifox" "$BIN/ignifox"
 
-sed "s|^Exec=emberfox|Exec=$PREFIX/emberfox|" "$PREFIX/emberfox.desktop" > "$SHARE/applications/emberfox.desktop"
+sed "s|^Exec=ignifox|Exec=$PREFIX/ignifox|" "$PREFIX/ignifox.desktop" > "$SHARE/applications/ignifox.desktop"
 for d in "$PREFIX"/icons/hicolor/*/apps; do
   size=$(basename "$(dirname "$d")")
   mkdir -p "$SHARE/icons/hicolor/$size/apps"
-  cp "$d"/emberfox.* "$SHARE/icons/hicolor/$size/apps/"
+  cp "$d"/ignifox.* "$SHARE/icons/hicolor/$size/apps/"
 done
 refresh
 
@@ -70,4 +70,4 @@ case ":$PATH:" in
   *":$BIN:"*) ;;
   *) echo "Note: $BIN is not in your PATH; launch from your app menu or add it." ;;
 esac
-echo "Done. Launch Emberfox from your app menu or run: emberfox"
+echo "Done. Launch Ignifox from your app menu or run: ignifox"

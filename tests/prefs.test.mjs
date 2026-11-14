@@ -1,9 +1,9 @@
 // node --test tests/
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import * as M from "../ember/content/prefs.sys.mjs";
+import * as M from "../studio/content/prefs.sys.mjs";
 
-const defaults = () => Object.fromEntries(Object.entries(M.EMBER_PREFS).map(([k, s]) => [k, s.def]));
+const defaults = () => Object.fromEntries(Object.entries(M.IGNI_PREFS).map(([k, s]) => [k, s.def]));
 
 test("every built-in theme has a complete, valid palette", () => {
   for (const [id, t] of Object.entries(M.THEMES)) {
@@ -25,37 +25,37 @@ test("text is readable on every theme (WCAG contrast >= 4.5)", () => {
   }
 });
 
-test("defaults resolve to the Ember theme", () => {
-  assert.equal(M.resolvePalette(defaults()).name, "Ember");
+test("defaults resolve to the Ignis theme", () => {
+  assert.equal(M.resolvePalette(defaults()).name, "Ignis");
 });
 
-test("unknown preset falls back to Ember", () => {
-  assert.equal(M.resolvePalette({ ...defaults(), "ember.theme.preset": "nope" }).name, "Ember");
+test("unknown preset falls back to Ignis", () => {
+  assert.equal(M.resolvePalette({ ...defaults(), "ignifox.theme.preset": "nope" }).name, "Ignis");
 });
 
 test("custom palette fills in missing colors", () => {
-  const p = M.resolvePalette({ ...defaults(), "ember.theme.preset": "custom",
-    "ember.theme.custom": JSON.stringify({ bg: "#202020", accent: "#00ff88" }) });
+  const p = M.resolvePalette({ ...defaults(), "ignifox.theme.preset": "custom",
+    "ignifox.theme.custom": JSON.stringify({ bg: "#202020", accent: "#00ff88" }) });
   for (const k of M.PALETTE_KEYS) assert.ok(M.isHex(p[k]), k);
   assert.equal(p.accent, "#00ff88");
   assert.equal(p.dark, true);
 });
 
 test("broken custom JSON never throws", () => {
-  const p = M.resolvePalette({ ...defaults(), "ember.theme.preset": "custom", "ember.theme.custom": "{oops" });
+  const p = M.resolvePalette({ ...defaults(), "ignifox.theme.preset": "custom", "ignifox.theme.custom": "{oops" });
   assert.ok(M.isHex(p.bg));
 });
 
 test("saved user themes resolve; missing ones fall back", () => {
-  const v = { ...defaults(), "ember.theme.saved": JSON.stringify({ Mine: { bg: "#111111", fg: "#eeeeee", accent: "#ff00ff" } }) };
-  assert.equal(M.resolvePalette({ ...v, "ember.theme.preset": "user:Mine" }).accent, "#ff00ff");
-  assert.equal(M.resolvePalette({ ...v, "ember.theme.preset": "user:Gone" }).name, "Ember");
+  const v = { ...defaults(), "ignifox.theme.saved": JSON.stringify({ Mine: { bg: "#111111", fg: "#eeeeee", accent: "#ff00ff" } }) };
+  assert.equal(M.resolvePalette({ ...v, "ignifox.theme.preset": "user:Mine" }).accent, "#ff00ff");
+  assert.equal(M.resolvePalette({ ...v, "ignifox.theme.preset": "user:Gone" }).name, "Ignis");
 });
 
 test("accent override applies to presets only", () => {
-  assert.equal(M.resolvePalette({ ...defaults(), "ember.theme.accent": "#00aaff" }).accent, "#00aaff");
-  const custom = { ...defaults(), "ember.theme.preset": "custom", "ember.theme.accent": "#00aaff",
-    "ember.theme.custom": JSON.stringify({ accent: "#123456" }) };
+  assert.equal(M.resolvePalette({ ...defaults(), "ignifox.theme.accent": "#00aaff" }).accent, "#00aaff");
+  const custom = { ...defaults(), "ignifox.theme.preset": "custom", "ignifox.theme.accent": "#00aaff",
+    "ignifox.theme.custom": JSON.stringify({ accent: "#123456" }) };
   assert.equal(M.resolvePalette(custom).accent, "#123456");
 });
 
@@ -64,9 +64,9 @@ test("theme share codes round-trip", () => {
     const back = M.codeToPalette(M.paletteToCode(t));
     for (const k of M.PALETTE_KEYS) assert.equal(back[k], t[k]);
   }
-  assert.equal(M.codeToPalette("ember:zzz"), null);
+  assert.equal(M.codeToPalette("igni:zzz"), null);
   assert.equal(M.codeToPalette("not a code"), null);
-  assert.equal(M.codeToPalette("ember:000000,111111"), null);
+  assert.equal(M.codeToPalette("igni:000000,111111"), null);
 });
 
 test("privacy levels only touch prefs Studio knows the type of", () => {

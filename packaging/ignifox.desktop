@@ -1,14 +1,14 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Emberfox
+Name=Ignifox
 GenericName=Web Browser
 Comment=Private, telemetry-free, deeply customizable browser built on Firefox
-Exec=emberfox %u
-Icon=emberfox
+Exec=ignifox %u
+Icon=ignifox
 Terminal=false
 StartupNotify=true
-StartupWMClass=emberfox
+StartupWMClass=ignifox
 Categories=Network;WebBrowser;
 Keywords=web;browser;internet;firefox;privacy;
 MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;application/pdf;image/svg+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/about;
@@ -16,16 +16,16 @@ Actions=new-window;new-private-window;studio;profile-manager;
 
 [Desktop Action new-window]
 Name=New Window
-Exec=emberfox --new-window %u
+Exec=ignifox --new-window %u
 
 [Desktop Action new-private-window]
 Name=New Private Window
-Exec=emberfox --private-window %u
+Exec=ignifox --private-window %u
 
 [Desktop Action studio]
-Name=Ember Studio
-Exec=emberfox --new-tab about:ember
+Name=Ignifox Studio
+Exec=ignifox --new-tab about:ignifox
 
 [Desktop Action profile-manager]
 Name=Profile Manager
-Exec=emberfox --ProfileManager
+Exec=ignifox --ProfileManager

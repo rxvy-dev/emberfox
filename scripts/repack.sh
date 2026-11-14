@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Fast build (minutes): take Mozilla's official, signed-off Linux build and turn
-# it into Emberfox: rebrand, strip telemetry binaries, lock privacy prefs,
-# add Ember Studio.
+# it into Ignifox: rebrand, strip telemetry binaries, lock privacy prefs,
+# add Ignifox Studio.
 #
 #   repack.sh                          latest Firefox for this machine's arch
 #   repack.sh --version 160.0          a specific release
@@ -22,29 +22,29 @@ while (($#)); do
 done
 
 if [[ -z "$FROM" ]]; then
-  FROM=$("$EMBER_ROOT/scripts/fetch-firefox.sh" "$VER" "$ARCH")
+  FROM=$("$IGNI_ROOT/scripts/fetch-firefox.sh" "$VER" "$ARCH")
 fi
 
 WORK="$BUILD_DIR/repack"
 rm -rf "$WORK"; mkdir -p "$WORK"
 if [[ -d "$FROM" ]]; then
   msg "Copying $FROM"
-  cp -a "$FROM" "$WORK/emberfox"
+  cp -a "$FROM" "$WORK/ignifox"
 else
   msg "Extracting $(basename "$FROM")"
   tar -C "$WORK" -xf "$FROM"
-  mv "$WORK/firefox" "$WORK/emberfox"
+  mv "$WORK/firefox" "$WORK/ignifox"
 fi
-INST="$WORK/emberfox"
+INST="$WORK/ignifox"
 FFVER=$(sed -n 's/^Version=//p' "$INST/application.ini" | head -1)
 [[ -n "$FFVER" ]] || die "can't read Firefox version from application.ini"
 
-msg "Rebranding Firefox $FFVER -> Emberfox"
-python3 "$EMBER_ROOT/tools/brandify.py" omni "$INST"
+msg "Rebranding Firefox $FFVER -> Ignifox"
+python3 "$IGNI_ROOT/tools/brandify.py" omni "$INST"
 
-install_ember "$INST"
+install_ignifox "$INST"
 
-VERSION="$FFVER-$EMBER_SUFFIX"
-echo "$VERSION" > "$INST/EMBERFOX_VERSION"
+VERSION="$FFVER-$IGNI_SUFFIX"
+echo "$VERSION" > "$INST/IGNIFOX_VERSION"
 make_tarball "$INST" "$VERSION" "$ARCH"
-msg "Emberfox $VERSION ready in $DIST_DIR"
+msg "Ignifox $VERSION ready in $DIST_DIR"

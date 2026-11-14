@@ -2,20 +2,20 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-// Emberfox branding + default preferences.
+// Ignifox branding + default preferences.
 // Baked into the browser as the branding pref file (replaces firefox-branding.js).
-// Everything here is a *default*: users can change it in Settings or Ember Studio.
-// The non-negotiable telemetry kill-switches are locked separately in emberfox.cfg.
+// Everything here is a *default*: users can change it in Settings or Ignifox Studio.
+// The non-negotiable telemetry kill-switches are locked separately in ignifox.cfg.
 
 // ------------------------------------------------------------- branding
 pref("startup.homepage_override_url", "");
-pref("startup.homepage_welcome_url", "about:ember#welcome");
+pref("startup.homepage_welcome_url", "about:ignifox#welcome");
 pref("startup.homepage_welcome_url.additional", "");
-pref("app.update.url.manual", "https://github.com/rxvy-dev/emberfox/releases");
-pref("app.update.url.details", "https://github.com/rxvy-dev/emberfox/releases");
-pref("app.releaseNotesURL", "https://github.com/rxvy-dev/emberfox/releases");
-pref("app.releaseNotesURL.aboutDialog", "https://github.com/rxvy-dev/emberfox/releases");
-pref("app.releaseNotesURL.prompt", "https://github.com/rxvy-dev/emberfox/releases");
+pref("app.update.url.manual", "https://github.com/rxvy-dev/ignifox/releases");
+pref("app.update.url.details", "https://github.com/rxvy-dev/ignifox/releases");
+pref("app.releaseNotesURL", "https://github.com/rxvy-dev/ignifox/releases");
+pref("app.releaseNotesURL.aboutDialog", "https://github.com/rxvy-dev/ignifox/releases");
+pref("app.releaseNotesURL.prompt", "https://github.com/rxvy-dev/ignifox/releases");
 pref("app.update.interval", 86400);
 pref("app.update.promptWaitTime", 691200);
 pref("app.update.checkInstallTime.days", 63);

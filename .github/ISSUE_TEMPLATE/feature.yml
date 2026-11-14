@@ -1,5 +1,5 @@
 name: Feature idea
-description: Suggest something for Emberfox or Ember Studio
+description: Suggest something for Ignifox or Ignifox Studio
 labels: [enhancement]
 body:
   - type: textarea
@@ -12,4 +12,4 @@ body:
     id: area
     attributes:
       label: Area
-      options: [Ember Studio – look & color, Ember Studio – placement, Privacy, Packaging / a distro, Something else]
+      options: [Ignifox Studio – look & color, Ignifox Studio – placement, Privacy, Packaging / a distro, Something else]

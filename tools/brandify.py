@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Emberfox brandify: swap Firefox branding for Emberfox branding.
+"""Ignifox brandify: swap Firefox branding for Ignifox branding.
 
   brandify.py dir  <branding-dir>    rebrand a branding directory in place
-                                     (source tree: browser/branding/emberfox)
+                                     (source tree: browser/branding/ignifox)
   brandify.py omni <install-dir>     rebrand an installed/extracted Firefox
                                      (rewrites browser/omni.ja + window icons)
 
@@ -27,7 +27,7 @@ TEXT_FILES = {
     "brand.ftl": os.path.join(B, "brand.ftl"),
     "brand.properties": os.path.join(B, "brand.properties"),
     "aboutDialog.css": os.path.join(B, "aboutDialog.css"),
-    "firefox-branding.js": os.path.join(B, "emberfox-branding.js"),
+    "firefox-branding.js": os.path.join(B, "ignifox-branding.js"),
     "configure.sh": os.path.join(B, "configure.sh"),
 }
 

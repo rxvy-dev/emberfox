@@ -1,33 +1,33 @@
 # Arch / EndeavourOS / Manjaro / CachyOS / Garuda
 # Maintainer: rxvy
-pkgname=emberfox-bin
+pkgname=ignifox-bin
 pkgver=160.0
 _emrel=1
 pkgrel=1
 pkgdesc="Telemetry-free, deeply customizable browser built on Firefox"
 arch=('x86_64' 'aarch64')
-url="https://github.com/rxvy-dev/emberfox"
+url="https://github.com/rxvy-dev/ignifox"
 license=('MPL-2.0')
 depends=('gtk3' 'libxt' 'dbus-glib' 'alsa-lib' 'nss' 'ttf-font')
 optdepends=('pulse-native-provider: audio'
             'ffmpeg: video playback'
             'libva-nvidia-driver: hardware video decoding on NVIDIA'
             'libva-mesa-driver: hardware video decoding on AMD/Intel')
-provides=('emberfox')
-conflicts=('emberfox')
+provides=('ignifox')
+conflicts=('ignifox')
 options=('!strip' '!debug')
-source_x86_64=("$url/releases/download/v$pkgver-$_emrel/emberfox-$pkgver-$_emrel-linux-x86_64.tar.xz")
-source_aarch64=("$url/releases/download/v$pkgver-$_emrel/emberfox-$pkgver-$_emrel-linux-aarch64.tar.xz")
+source_x86_64=("$url/releases/download/v$pkgver-$_emrel/ignifox-$pkgver-$_emrel-linux-x86_64.tar.xz")
+source_aarch64=("$url/releases/download/v$pkgver-$_emrel/ignifox-$pkgver-$_emrel-linux-aarch64.tar.xz")
 sha256sums_x86_64=('897501d993c6b49e4b5dbf038e449d1e5b8d70bb223199d74f447e71ec3125fa')
 sha256sums_aarch64=('f6a477c37ad69feb88ccef47ebdeb93a24a549005ec875abb4f4c27790a1fc0c')
 
 package() {
   install -d "$pkgdir/opt" "$pkgdir/usr/bin"
-  cp -a emberfox "$pkgdir/opt/emberfox"
-  rm -f "$pkgdir/opt/emberfox/install.sh"
-  ln -s /opt/emberfox/emberfox "$pkgdir/usr/bin/emberfox"
-  sed 's|^Exec=emberfox|Exec=/usr/bin/emberfox|' emberfox/emberfox.desktop |
-    install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/emberfox.desktop"
-  cp -r emberfox/icons "$pkgdir/usr/share/icons"
-  install -Dm644 emberfox/LICENSE.emberfox "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  cp -a ignifox "$pkgdir/opt/ignifox"
+  rm -f "$pkgdir/opt/ignifox/install.sh"
+  ln -s /opt/ignifox/ignifox "$pkgdir/usr/bin/ignifox"
+  sed 's|^Exec=ignifox|Exec=/usr/bin/ignifox|' ignifox/ignifox.desktop |
+    install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/ignifox.desktop"
+  cp -r ignifox/icons "$pkgdir/usr/share/icons"
+  install -Dm644 ignifox/LICENSE.ignifox "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

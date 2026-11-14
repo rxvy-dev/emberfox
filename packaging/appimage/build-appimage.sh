@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # AppImage: one file, runs on any glibc distro without installing.
-#   build-appimage.sh dist/emberfox-<ver>-linux-<arch>.tar.xz
+#   build-appimage.sh dist/ignifox-<ver>-linux-<arch>.tar.xz
 source "$(dirname "$0")/../../scripts/lib.sh"
 need tar curl
-TB="${1:?usage: build-appimage.sh <emberfox tarball>}"
-VER=$(basename "$TB" | sed -E 's/^emberfox-(.*)-linux-.*/\1/')
+TB="${1:?usage: build-appimage.sh <ignifox tarball>}"
+VER=$(basename "$TB" | sed -E 's/^ignifox-(.*)-linux-.*/\1/')
 ARCH=$(basename "$TB" | sed -E 's/.*-linux-([a-z0-9_]+)\.tar.*/\1/')
-APPDIR="$BUILD_DIR/appimage/Emberfox.AppDir"
+APPDIR="$BUILD_DIR/appimage/Ignifox.AppDir"
 rm -rf "$APPDIR"; mkdir -p "$APPDIR/usr/lib"
 tar -C "$APPDIR/usr/lib" -xf "$TB"
-rm -f "$APPDIR/usr/lib/emberfox/install.sh"
-cp "$APPDIR/usr/lib/emberfox/emberfox.desktop" "$APPDIR/emberfox.desktop"
-cp "$EMBER_ROOT/branding/icons/default256.png" "$APPDIR/emberfox.png"
-ln -s emberfox.png "$APPDIR/.DirIcon"
+rm -f "$APPDIR/usr/lib/ignifox/install.sh"
+cp "$APPDIR/usr/lib/ignifox/ignifox.desktop" "$APPDIR/ignifox.desktop"
+cp "$IGNI_ROOT/branding/icons/default256.png" "$APPDIR/ignifox.png"
+ln -s ignifox.png "$APPDIR/.DirIcon"
 cat > "$APPDIR/AppRun" <<'RUN'
 #!/bin/sh
 HERE=$(dirname "$(readlink -f "$0")")
-exec "$HERE/usr/lib/emberfox/emberfox" "$@"
+exec "$HERE/usr/lib/ignifox/ignifox" "$@"
 RUN
 chmod 755 "$APPDIR/AppRun"
 
@@ -29,7 +29,7 @@ if [[ ! -x "$TOOL" ]]; then
   chmod +x "$TOOL"
 fi
 mkdir -p "$DIST_DIR"
-OUT="$DIST_DIR/Emberfox-$VER-$ARCH.AppImage"
+OUT="$DIST_DIR/Ignifox-$VER-$ARCH.AppImage"
 export ARCH
 "$TOOL" --appimage-extract-and-run --no-appstream "$APPDIR" "$OUT"
 msg "Built $OUT"

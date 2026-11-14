@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Full build from Mozilla source (1–3 h on a 16-thread machine, ~40 GB disk,
-# 16+ GB RAM recommended). Produces a native "emberfox" binary with telemetry,
-# crash reporter and updater compiled out, then adds the same Ember layer the
+# 16+ GB RAM recommended). Produces a native "ignifox" binary with telemetry,
+# crash reporter and updater compiled out, then adds the same Ignifox layer the
 # repack uses.
 #
 #   source-build.sh [--version 160.0.1] [--lto] [--pgo] [--src DIR] [--git]
@@ -46,24 +46,24 @@ if [[ ! -f "$SRC/mach" ]]; then
 fi
 
 # ---- 2. branding: start from Mozilla's unofficial branding, overlay ours
-msg "Installing Emberfox branding"
-BR="$SRC/browser/branding/emberfox"
+msg "Installing Ignifox branding"
+BR="$SRC/browser/branding/ignifox"
 rm -rf "$BR"
 cp -r "$SRC/browser/branding/unofficial" "$BR"
-python3 "$EMBER_ROOT/tools/brandify.py" dir "$BR"
+python3 "$IGNI_ROOT/tools/brandify.py" dir "$BR"
 for s in 16 22 24 32 48 64 128 256; do
-  cp "$EMBER_ROOT/branding/icons/default$s.png" "$BR/default$s.png"
+  cp "$IGNI_ROOT/branding/icons/default$s.png" "$BR/default$s.png"
 done
 
-# ---- 3. patches (optional extras; Emberfox's core needs none)
+# ---- 3. patches (optional extras; Ignifox's core needs none)
 shopt -s nullglob
-for p in "$EMBER_ROOT"/patches/*.patch; do
+for p in "$IGNI_ROOT"/patches/*.patch; do
   msg "Applying $(basename "$p")"
   patch -d "$SRC" -p1 --forward --batch < "$p" || die "patch failed: $p"
 done
 
 # ---- 4. mozconfig
-cp "$EMBER_ROOT/mozconfig" "$SRC/mozconfig"
+cp "$IGNI_ROOT/mozconfig" "$SRC/mozconfig"
 ((LTO)) && echo 'ac_add_options --enable-lto=cross' >> "$SRC/mozconfig"
 ((PGO)) && echo 'ac_add_options MOZ_PGO=1' >> "$SRC/mozconfig"
 
@@ -77,13 +77,13 @@ msg "Building (this is the long part)"
 ./mach build
 ./mach package
 
-# ---- 6. Ember layer + tarball (same as repack)
-PKG=$(ls obj-emberfox/dist/emberfox-*.tar.* | head -1)
+# ---- 6. Ignifox layer + tarball (same as repack)
+PKG=$(ls obj-ignifox/dist/ignifox-*.tar.* | head -1)
 WORK="$BUILD_DIR/source-pkg"; rm -rf "$WORK"; mkdir -p "$WORK"
 tar -C "$WORK" -xf "$PKG"
-INST="$WORK/emberfox"
-install_ember "$INST"
-VERSION="$VER-$EMBER_SUFFIX"
-echo "$VERSION" > "$INST/EMBERFOX_VERSION"
+INST="$WORK/ignifox"
+install_ignifox "$INST"
+VERSION="$VER-$IGNI_SUFFIX"
+echo "$VERSION" > "$INST/IGNIFOX_VERSION"
 make_tarball "$INST" "$VERSION-src" "$ARCH"
-msg "Source-built Emberfox $VERSION ready in $DIST_DIR"
+msg "Source-built Ignifox $VERSION ready in $DIST_DIR"

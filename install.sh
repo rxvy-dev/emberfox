@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Emberfox installer: graphical installer for every Linux distro.
+# Ignifox installer: graphical installer for every Linux distro.
 #
-#   curl -fsSL https://raw.githubusercontent.com/rxvy-dev/emberfox/main/install.sh | bash
-#   wget -qO-  https://raw.githubusercontent.com/rxvy-dev/emberfox/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/rxvy-dev/ignifox/main/install.sh | bash
+#   wget -qO-  https://raw.githubusercontent.com/rxvy-dev/ignifox/main/install.sh | bash
 #
 # Opens a GUI (zenity on GNOME/GTK desktops, kdialog on KDE). Falls back to a
 # terminal UI (whiptail/dialog) or plain prompts when no GUI toolkit is around.
@@ -11,14 +11,14 @@
 #   --user        install just for you (no password)      --system   for everyone
 #   --flatpak     install the Flatpak                     --uninstall
 #   --cli         force the terminal UI                   --yes      accept defaults, no questions
-#   --no-launch   don't start Emberfox at the end         --version vX.Y-N   a specific release
+#   --no-launch   don't start Ignifox at the end         --version vX.Y-N   a specific release
 set -euo pipefail
 
-REPO="rxvy-dev/emberfox"
+REPO="rxvy-dev/ignifox"
 RAW="https://raw.githubusercontent.com/$REPO/main"
 API="https://api.github.com/repos/$REPO/releases"
-TITLE="Emberfox Installer"
-TMP="$(mktemp -d "${TMPDIR:-/tmp}/emberfox-install.XXXXXX")"
+TITLE="Ignifox Installer"
+TMP="$(mktemp -d "${TMPDIR:-/tmp}/ignifox-install.XXXXXX")"
 # A closed progress window must never kill the installer (SIGPIPE): writes just fail.
 trap '' PIPE
 # GTK dialogs reject non-ASCII arguments under a non-UTF-8 locale; make sure we have one.
@@ -56,7 +56,7 @@ elif command -v wget >/dev/null 2>&1; then
   fetch_out() { wget -q --tries=3 -O- "$1"; }
   final_url() { wget -q -O /dev/null --server-response "$1" 2>&1 | awk 'tolower($1)=="location:"{u=$2} END{print u}' | tr -d '\r'; }
 else
-  echo "Emberfox installer needs curl or wget." >&2; exit 1
+  echo "Ignifox installer needs curl or wget." >&2; exit 1
 fi
 
 # ------------------------------------------------------------------- UI
@@ -65,7 +65,7 @@ have() { command -v "$1" >/dev/null 2>&1; }
 gui_session() { [[ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]]; }
 has_tty() { [[ -r $TTY && -w $TTY ]] && (: <"$TTY") 2>/dev/null; }
 
-# Dark installer windows to match Emberfox (libadwaita/zenity 4, and GTK3 zenity/yad).
+# Dark installer windows to match Ignifox (libadwaita/zenity 4, and GTK3 zenity/yad).
 export ADW_DEBUG_COLOR_SCHEME="${ADW_DEBUG_COLOR_SCHEME:-prefer-dark}"
 export GTK_THEME="${GTK_THEME:-Adwaita:dark}"
 
@@ -79,7 +79,7 @@ elif ((ASSUME_YES)); then UI=none
 else echo "No GUI, terminal or --yes: nothing to ask questions with." >&2; exit 1
 fi
 
-ICON="$TMP/emberfox.png"
+ICON="$TMP/ignifox.png"
 fetch "$RAW/branding/icons/default128.png" "$ICON" 2>/dev/null || ICON=""
 ZOPTS=(--title="$TITLE" --width=560)
 if [[ $UI == zenity && -n $ICON ]]; then
@@ -247,25 +247,25 @@ download() {
 case "$(uname -m)" in
   x86_64|amd64) ARCH=x86_64 ;;
   aarch64|arm64) ARCH=aarch64 ;;
-  *) die "Emberfox runs on x86_64 and ARM64 (aarch64). This machine is $(uname -m)." ;;
+  *) die "Ignifox runs on x86_64 and ARM64 (aarch64). This machine is $(uname -m)." ;;
 esac
 MUSL=0
 if ldd --version 2>&1 | grep -qi musl || [[ -e /lib/ld-musl-x86_64.so.1 || -e /lib/ld-musl-aarch64.so.1 ]]; then MUSL=1; fi
 DISTRO="$( (. /etc/os-release 2>/dev/null && echo "${PRETTY_NAME:-$NAME}") || uname -s)"
 
-USER_PREFIX="$HOME/.local/opt/emberfox"
-SYS_PREFIX="/opt/emberfox"
+USER_PREFIX="$HOME/.local/opt/ignifox"
+SYS_PREFIX="/opt/ignifox"
 installed_where() {
-  if [[ -f $SYS_PREFIX/EMBERFOX_VERSION ]]; then echo system
-  elif [[ -f $USER_PREFIX/EMBERFOX_VERSION ]]; then echo user
-  elif have flatpak && flatpak info dev.rxvy.Emberfox >/dev/null 2>&1; then echo flatpak
+  if [[ -f $SYS_PREFIX/IGNIFOX_VERSION ]]; then echo system
+  elif [[ -f $USER_PREFIX/IGNIFOX_VERSION ]]; then echo user
+  elif have flatpak && flatpak info dev.rxvy.Ignifox >/dev/null 2>&1; then echo flatpak
   fi
 }
 installed_version() {
   case "$1" in
-    system) cat "$SYS_PREFIX/EMBERFOX_VERSION" ;;
-    user) cat "$USER_PREFIX/EMBERFOX_VERSION" ;;
-    flatpak) flatpak info dev.rxvy.Emberfox 2>/dev/null | awk -F': *' '/Version/{print $2; exit}' ;;
+    system) cat "$SYS_PREFIX/IGNIFOX_VERSION" ;;
+    user) cat "$USER_PREFIX/IGNIFOX_VERSION" ;;
+    flatpak) flatpak info dev.rxvy.Ignifox 2>/dev/null | awk -F': *' '/Version/{print $2; exit}' ;;
   esac
 }
 
@@ -277,7 +277,7 @@ as_root() {
     if [[ $UI == zenity ]]; then
       printf '#!/bin/sh\nexec zenity --password --title="%s" 2>/dev/null\n' "$TITLE" >"$ask"
     else
-      printf '#!/bin/sh\nexec kdialog --title "%s" --password "Your password is needed to install Emberfox for everyone."\n' "$TITLE" >"$ask"
+      printf '#!/bin/sh\nexec kdialog --title "%s" --password "Your password is needed to install Ignifox for everyone."\n' "$TITLE" >"$ask"
     fi
     chmod 700 "$ask"
     SUDO_ASKPASS="$ask" sudo -A "$@"
@@ -310,18 +310,18 @@ resolve_release() {
     : >"$ASSETS"
     # GitHub sends /releases/latest to plain /releases when nothing is published yet.
     if [[ -z $TAG && $where == */releases ]]; then
-      die "Emberfox hasn't published a release yet.\n\nThe first build is on its way. Try again soon, or watch https://github.com/$REPO/releases"
+      die "Ignifox hasn't published a release yet.\n\nThe first build is on its way. Try again soon, or watch https://github.com/$REPO/releases"
     fi
   fi
-  [[ -n $TAG ]] || die "Couldn't reach GitHub to find the latest Emberfox release.\n\nCheck your internet connection, or see https://github.com/$REPO/releases"
+  [[ -n $TAG ]] || die "Couldn't reach GitHub to find the latest Ignifox release.\n\nCheck your internet connection, or see https://github.com/$REPO/releases"
 }
 asset() {   # asset NAME -> "size<TAB>url" (url built from tag if the API listing is missing)
   local line; line=$(awk -F'\t' -v n="$1" '$1==n{print $2 "\t" $3; exit}' "$ASSETS")
   [[ -n $line ]] && echo "$line" || printf '0\thttps://github.com/%s/releases/download/%s/%s\n' "$REPO" "$TAG" "$1"
 }
 
-if [[ -n ${EMBERFOX_TARBALL:-} ]]; then          # testing hook: install a local build
-  TAG="v$(basename "$EMBERFOX_TARBALL" | sed -E 's/^emberfox-(.*)-linux-.*/\1/')"
+if [[ -n ${IGNIFOX_TARBALL:-} ]]; then          # testing hook: install a local build
+  TAG="v$(basename "$IGNIFOX_TARBALL" | sed -E 's/^ignifox-(.*)-linux-.*/\1/')"
 else
   resolve_release
 fi
@@ -333,15 +333,15 @@ do_uninstall() {
   case "$where" in
     system) as_root "$SYS_PREFIX/install.sh" --uninstall ;;
     user) "$USER_PREFIX/install.sh" --uninstall --user ;;
-    flatpak) flatpak uninstall -y --noninteractive dev.rxvy.Emberfox ;;
+    flatpak) flatpak uninstall -y --noninteractive dev.rxvy.Ignifox ;;
   esac >/dev/null
-  ui_info "<b>Emberfox has been removed.</b>\n\nYour bookmarks, passwords and settings are kept in your profile in case you come back."
+  ui_info "<b>Ignifox has been removed.</b>\n\nYour bookmarks, passwords and settings are kept in your profile in case you come back."
 }
 
 WHERE="$(installed_where || true)"
 if [[ $ACTION == uninstall ]]; then
-  [[ -n $WHERE ]] || die "Emberfox isn't installed."
-  ui_yesno "Remove Emberfox $(installed_version "$WHERE") ($WHERE install)?" "Remove" "Cancel" || exit 0
+  [[ -n $WHERE ]] || die "Ignifox isn't installed."
+  ui_yesno "Remove Ignifox $(installed_version "$WHERE") ($WHERE install)?" "Remove" "Cancel" || exit 0
   do_uninstall "$WHERE"; exit 0
 fi
 
@@ -349,11 +349,11 @@ fi
 if [[ -n $WHERE ]]; then
   CUR="$(installed_version "$WHERE" || true)"
   if [[ $CUR == "$VER" ]]; then
-    PICK=$(ui_choice "<b>Emberfox $CUR is installed and up to date.</b>" \
-      "reinstall|Reinstall Emberfox $VER|on" "uninstall|Uninstall Emberfox|off" "quit|Close|off") || exit 0
+    PICK=$(ui_choice "<b>Ignifox $CUR is installed and up to date.</b>" \
+      "reinstall|Reinstall Ignifox $VER|on" "uninstall|Uninstall Ignifox|off" "quit|Close|off") || exit 0
   else
-    PICK=$(ui_choice "<b>Emberfox ${CUR:-?} is installed.</b> Version <b>$VER</b> is available." \
-      "update|Update to $VER|on" "uninstall|Uninstall Emberfox|off" "quit|Close|off") || exit 0
+    PICK=$(ui_choice "<b>Ignifox ${CUR:-?} is installed.</b> Version <b>$VER</b> is available." \
+      "update|Update to $VER|on" "uninstall|Uninstall Ignifox|off" "quit|Close|off") || exit 0
   fi
   case "$PICK" in
     uninstall) do_uninstall "$WHERE"; exit 0 ;;
@@ -361,11 +361,11 @@ if [[ -n $WHERE ]]; then
     *) exit 0 ;;
   esac
 else
-  ui_yesno "<span size='x-large'><b>Welcome to Emberfox $VER</b></span>
+  ui_yesno "<span size='x-large'><b>Welcome to Ignifox $VER</b></span>
 
-Firefox's engine with every telemetry and data-upload channel locked off, no ads or sponsored junk, and <b>Ember Studio</b> for themes, colors and moving the whole UI around.
+Firefox's engine with every telemetry and data-upload channel locked off, no ads or sponsored junk, and <b>Ignifox Studio</b> for themes, colors and moving the whole UI around.
 
-This will install Emberfox on <b>$DISTRO</b> ($ARCH)." "Install" "Cancel" || exit 0
+This will install Ignifox on <b>$DISTRO</b> ($ARCH)." "Install" "Cancel" || exit 0
 fi
 
 # ---------------------------------------------------------- where to go
@@ -377,34 +377,34 @@ if [[ -z $MODE ]]; then
     OPTS=("user|Just for me: no password needed (~/.local)|on"
           "system|For everyone on this computer: asks for your password (/opt)|off")
     have flatpak && OPTS+=("flatpak|Flatpak: sandboxed, updates with your other Flatpaks|off")
-    MODE=$(ui_choice "<b>How should Emberfox be installed?</b>" "${OPTS[@]}") || exit 0
+    MODE=$(ui_choice "<b>How should Ignifox be installed?</b>" "${OPTS[@]}") || exit 0
     [[ -n $MODE ]] || exit 0
   fi
 fi
 
 EXTRAS=$(ui_checklist "<b>Finishing touches</b>" \
-  "default|Make Emberfox my default browser|on" \
-  "launch|Open Emberfox when the install finishes|$([[ $LAUNCH == 1 ]] && echo on || echo off)") || EXTRAS=""
+  "default|Make Ignifox my default browser|on" \
+  "launch|Open Ignifox when the install finishes|$([[ $LAUNCH == 1 ]] && echo on || echo off)") || EXTRAS=""
 
 # -------------------------------------------------------------- install
-progress_start "Installing Emberfox $VER..."
+progress_start "Installing Ignifox $VER..."
 
 if [[ $MODE == flatpak ]]; then
-  NAME="Emberfox-$VER-$ARCH.flatpak"
+  NAME="Ignifox-$VER-$ARCH.flatpak"
   IFS=$'\t' read -r SIZE URL < <(asset "$NAME")
-  download "$URL" "$TMP/$NAME" "$SIZE" 0 70 "Downloading Emberfox" || { progress_end; die "Download failed:\n$URL"; }
+  download "$URL" "$TMP/$NAME" "$SIZE" 0 70 "Downloading Ignifox" || { progress_end; die "Download failed:\n$URL"; }
   progress 75 "Adding Flathub (for the runtime)"
   flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo >/dev/null 2>&1 || true
   progress 80 "Installing Flatpak (first time can take a few minutes)"
   flatpak install --user -y --noninteractive "$TMP/$NAME" >/dev/null 2>&1 || { progress_end; die "Flatpak install failed. Try: flatpak install --user $NAME"; }
-  DESKTOP_ID="dev.rxvy.Emberfox.desktop"; RUN=(flatpak run dev.rxvy.Emberfox)
+  DESKTOP_ID="dev.rxvy.Ignifox.desktop"; RUN=(flatpak run dev.rxvy.Ignifox)
 else
-  NAME="emberfox-$VER-linux-$ARCH.tar.xz"
-  if [[ -n ${EMBERFOX_TARBALL:-} ]]; then
-    cp "$EMBERFOX_TARBALL" "$TMP/$NAME"; progress 60 "Using local build"
+  NAME="ignifox-$VER-linux-$ARCH.tar.xz"
+  if [[ -n ${IGNIFOX_TARBALL:-} ]]; then
+    cp "$IGNIFOX_TARBALL" "$TMP/$NAME"; progress 60 "Using local build"
   else
     IFS=$'\t' read -r SIZE URL < <(asset "$NAME")
-    download "$URL" "$TMP/$NAME" "$SIZE" 0 60 "Downloading Emberfox" || { progress_end; die "Download failed:\n$URL"; }
+    download "$URL" "$TMP/$NAME" "$SIZE" 0 60 "Downloading Ignifox" || { progress_end; die "Download failed:\n$URL"; }
     progress 62 "Verifying checksum"
     IFS=$'\t' read -r _ SUMURL < <(asset SHA256SUMS)
     if fetch "$SUMURL" "$TMP/SHA256SUMS" 2>/dev/null; then
@@ -417,14 +417,46 @@ else
   tar -C "$TMP" -xJf "$TMP/$NAME" || { progress_end; die "Couldn't unpack the download (is xz installed?)."; }
   progress 85 "Installing"
   if [[ $MODE == system ]]; then
-    as_root "$TMP/emberfox/install.sh" >/dev/null || { progress_end; die "Install for everyone failed (wrong password?)."; }
-    RUN=(/usr/local/bin/emberfox)
+    as_root "$TMP/ignifox/install.sh" >/dev/null || { progress_end; die "Install for everyone failed (wrong password?)."; }
+    RUN=(/usr/local/bin/ignifox)
   else
-    "$TMP/emberfox/install.sh" --user >/dev/null || { progress_end; die "Install failed."; }
-    RUN=("$HOME/.local/bin/emberfox")
+    "$TMP/ignifox/install.sh" --user >/dev/null || { progress_end; die "Install failed."; }
+    RUN=("$HOME/.local/bin/ignifox")
   fi
-  DESKTOP_ID="emberfox.desktop"
+  DESKTOP_ID="ignifox.desktop"
 fi
+
+# ------------------------------------------------- migrate from Emberfox
+# Ignifox was called Emberfox in its first release. Remove the old install and
+# carry the profile (bookmarks, logins, Studio settings) over.
+migrate_emberfox() {
+  local moved=0 d new p
+  if [[ -x /opt/emberfox/install.sh ]]; then as_root /opt/emberfox/install.sh --uninstall >/dev/null 2>&1 || true; moved=1; fi
+  if [[ -x $HOME/.local/opt/emberfox/install.sh ]]; then "$HOME/.local/opt/emberfox/install.sh" --uninstall --user >/dev/null 2>&1 || true; moved=1; fi
+  if have flatpak && flatpak info dev.rxvy.Emberfox >/dev/null 2>&1; then
+    flatpak uninstall -y --noninteractive dev.rxvy.Emberfox >/dev/null 2>&1 || true; moved=1
+  fi
+  for d in "$HOME/.emberfox" "${XDG_CONFIG_HOME:-$HOME/.config}/emberfox" "${XDG_DATA_HOME:-$HOME/.local/share}/emberfox" \
+           "$HOME/.var/app/dev.rxvy.Emberfox"; do
+    [[ -d $d ]] || continue
+    new="${d//emberfox/ignifox}"; new="${new//Emberfox/Ignifox}"
+    [[ -e $new ]] && continue
+    mv "$d" "$new" && moved=1
+    [[ -d $new/emberfox ]] && mv "$new/emberfox" "$new/ignifox"
+    [[ -d $new/.emberfox ]] && mv "$new/.emberfox" "$new/.ignifox"
+  done
+  # Studio settings were named ember.* ; the default theme was "ember".
+  while IFS= read -r -d '' p; do
+    sed -i -e 's/^user_pref("ember\./user_pref("ignifox./' \
+           -e 's/^user_pref("ignifox\.theme\.preset", "ember")/user_pref("ignifox.theme.preset", "ignis")/' \
+           -e 's/^user_pref("ignifox\.fx\.emberStrip"/user_pref("ignifox.fx.accentStrip"/' "$p" 2>/dev/null || true
+  done < <(find "$HOME/.ignifox" "${XDG_CONFIG_HOME:-$HOME/.config}/ignifox" "$HOME/.var/app/dev.rxvy.Ignifox" \
+              -maxdepth 4 -name prefs.js -print0 2>/dev/null)
+  return $((moved ? 0 : 1))
+}
+progress 92 "Checking for an older Emberfox install"
+MIGRATED=0
+if migrate_emberfox; then MIGRATED=1; fi
 
 if [[ " $EXTRAS " == *" default "* ]]; then
   progress 95 "Setting default browser"
@@ -437,15 +469,15 @@ progress_end
 
 # ------------------------------------------------------------------ done
 if [[ " $EXTRAS " == *" launch "* ]]; then
-  ui_info "<span size='large'><b>Emberfox $VER is installed. 🔥</b></span>
+  ui_info "<span size='large'><b>Ignifox $VER is installed. 🔥</b></span>
 
-It's in your app menu. Opening it now: the welcome screen walks you through themes, layout and privacy.
+$( ((MIGRATED)) && echo "Your Emberfox install was replaced and your settings came along. ")It's in your app menu. Opening it now: the welcome screen walks you through themes, layout and privacy.
 
-Tip: <b>Ctrl+Alt+E</b> opens Ember Studio any time."
+Tip: <b>Ctrl+Alt+I</b> opens Ignifox Studio any time."
   (setsid -f "${RUN[@]}" >/dev/null 2>&1 || nohup "${RUN[@]}" >/dev/null 2>&1 &) || true
 else
-  ui_info "<span size='large'><b>Emberfox $VER is installed. 🔥</b></span>
+  ui_info "<span size='large'><b>Ignifox $VER is installed. 🔥</b></span>
 
-Find it in your app menu, or run <tt>${RUN[*]}</tt>.
-Tip: <b>Ctrl+Alt+E</b> opens Ember Studio any time."
+$( ((MIGRATED)) && echo "Your Emberfox install was replaced and your settings came along. ")Find it in your app menu, or run <tt>${RUN[*]}</tt>.
+Tip: <b>Ctrl+Alt+I</b> opens Ignifox Studio any time."
 fi

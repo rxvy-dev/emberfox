@@ -1,11 +1,11 @@
-# Emberfox mozconfig: Linux desktop release build.
+# Ignifox mozconfig: Linux desktop release build.
 # Used by scripts/source-build.sh (copied to <firefox-src>/mozconfig).
 
 ac_add_options --enable-application=browser
-ac_add_options --with-app-name=emberfox
-ac_add_options --with-app-basename=Emberfox
-ac_add_options --with-branding=browser/branding/emberfox
-ac_add_options --with-distribution-id=dev.rxvy.emberfox
+ac_add_options --with-app-name=ignifox
+ac_add_options --with-app-basename=Ignifox
+ac_add_options --with-branding=browser/branding/ignifox
+ac_add_options --with-distribution-id=dev.rxvy.ignifox
 
 ac_add_options --enable-release
 ac_add_options --enable-optimize
@@ -35,7 +35,7 @@ ac_add_options --enable-alsa
 ac_add_options --enable-pulseaudio
 ac_add_options --enable-jack
 
-mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-emberfox
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-ignifox
 
 # Optional speed-ups, switched on by source-build.sh flags:
 #   --lto  -> ac_add_options --enable-lto=cross

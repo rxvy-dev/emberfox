@@ -1,7 +1,7 @@
 name: Release
 
-# Builds Emberfox for x86_64 + aarch64 and publishes a GitHub Release.
-#  - push a tag like v160.0.1-1   (Firefox 160.0.1, Emberfox revision 1)
+# Builds Ignifox for x86_64 + aarch64 and publishes a GitHub Release.
+#  - push a tag like v160.0.1-1   (Firefox 160.0.1, Ignifox revision 1)
 #  - or run it by hand from the Actions tab
 #  - or let firefox-watch.yml call it when Mozilla ships a new Firefox
 
@@ -14,7 +14,7 @@ on:
         description: "Firefox version to build on (or 'latest')"
         default: latest
       revision:
-        description: "Emberfox revision on top of that Firefox (1, 2, …)"
+        description: "Ignifox revision on top of that Firefox (1, 2, …)"
         default: "1"
   workflow_call:
     inputs:
@@ -59,7 +59,7 @@ jobs:
           [[ "$FF" =~ ^[0-9]+(\.[0-9]+)+$ ]] || { echo "bad Firefox version '$FF'"; exit 1; }
           [[ "$REL" =~ ^[0-9]+$ ]] || { echo "bad revision '$REL'"; exit 1; }
           { echo "firefox=$FF"; echo "revision=$REL"; echo "version=$FF-$REL"; echo "tag=v$FF-$REL"; } >> "$GITHUB_OUTPUT"
-          echo "### Building Emberfox $FF-$REL" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Building Ignifox $FF-$REL" >> "$GITHUB_STEP_SUMMARY"
 
   build:
     name: Build ${{ matrix.arch }}
@@ -123,14 +123,14 @@ jobs:
 
       - name: Prepare manifest
         run: |
-          T=$(ls "$PWD"/dist/emberfox-*-linux-x86_64.tar.xz)
-          sed "s|EMBERFOX_TARBALL|$T|" packaging/flatpak/dev.rxvy.Emberfox.yml > dev.rxvy.Emberfox.yml
-          cp packaging/flatpak/dev.rxvy.Emberfox.metainfo.xml .
+          T=$(ls "$PWD"/dist/ignifox-*-linux-x86_64.tar.xz)
+          sed "s|IGNIFOX_TARBALL|$T|" packaging/flatpak/dev.rxvy.Ignifox.yml > dev.rxvy.Ignifox.yml
+          cp packaging/flatpak/dev.rxvy.Ignifox.metainfo.xml .
 
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          bundle: Emberfox-${{ needs.meta.outputs.version }}-x86_64.flatpak
-          manifest-path: dev.rxvy.Emberfox.yml
+          bundle: Ignifox-${{ needs.meta.outputs.version }}-x86_64.flatpak
+          manifest-path: dev.rxvy.Ignifox.yml
           upload-artifact: false
 
       - uses: actions/upload-artifact@v4
@@ -159,22 +159,22 @@ jobs:
           rm -f ./*.sha256
           sha256sum ./* | sed 's| \./| |' > SHA256SUMS
           cat > ../notes.md <<NOTES
-          Emberfox **$V**, built on **Firefox $FF** ([Firefox $FF release notes](https://www.firefox.com/en-US/firefox/$FF/releasenotes/), including its security fixes).
+          Ignifox **$V**, built on **Firefox $FF** ([Firefox $FF release notes](https://www.firefox.com/en-US/firefox/$FF/releasenotes/), including its security fixes).
 
           ### Download
 
           **Easiest:** paste into a terminal for the graphical installer:
           \`\`\`bash
-          curl -fsSL https://raw.githubusercontent.com/rxvy-dev/emberfox/main/install.sh | bash
+          curl -fsSL https://raw.githubusercontent.com/rxvy-dev/ignifox/main/install.sh | bash
           \`\`\`
 
           | You're on | Get |
           |---|---|
-          | Any Linux (glibc) | \`emberfox-$V-linux-x86_64.tar.xz\`, extract, run \`./install.sh\` (or \`--user\`) |
-          | Any Linux, no install | \`Emberfox-$V-x86_64.AppImage\` |
-          | Any Linux, sandboxed (incl. musl, immutable) | \`Emberfox-$V-x86_64.flatpak\` |
-          | Debian · Ubuntu · Mint · Pop!_OS | \`emberfox_${V}_amd64.deb\` |
-          | Fedora · openSUSE · RHEL | \`emberfox-*.x86_64.rpm\` |
+          | Any Linux (glibc) | \`ignifox-$V-linux-x86_64.tar.xz\`, extract, run \`./install.sh\` (or \`--user\`) |
+          | Any Linux, no install | \`Ignifox-$V-x86_64.AppImage\` |
+          | Any Linux, sandboxed (incl. musl, immutable) | \`Ignifox-$V-x86_64.flatpak\` |
+          | Debian · Ubuntu · Mint · Pop!_OS | \`ignifox_${V}_amd64.deb\` |
+          | Fedora · openSUSE · RHEL | \`ignifox-*.x86_64.rpm\` |
           | Arch / Void / Gentoo | recipes in \`packaging/\` (updated automatically) |
           | ARM64 (Pi 5, Asahi, Snapdragon) | the \`aarch64\` / \`arm64\` files |
 
@@ -185,7 +185,7 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.meta.outputs.tag }}
-          name: Emberfox ${{ needs.meta.outputs.version }}
+          name: Ignifox ${{ needs.meta.outputs.version }}
           body_path: notes.md
           target_commitish: ${{ github.sha }}
           files: dist/*
@@ -211,7 +211,7 @@ jobs:
 
       - name: Commit
         run: |
-          git config user.name "emberfox-bot"
+          git config user.name "ignifox-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A packaging
           if git diff --cached --quiet; then echo "recipes already current"; exit 0; fi

@@ -1,9 +1,9 @@
-/* Ember Studio page. Palette variables are pushed in by studio.js from the
- * active Ember theme, so Studio always wears the theme you've picked. */
+/* Ignifox Studio page. Palette variables are pushed in by studio.js from the
+ * active theme, so Studio always wears the theme you've picked. */
 
 @font-face {
   font-family: "Metal Mania";
-  src: url("chrome://ember/content/fonts/MetalMania-Regular.ttf");
+  src: url("chrome://ignifox/content/fonts/MetalMania-Regular.ttf");
 }
 
 :root {
