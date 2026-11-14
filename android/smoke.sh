@@ -64,6 +64,14 @@ adb shell input tap $((w - 350)) 185 >/dev/null 2>&1
 sleep 12
 shot 8-newtab-synthwave
 
+echo "Searching from the new tab page"
+adb shell input tap $((w / 2)) $((h * 52 / 100)) >/dev/null 2>&1
+sleep 3
+adb shell input text "ignifox" >/dev/null 2>&1
+adb shell input keyevent KEYCODE_ENTER >/dev/null 2>&1
+sleep 15
+shot 9-search
+
 timeout 60 adb logcat -d > "$out/logcat.txt" 2>/dev/null || true
 grep -E "FATAL EXCEPTION|AndroidRuntime: |IgnifoxPrefs|could not set" "$out/logcat.txt" | head -80 > "$out/problems.txt" || true
 

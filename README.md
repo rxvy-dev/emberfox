@@ -107,6 +107,8 @@ Ignifox for Android is the same idea on your phone: Mozilla's Gecko engine, no t
 and **Ignifox Studio** built in. It shares its themes and its new tab page with the Linux
 browser, so a theme code made on one works on the other.
 
+<p align="center"><img src="docs/android.png" width="98%" alt="Ignifox for Android: new tab, Synthwave theme with the toolbar on top, menu, Ignifox Studio"></p>
+
 **Get it:** download the APK from the [latest release](https://github.com/rxvy-dev/ignifox/releases/latest), open it, and allow your browser or file manager to install apps when Android asks.
 
 | Your phone | File |
@@ -126,6 +128,8 @@ Android 8 or newer. For automatic updates, add `https://github.com/rxvy-dev/igni
 | **Freedom** | No Google Play Services, Firebase or other closed libraries · any add-on from addons.mozilla.org · install add-ons from a file, unsigned ones if you allow it · `about:config` unlocked · zoom on every site |
 
 Trade-offs of shipping without Google's libraries: no passkeys and no casting, and websites can't send push notifications while the app is closed.
+
+**Signing (for whoever publishes releases):** without a key, each build is signed with a throwaway key and Android refuses to install it over an older build. To fix that once, create a key with `keytool -genkeypair -keystore ignifox.jks -alias ignifox -keyalg RSA -keysize 4096 -validity 10950`, then add three repository secrets under Settings → Secrets and variables → Actions: `ANDROID_KEYSTORE_B64` (output of `base64 -w0 ignifox.jks`), `ANDROID_KEYSTORE_PASSWORD` and `ANDROID_KEY_ALIAS` (`ignifox`). Keep the `.jks` file safe: updates must always be signed with the same key.
 
 The app lives in [`android/`](android/). It is built on Mozilla's open-source Android Components (the building blocks of Firefox for Android), starting from their reference browser. Build it yourself with `cd android && ./gradlew assembleNightly` (JDK 17+ and the Android SDK).
 
