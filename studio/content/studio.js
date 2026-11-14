@@ -4,8 +4,11 @@
  * browser window repaints immediately, no restart. */
 
 import * as M from "chrome://ignifox/content/prefs.sys.mjs";
+import * as D from "chrome://ignifox/content/data.sys.mjs";
 
 const { IgniBoot } = ChromeUtils.importESModule("chrome://ignifox/content/boot.sys.mjs");
+const Importer = ChromeUtils.importESModule("chrome://ignifox/content/importer.sys.mjs");
+const Fonts = ChromeUtils.importESModule("chrome://ignifox/content/fonts.sys.mjs");
 let CUI = null;
 try {
   ({ CustomizableUI: CUI } = ChromeUtils.importESModule(
@@ -318,17 +321,23 @@ const ICONS = {
   ai: "M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2zM19 16l1 2.5 2.5 1-2.5 1L19 23l-1-2.5-2.5-1 2.5-1z",
   css: "M8 4L2 12l6 8 1.6-1.2L4.5 12l5.1-6.8zM16 4l-1.6 1.2 5.1 6.8-5.1 6.8L16 20l6-8z",
   backup: "M12 3l5 5h-3v6h-4V8H7zM4 16h2v3h12v-3h2v5H4z",
+  fonts: "M4 20l6-16h2l6 16h-2.3l-1.6-4.5H7.9L6.3 20zm4.6-6.5h4.8L11 6.6z",
+  addons: "M10 2a2 2 0 012 2v1h4a1 1 0 011 1v4h1a2 2 0 110 4h-1v4a1 1 0 01-1 1h-4v-1a2 2 0 10-4 0v1H4a1 1 0 01-1-1v-4h1a2 2 0 100-4H3V6a1 1 0 011-1h4V4a2 2 0 012-2z",
+  import: "M12 3v10.6l3.3-3.3 1.4 1.4L11 17.4l-5.7-5.7 1.4-1.4 3.3 3.3V3zM4 19h14v2H4z",
   about: "M12 2a10 10 0 110 20 10 10 0 010-20zm-1 8v7h2v-7zm0-4v2h2V6z",
 };
 const SECTIONS = [
   ["look", "Look & Color", renderLook],
+  ["fonts", "Fonts", renderFonts],
   ["newtab", "New Tab", renderNewtab],
   ["search", "Search", renderSearch],
   ["placement", "Placement", renderPlacement],
   ["browsing", "Tabs & Browsing", renderBrowsing],
   ["privacy", "Privacy", renderPrivacy],
   ["ai", "AI Features", renderAI],
+  ["addons", "Add-ons", renderAddons],
   ["css", "Custom CSS", renderCSS],
+  ["import", "Import", renderImport],
   ["backup", "Backup & Reset", renderBackup],
   ["about", "About", renderAbout],
 ];
@@ -353,8 +362,14 @@ function renderLook() {
       toggle("ignifox.theme.respectAddonThemes", "Step aside for add-on themes", "If you install a theme from addons.mozilla.org, show it instead of Ignifox colors."),
       toggle("ignifox.theme.contentBg", "Tint blank pages", "New tabs and loading pages use the theme background instead of flashing white.")),
 
-    h("h2", {}, "Presets"),
+    h("h2", {}, "One-click looks"),
+    h("p", { class: "lede" }, "Each look changes the theme, tab layout, shapes and spacing together. Tweak anything after."),
+    looksPicker(),
+    h("h2", {}, "Themes"),
     themeGallery(),
+    h("div", { class: "btns", style: { marginTop: "12px" } },
+      h("button", { class: "btn", onclick: surpriseMe }, "🎲 Surprise me"),
+      h("span", { class: "val", style: { textAlign: "start" } }, "Random colors that are always readable. Keep it with Save as my theme below.")),
 
     h("h2", {}, "Quick accent"),
     card(colorPick("ignifox.theme.accent", "Accent color", "Keep the preset, just swap its highlight color (focus rings, glow, progress).")),
@@ -370,7 +385,13 @@ function renderLook() {
       toggle("ignifox.fx.progressBar", "Flame loading bar", "Animated accent line on tabs that are loading."),
       toggle("ui.prefersReducedMotion", "Reduce motion", "Turn off UI animations everywhere, including websites that respect it.", { on: 1, off: 0 })),
 
-    h("h2", {}, "Shape & type"),
+    h("h2", {}, "Tab strip background"),
+    card(
+      select("ignifox.frame.style", "Background", "What sits behind the tabs and toolbar.",
+        [["solid", "Solid theme color"], ["gradient", "Accent gradient"], ["image", "My own picture"]]),
+      row(null, "Picture", "A wide image works best, like a Firefox theme header.", [frameFile(), h("button", { class: "btn", onclick: () => document.getElementById("frame-file").click() }, "Choose a picture…")]),
+      range("ignifox.frame.dim", "Darken picture", "Keeps tab text readable.", 0, 90, 5, v => `${v}%`)),
+    h("h2", {}, "Shape"),
     card(
       range("ignifox.shape.radius", "Corner roundness", "Tabs, buttons, URL bar and menus.", 0, 20, 1, v => `${v}px`),
       select("ignifox.tabs.style", "Tab style", null,
@@ -387,13 +408,6 @@ function renderLook() {
       range("browser.tabs.tabMinWidth", "Tab minimum width", "Smaller = more tabs before scrolling.", 40, 250, 5, v => `${v}px`),
       range("ignifox.shape.tabMaxWidth", "Tab maximum width", null, 120, 500, 5, v => `${v}px`),
       select("browser.uidensity", "Density", "Compact trims padding across all toolbars.", [[0, "Normal"], [1, "Compact"]]),
-      text("ignifox.font.family", "Interface font", "Any installed font. Leave empty for your system font.", {
-        placeholder: "e.g. Inter, JetBrains Mono",
-        list: h("datalist", { id: "fonts" },
-          ["Inter", "Cantarell", "Noto Sans", "Ubuntu", "Fira Sans", "IBM Plex Sans", "JetBrains Mono", "Iosevka", "Hack", "monospace"]
-            .map(f => h("option", { value: f }))),
-      }),
-      range("ignifox.font.size", "Interface text size", "0 = system default.", 0, 20, 1, v => (v < 9 ? "auto" : `${v}px`)),
       select("layout.css.prefers-color-scheme.content-override", "Websites prefer", "What color scheme sites see when they offer light/dark versions.",
         [[0, "Dark"], [1, "Light"], [2, "Follow system"], [3, "Follow browser theme"]])),
   ];
@@ -834,6 +848,9 @@ function renderPlacement() {
     layoutPicker(),
     h("p", { class: "desc", style: { color: "var(--dim)", fontSize: "12px" } },
       "With tabs below the bar or hidden, window buttons move with the tab strip. Turn on the system title bar in Customize if you prefer them at the top."),
+    card(
+      toggle("ignifox.tabs.multirow", "Multi-row tabs", "Tabs wrap onto more rows instead of scrolling sideways. Experimental."),
+      range("ignifox.tabs.maxRows", "Rows before scrolling", null, 2, 8, 1, v => `${v}`)),
     h("h2", {}, "Bars & sidebar"),
     card(
       toggle("sidebar.position_start", "Sidebar on the left", "Turn off to dock the sidebar (and vertical tabs) on the right."),
@@ -860,6 +877,9 @@ function renderPlacement() {
       h("button", { class: "btn", onclick: () => browserWin()?.gCustomizeMode?.enter() }, "Open drag-and-drop customizer"),
       h("button", { class: "btn danger", onclick: () => { CUI?.reset(); toast("Toolbars reset"); } }, "Reset all toolbars")),
 
+    h("h2", {}, "Right-click menu"),
+    h("p", { class: "lede" }, "Tick what you never use and it disappears from right-click menus."),
+    menuCleanup(),
     h("h2", {}, "Hide things"),
     card(
       toggle("ignifox.hide.newTabButton", "New-tab (+) button", "Ctrl+T still works."),
@@ -1222,6 +1242,22 @@ function openWelcome() {
       h("img", { class: "logo", src: "chrome://ignifox/content/logo.svg", alt: "" }),
       h("h1", {}, "Welcome to Ignifox"),
       h("p", { class: "lede" }, "Firefox's engine with the telemetry ripped out and the customization turned all the way up. Three quick picks and you're done.")),
+    () => {
+      const box = h("div", { class: "step" }, h("h1", {}, "Coming from another browser?"),
+        h("p", { class: "lede" }, "Bring bookmarks, history, passwords, logins, tabs and extensions over in a minute."));
+      const list = h("div", { class: "btns", style: { justifyContent: "center" } }, h("span", { class: "val" }, "Looking…"));
+      Importer.findProfiles().then(pfs => {
+        const names = [...new Set(pfs.map(p => p.browser))];
+        list.replaceChildren(...(names.length
+          ? [h("p", { class: "lede", style: { width: "100%" } }, `Found: ${names.join(", ")}`),
+             h("button", { class: "btn primary", onclick: () => { finish(); location.hash = "#import"; } }, "Import now")]
+          : [h("span", { class: "val" }, "No Firefox-family browsers found. Chrome-family imports live in Studio → Import.")]),
+        h("button", { class: "btn", onclick: () => { finish(); location.hash = "#import"; } }, "Chrome, Brave, Edge…"));
+      }, () => list.replaceChildren());
+      box.append(list);
+      return box;
+    },
+    () => h("div", { class: "step" }, h("h1", {}, "Pick your look"), h("p", { class: "lede" }, "One click sets theme, tabs and shapes together. Everything stays tweakable."), looksPicker()),
     () => h("div", { class: "step" }, h("h1", {}, "Pick your fire"), h("p", { class: "lede" }, "You can tweak every color later."), themeGallery()),
     () => h("div", { class: "step" }, h("h1", {}, "Where do tabs go?"), layoutPicker()),
     () => h("div", { class: "step" }, h("h1", {}, "How private?"), h("p", { class: "lede" }, "Telemetry is off at every level. This is about how much you harden on top."), levelCards()),
@@ -1243,6 +1279,353 @@ function openWelcome() {
   }
   w.hidden = false;
   render();
+}
+
+// ============================================================ LOOKS etc.
+function applyLook(id) {
+  const look = D.LOOKS[id];
+  for (const [k, v] of Object.entries(look.prefs)) {
+    if (M.typeOf(k)) set(k, v);
+  }
+  toast(`${look.name} look applied`);
+}
+
+function looksPicker() {
+  const swatch = {
+    classic: ["ignis", "top"], zen: ["obsidian", "vertical"], arc: ["synthwave", "vertical"],
+    chrome: ["ash", "top"], minimal: ["void", "top"], hacker: ["toxic", "top"],
+  };
+  return h("div", { class: "looks" }, Object.entries(D.LOOKS).map(([id, look]) => {
+    const t = M.THEMES[swatch[id][0]];
+    const vertical = swatch[id][1] == "vertical";
+    return h("button", { class: "look", onclick: () => applyLook(id) },
+      h("div", { class: "look-pic", style: { background: t.bg } },
+        vertical ? h("i", { class: "lp-side", style: { background: t.bg2 } }) : h("i", { class: "lp-top", style: { background: t.bg2 } }),
+        h("i", { class: "lp-page" + (look.prefs["ignifox.layout.floatingContent"] ? " floating" : ""), style: { background: t.bg3, borderColor: t.accent + "55" } }),
+        h("i", { class: "lp-dot", style: { background: t.accent } })),
+      h("b", {}, look.name), h("small", {}, look.blurb));
+  }));
+}
+
+function surpriseMe() {
+  const p = D.randomPalette();
+  set("ignifox.theme.custom", JSON.stringify(p));
+  P.clearUserPref("ignifox.theme.accent");
+  set("ignifox.theme.preset", "custom");
+  toast("New colors rolled. Hit Surprise me again, or save them below");
+}
+
+function frameFile() {
+  const file = h("input", { id: "frame-file", type: "file", accept: "image/png,image/jpeg,image/webp,image/gif,image/avif", hidden: true });
+  file.addEventListener("change", async () => {
+    const f = file.files[0];
+    if (!f) return;
+    if (f.size > 30 * 1024 * 1024) { toast("That picture is over 30 MB"); return; }
+    try {
+      await IgniBoot.setFrameImage(new Uint8Array(await f.arrayBuffer()), f.name.split(".").pop());
+      toast("Tab strip picture set");
+    } catch (e) {
+      toast("Couldn't use that picture: " + e.message);
+    }
+    file.value = "";
+  });
+  return file;
+}
+
+function menuCleanup() {
+  const wrap = h("div", { class: "card" });
+  const keysNow = () => new Set(String(get("ignifox.menu.hide") || "").split(",").filter(Boolean));
+  for (const [key, item] of Object.entries(D.MENU_ITEMS)) {
+    const input = h("input", { type: "checkbox", role: "switch", "aria-label": `Hide ${item.label}` });
+    input.addEventListener("change", () => {
+      const k = keysNow();
+      input.checked ? k.add(key) : k.delete(key);
+      set("ignifox.menu.hide", [...k].join(","));
+    });
+    bind(() => { input.checked = keysNow().has(key); }, input);
+    wrap.append(row(null, item.label, null, h("label", { class: "switch" }, input)));
+  }
+  return wrap;
+}
+
+// ================================================================= FONTS
+let fontFaceStyle = null;
+async function refreshStudioFontFaces(list) {
+  list ||= await Fonts.listImported();
+  if (!fontFaceStyle) {
+    fontFaceStyle = h("style", { id: "imported-fonts" });
+    document.head.append(fontFaceStyle);
+  }
+  fontFaceStyle.textContent = Fonts.fontFaceCSS(list);
+  return list;
+}
+
+function fontPickerList(id) {
+  const dl = h("datalist", { id });
+  Promise.all([Fonts.systemFamilies(), Fonts.listImported()]).then(([sys, imp]) => {
+    const all = [...new Set([...imp.map(f => f.family), ...sys, "monospace", "serif", "sans-serif", "system-ui"])];
+    dl.replaceChildren(...all.map(f => h("option", { value: f })));
+  });
+  return dl;
+}
+
+function fontRow(key, label, desc, listId) {
+  return text(key, label, desc, { placeholder: "Type or pick a font", list: fontPickerList(listId) });
+}
+
+function renderFonts() {
+  const listCard = h("div", { class: "card" });
+  const sample = h("input", { type: "text", value: "Ignifox 0123 — The quick brown fox", "aria-label": "Preview text", style: { minWidth: "320px" } });
+  const file = h("input", { type: "file", multiple: true, accept: ".ttf,.otf,.ttc,.woff,.woff2", hidden: true });
+
+  async function render() {
+    const list = await refreshStudioFontFaces();
+    if (!list.length) {
+      listCard.replaceChildren(row(null, "No imported fonts yet", "Add .ttf, .otf, .ttc, .woff or .woff2 files. Free fonts: fonts.google.com, fontsource.org, nerdfonts.com."));
+      return;
+    }
+    const quote = f => (/[\s\d]/.test(f) ? `"${f}"` : f);
+    listCard.replaceChildren(...list.map(f => h("div", { class: "row font-row" },
+      h("div", {},
+        h("div", { class: "font-sample", style: { fontFamily: `"${f.family}", monospace` } }, sample.value || f.family),
+        h("div", { class: "desc" }, `${f.family} · ${f.file} · ${Math.max(1, Math.round(f.size / 1024))} KB`)),
+      h("div", { class: "ctl", style: { flexWrap: "wrap", justifyContent: "flex-end" } },
+        h("button", { class: "btn", title: "Use for tabs, menus and toolbars", onclick: () => { set("ignifox.font.family", quote(f.family)); toast(`Interface font: ${f.family}`); } }, "Interface"),
+        h("button", { class: "btn", title: "Default font for websites", onclick: () => { set("font.name.sans-serif.x-western", f.family); toast(`Websites now default to ${f.family}`); } }, "Websites"),
+        h("button", { class: "btn", title: "Clock and greeting on the new tab", onclick: () => { set("ignifox.newtab.font", f.family); toast(`New tab font: ${f.family}`); } }, "New tab"),
+        h("button", { class: "btn danger", onclick: async () => { await Fonts.removeFont(f.file); toast(`${f.family} removed`); render(); } }, "Remove")))));
+  }
+
+  file.addEventListener("change", async () => {
+    let ok = 0;
+    for (const f of file.files) {
+      try {
+        const r = await Fonts.importFont(f.name, new Uint8Array(await f.arrayBuffer()));
+        ok++;
+        toast(`Added ${r.family}`);
+      } catch (e) {
+        toast(`${f.name}: ${e.message}`);
+      }
+    }
+    file.value = "";
+    if (ok > 1) toast(`Added ${ok} fonts`);
+    render();
+  });
+  sample.addEventListener("input", () => listCard.querySelectorAll(".font-sample").forEach(el => (el.textContent = sample.value || " ")));
+  render();
+
+  return [
+    h("h1", {}, "Fonts"),
+    h("p", { class: "lede" }, "Drop in any font file and use it for the browser itself, for websites, or for your new tab. Imported fonts go to ~/.local/share/fonts/ignifox, so your other apps can use them too."),
+    h("div", { class: "btns" }, file,
+      h("button", { class: "btn primary", onclick: () => file.click() }, "Add font files…"),
+      sample),
+    h("h2", {}, "Imported fonts"),
+    listCard,
+    h("h2", {}, "Browser interface"),
+    card(
+      fontRow("ignifox.font.family", "Interface font", "Tabs, menus and toolbars. Leave empty for your system font.", "fl-ui"),
+      range("ignifox.font.size", "Interface text size", "0 = system default.", 0, 20, 1, v => (v < 9 ? "auto" : `${v}px`))),
+    h("h2", {}, "Websites"),
+    card(
+      fontRow("font.name.sans-serif.x-western", "Sans-serif font", "Used by most websites that don't pick their own.", "fl-sans"),
+      fontRow("font.name.serif.x-western", "Serif font", null, "fl-serif"),
+      fontRow("font.name.monospace.x-western", "Monospace font", "Code blocks and terminals on the web.", "fl-mono"),
+      range("font.size.variable.x-western", "Default text size", null, 9, 28, 1, v => `${v}px`),
+      range("font.minimum-size.x-western", "Minimum text size", "Stops sites from using tiny text. 0 = no minimum.", 0, 24, 1, v => (v ? `${v}px` : "none")),
+      toggle("browser.display.use_document_fonts", "Let websites use their own fonts", "Off = every site uses your fonts above.", { on: 1, off: 0 })),
+    h("h2", {}, "New tab"),
+    card(fontRow("ignifox.newtab.font", "Clock & greeting font", "Empty = the built-in look (thin clock, Metal Mania greeting).", "fl-nt")),
+  ];
+}
+
+// ================================================================ ADD-ONS
+function renderAddons() {
+  const grid = h("div", { class: "addons" });
+  let AM;
+  try {
+    ({ AddonManager: AM } = ChromeUtils.importESModule("resource://gre/modules/AddonManager.sys.mjs"));
+  } catch (e) {}
+  async function render() {
+    let names = [];
+    try {
+      names = (await AM.getAddonsByTypes(["extension"])).map(a => a.name.toLowerCase());
+    } catch (e) {}
+    grid.replaceChildren(...D.RECOMMENDED_ADDONS.map(a => {
+      const have = names.some(n => n.includes(a.match));
+      const btn = h("button", { class: "btn" + (have ? "" : " primary"), disabled: have }, have ? "Installed" : "Install");
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        btn.textContent = "Installing…";
+        const r = await Importer.installAddon(a.slug);
+        toast(r == "ok" ? `${a.name} installed` : r == "missing" ? `${a.name} isn't available right now` : `${a.name}: ${r}`);
+        render();
+      });
+      return h("div", { class: "addon" }, h("b", {}, a.name), h("p", {}, a.blurb), btn);
+    }));
+  }
+  render();
+  return [
+    h("h1", {}, "Add-ons"),
+    h("p", { class: "lede" }, "Hand-picked, open-source add-ons that fit Ignifox. One click installs from addons.mozilla.org. uBlock Origin is already included."),
+    grid,
+    h("div", { class: "btns", style: { marginTop: "14px" } },
+      h("button", { class: "btn", onclick: () => browserWin()?.openTrustedLinkIn("about:addons", "tab") }, "Manage add-ons"),
+      h("button", { class: "btn", onclick: () => browserWin()?.openTrustedLinkIn("https://addons.mozilla.org/firefox/", "tab") }, "Browse addons.mozilla.org")),
+  ];
+}
+
+// ================================================================= IMPORT
+function fmtDate(ms) {
+  if (!ms) return "unknown";
+  const days = Math.round((Date.now() - ms) / 86400000);
+  return days <= 0 ? "today" : days == 1 ? "yesterday" : days < 60 ? `${days} days ago` : new Date(ms).toLocaleDateString();
+}
+
+function renderImport() {
+  const wrap = h("div", {});
+  const pendingBox = h("div", {});
+  const launcher = Importer.launcherAvailable();
+
+  async function showPending() {
+    const pend = await Importer.pendingImport();
+    if (!pend) { pendingBox.replaceChildren(); return; }
+    pendingBox.replaceChildren(h("div", { class: "card notice" },
+      row(null, `Waiting to finish: ${pend.files.length} file(s) from ${pend.source}`,
+        "Passwords, logins, tabs and form history are swapped in while Ignifox is closed. Your current files are backed up first.",
+        [h("button", { class: "btn primary", disabled: !launcher, onclick: () => Importer.restartToFinishImport() }, "Restart to finish"),
+          h("button", { class: "btn", onclick: async () => { await Importer.cancelPendingImport(); showPending(); toast("Pending import cancelled"); } }, "Cancel")])));
+  }
+
+  function profileCard(pf) {
+    const body = h("div", { class: "imp-body", hidden: true });
+    const logins = Importer.currentLoginCount();
+    const live = [
+      ["bookmarks", "Bookmarks", pf.hasPlaces, true],
+      ["history", "History (last year)", pf.hasPlaces, true],
+      ["settings", pf.legacy ? "All Emberfox settings, theme & layout" : "Settings (startup, downloads, fonts, privacy…)", true, true],
+      ["chrome", pf.legacy ? "Custom CSS, userChrome & new tab wallpaper" : "userChrome.css / userContent.css tweaks", true, true],
+      ["extensions", "Extensions (reinstalled from addons.mozilla.org)", true, true],
+    ];
+    const staged = Object.entries(D.STAGED_ITEMS).map(([k, it]) => [k, it.label, launcher && !(k == "passwords" && logins > 0), k != "tabs"]);
+    const boxes = {};
+    const opt = ([k, label, enabled, on]) => {
+      const cb = h("input", { type: "checkbox", disabled: !enabled, checked: enabled && on ? true : null });
+      boxes[k] = cb;
+      return h("label", { class: "imp-opt" + (enabled ? "" : " off") }, cb, label);
+    };
+    const status = h("div", { class: "imp-status" });
+    const extBox = h("div", {});
+    const go = h("button", { class: "btn primary" }, "Import selected");
+    go.addEventListener("click", async () => {
+      go.disabled = true;
+      const want = k => boxes[k] && boxes[k].checked && !boxes[k].disabled;
+      const log = msg => status.append(h("div", {}, msg));
+      status.replaceChildren();
+      const step = async (k, label, fn) => {
+        if (!want(k)) return;
+        log(`… ${label}`);
+        try {
+          const r = await fn();
+          status.lastChild.textContent = `✓ ${label}${typeof r == "number" || typeof r == "string" ? `: ${r}` : ""}`;
+        } catch (e) {
+          status.lastChild.textContent = `✗ ${label}: ${e.message || e}`;
+        }
+      };
+      await step("bookmarks", "Bookmarks", () => Importer.importBookmarks(pf));
+      await step("history", "History pages", () => Importer.importHistory(pf));
+      await step("settings", "Settings", () => Importer.importSettings(pf));
+      await step("chrome", "Style files", () => Importer.importChromeFolder(pf, { setWallpaper: (b, e) => IgniBoot.setNewtabWallpaper(b, e) }));
+      const stageKeys = Object.keys(D.STAGED_ITEMS).filter(want);
+      if (stageKeys.length) {
+        await step(stageKeys[0], "Staged for restart", async () => (await Importer.stageImport(pf, stageKeys)).length + " file(s)");
+        showPending();
+      }
+      if (want("extensions")) {
+        const exts = await Importer.listExtensions(pf);
+        const todo = exts.filter(x => !x.installed);
+        if (!todo.length) {
+          log(exts.length ? "✓ Extensions: all already installed" : "✓ Extensions: none found");
+        } else {
+          const checks = todo.map(x => ({ x, cb: h("input", { type: "checkbox", checked: x.enabled ? true : null }) }));
+          const inst = h("button", { class: "btn primary" }, `Install ${todo.length} extension(s)`);
+          inst.addEventListener("click", async () => {
+            inst.disabled = true;
+            for (const { x, cb } of checks) {
+              if (!cb.checked) continue;
+              const r = await Importer.installAddon(x.id);
+              cb.parentElement.append(h("span", { class: "val" }, r == "ok" ? " ✓" : r == "missing" ? " not on addons.mozilla.org" : " ✗"));
+            }
+            inst.textContent = "Done";
+          });
+          extBox.replaceChildren(h("h2", {}, "Extensions to reinstall"),
+            h("p", { class: "lede" }, "Add-ons come fresh from addons.mozilla.org; their own settings don't carry over (most can export/import or sync them)."),
+            h("div", { class: "imp-opts" }, checks.map(({ x, cb }) => h("label", { class: "imp-opt" }, cb, x.name, x.type == "theme" ? " (theme)" : ""))),
+            inst);
+        }
+      }
+      log("Done. Bookmarks and history are in place now.");
+      go.disabled = false;
+    });
+
+    const head = h("button", { class: "imp-head", onclick: () => (body.hidden = !body.hidden) },
+      h("b", {}, pf.browser), h("span", {}, ` · ${pf.name}`),
+      pf.isDefault ? h("span", { class: "badge" }, "Default") : null,
+      pf.running ? h("span", { class: "badge" }, "Running") : null,
+      h("small", {}, `used ${fmtDate(pf.modified)}`));
+    body.append(...[
+      h("div", { class: "desc" }, pf.path),
+      pf.running ? h("p", { class: "warn" }, `${pf.browser} is open. Close it first for the newest data; otherwise you get a copy as of right now.`) : null,
+      h("div", { class: "imp-title" }, "Right now"),
+      h("div", { class: "imp-opts" }, live.map(opt)),
+      h("div", { class: "imp-title" }, "On next start" + (launcher ? "" : " (needs the standard ignifox launcher)")),
+      h("div", { class: "imp-opts" }, staged.map(opt)),
+      logins > 0 ? h("p", { class: "desc" }, `You already have ${logins} saved password(s) here, so passwords won't be swapped. Instead export them from ${pf.browser} (about:logins → ⋯ → Export) and use Import from a file below.`) : null,
+      h("div", { class: "btns", style: { marginTop: "10px" } }, go),
+      status, extBox].filter(Boolean));
+    return h("div", { class: "card imp" }, head, body);
+  }
+
+  async function render() {
+    wrap.replaceChildren(h("p", { class: "lede" }, "Looking for browsers…"));
+    let list = [];
+    try {
+      list = await Importer.findProfiles();
+    } catch (e) {
+      wrap.replaceChildren(card(row(null, "Couldn't scan for profiles", String(e))));
+      return;
+    }
+    wrap.replaceChildren(
+      list.length ? h("div", { class: "imp-list" }, list.map(profileCard))
+        : card(row(null, "No other Firefox-family browsers found", "Looked for Firefox (incl. Snap & Flatpak), LibreWolf, Waterfox, Floorp, Zen, Mullvad Browser and Emberfox.")));
+    const first = wrap.querySelector(".imp-body");
+    if (first) first.hidden = false;
+  }
+  render();
+  showPending();
+
+  return [
+    h("h1", {}, "Import"),
+    h("p", { class: "lede" }, "Bring your bookmarks, history, passwords, logins, open tabs, settings and extensions from Firefox, any Firefox-based browser, or an older Emberfox. Your old browser isn't changed."),
+    pendingBox,
+    h("h2", {}, "Firefox-family browsers"),
+    wrap,
+    h("h2", {}, "Chrome, Brave, Edge, Vivaldi, Opera, Chromium"),
+    card(
+      row(null, "Import from a Chromium browser", "Bookmarks, history, passwords and payment methods, using Firefox's built-in importer.",
+        h("button", { class: "btn", onclick: () => {
+          try {
+            const { MigrationUtils } = ChromeUtils.importESModule("moz-src:///browser/components/migration/MigrationUtils.sys.mjs");
+            MigrationUtils.showMigrationWizard(browserWin(), {});
+          } catch (e) {
+            browserWin()?.openPreferences("general-migrate");
+          }
+        } }, "Open importer")),
+      row(null, "Passwords from a file", "A CSV exported from any browser or password manager.",
+        h("button", { class: "btn", onclick: () => browserWin()?.openTrustedLinkIn("about:logins", "tab") }, "Open passwords")),
+      row(null, "Bookmarks from an HTML file", "Use the Library window: Import and Backup → Import Bookmarks from HTML.",
+        h("button", { class: "btn", onclick: () => browserWin()?.PlacesCommandHook?.showPlacesOrganizer("AllBookmarks") }, "Open Library"))),
+  ];
 }
 
 // =============================================================== router

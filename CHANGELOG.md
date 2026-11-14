@@ -6,6 +6,22 @@ Ignifox-only changes bump the revision.
 
 ## Unreleased
 
+### Import
+- Studio → Import finds Firefox (incl. Snap & Flatpak), LibreWolf, Waterfox, Floorp, Zen, Mullvad Browser and Emberfox profiles.
+- Imports right away: bookmarks (your toolbar comes over as-is if yours is empty), a year of history, settings (Emberfox settings are renamed for Ignifox), userChrome/custom CSS, the Emberfox new tab wallpaper, extensions (reinstalled from addons.mozilla.org).
+- Imports on next start, through the launcher: passwords, logins & cookies, open tabs, form history. Replaced files are backed up and profiles in use are never touched.
+- Chrome-family browsers go through Firefox's built-in importer; also links to CSV password import and HTML bookmark import.
+- The welcome screen offers import when it finds another browser.
+
+### Fonts
+- Import .ttf/.otf/.ttc/.woff/.woff2 into ~/.local/share/fonts/ignifox with live previews; use them for the interface, websites or the new tab clock and greeting.
+- Website font settings: sans/serif/mono families, default and minimum size, force your own fonts. Font pickers list every installed font.
+
+### More customization
+- One-click looks: Classic, Zen-style, Arc-like, Chrome-like, Minimal, Hacker/TTY. 🎲 Surprise me random palettes (contrast-checked).
+- Tab strip background: accent gradient or your own picture with darkening.
+- Multi-row tabs (experimental), right-click menu clean-up (AI items hidden by default), recommended add-ons with one-click install.
+
 ### Renamed: Emberfox → Ignifox
 - New name (Latin *ignis*, fire) and IGNIFOX wordmark; "Emberfox" was already used by other creators.
 - Everything renamed: app, packages (`ignifox`, `dev.rxvy.Ignifox`), Studio (`about:ignifox`, Ctrl+Alt+I), prefs (`ignifox.*`), CSS variables (`--igni-*`), default theme (Ignis).

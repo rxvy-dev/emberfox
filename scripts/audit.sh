@@ -34,7 +34,8 @@ PY
 [[ -e "$INST/distribution/distribution.ini" ]] && bad "Mozilla distribution.ini present" || ok "no Mozilla distribution.ini"
 
 echo "Ignifox layer"
-for f in studio/content/boot.sys.mjs studio/content/studio.html studio/content/newtab/index.html studio/content/newtab/newtab.js; do
+for f in studio/content/boot.sys.mjs studio/content/studio.html studio/content/data.sys.mjs studio/content/importer.sys.mjs \
+         studio/content/fonts.sys.mjs studio/content/newtab/index.html studio/content/newtab/newtab.js; do
   [[ -f "$INST/$f" ]] && ok "$f" || bad "$f missing"
 done
 

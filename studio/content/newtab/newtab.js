@@ -8,6 +8,7 @@
     search: true, engineSwitcher: true,
     engine: { name: "DuckDuckGo", url: "https://duckduckgo.com/?q={searchTerms}", alias: "@ddg" },
     engines: [], links: [], columns: 6, tileStyle: "rounded", favicons: false, notes: false,
+    font: "", fontFile: "",
   }, window.IGNI_NEWTAB || {});
 
   const $ = s => document.getElementById(s);
@@ -28,6 +29,17 @@
   root.dataset.wall = C.wallpaper == "image" && !C.wallpaperFile ? "gradient" : C.wallpaper;
   if (C.wallpaper == "image" && C.wallpaperFile && /^[\w.-]+$/.test(C.wallpaperFile)) {
     $("wall").style.backgroundImage = `url("${C.wallpaperFile}")`;
+  }
+
+  // ---- custom font for clock + greeting (an imported font, or any installed family)
+  if (C.font) {
+    const fam = C.font.replace(/["\\;{}]/g, "");
+    const use = () => root.style.setProperty("--nt-font", `"${C.fontFile ? "igniNT" : fam}", system-ui, sans-serif`);
+    if (C.fontFile && /^ntfont\.\w+$/.test(C.fontFile) && "FontFace" in window) {
+      new FontFace("igniNT", `url("${C.fontFile}")`).load().then(f => { document.fonts.add(f); use(); }, use);
+    } else {
+      use();
+    }
   }
 
   // ---- clock / date / greeting

@@ -306,3 +306,50 @@
   min-height: 0 !important;
   padding-block: 2px !important;
 }
+
+/* ======================================================= frame background */
+:root[igni-frame="gradient"] #navigator-toolbox {
+  background-image:
+    linear-gradient(100deg,
+      color-mix(in srgb, var(--igni-accent) 30%, var(--igni-bg)) 0%,
+      var(--igni-bg) 45%,
+      color-mix(in srgb, var(--igni-accent-2) 16%, var(--igni-bg)) 100%) !important;
+}
+:root[igni-frame="image"] #navigator-toolbox {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, var(--igni-frame-dim, .35)), rgba(0, 0, 0, var(--igni-frame-dim, .35))),
+    var(--igni-frame-img) !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+:root[igni-frame] #nav-bar,
+:root[igni-frame] #PersonalToolbar {
+  background-color: color-mix(in srgb, var(--igni-bg-2) 55%, transparent) !important;
+}
+:root[igni-frame] {
+  --tab-background-color-selected: color-mix(in srgb, var(--igni-bg-2) 75%, transparent) !important;
+}
+
+/* ===================================================== multi-row tabs */
+:root[igni-multirow] #tabbrowser-arrowscrollbox[orient="horizontal"] {
+  &::part(scrollbutton-up),
+  &::part(scrollbutton-down),
+  &::part(overflow-start-indicator),
+  &::part(overflow-end-indicator) {
+    display: none !important;
+  }
+  &::part(scrollbox) {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    max-height: calc(var(--igni-max-rows, 3) * var(--tab-height-with-margin-padding, 40px)) !important;
+    scrollbar-width: thin;
+  }
+  &::part(items-wrapper) {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex: 1 1 auto !important;
+  }
+  .tabbrowser-tab[fadein]:not([pinned]) {
+    flex: 1 1 var(--tab-min-width-pref, 140px) !important;
+  }
+}

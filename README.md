@@ -28,9 +28,14 @@ curl -fsSL https://raw.githubusercontent.com/rxvy-dev/ignifox/main/install.sh | 
 |---|---|
 | **Telemetry** | Every telemetry, study, experiment, attribution and crash-upload switch is **locked** off at the engine level (autoconfig `lockPref`), backed by enterprise policies. The crash reporter, ping sender and updater binaries are **deleted**. In source builds they're compiled out. A live **proof panel** in Studio shows each lock. |
 | **Ignifox Studio** (`about:ignifox`) | A built-in control center. Every change applies **instantly** to all windows, no restart and no add-on. |
+| **Import** | Bring **bookmarks, history, passwords, logins/cookies, open tabs, form history, settings, userChrome.css and extensions** from Firefox (incl. Snap & Flatpak), LibreWolf, Waterfox, Floorp, Zen, Mullvad Browser or an older Emberfox. Profiles are found automatically and never changed. Chrome, Brave, Edge, Vivaldi and Opera go through the built-in importer. |
+| **Fonts** | Drop in **.ttf / .otf / .ttc / .woff / .woff2** files and use them for the browser interface, for websites (sans/serif/mono, sizes, minimum size, force your fonts), or for the new tab clock and greeting. Imported fonts also work in every other app. |
+| **One-click looks** | Classic, Zen-style, Arc-like, Chrome-like, Minimal, Hacker/TTY: theme, tab layout, shapes and spacing in one click. Plus **🎲 Surprise me** random themes that always stay readable. |
 | **Ignifox New Tab** | Your own start page: big clock, date and a black-metal greeting with your name · search box with a per-search **engine switcher** and `@keyword` shortcuts · editable shortcut tiles (4 styles), optionally topped up from your most-visited sites · **wallpapers**: rising embers, aurora, gradient, solid, or your own picture with dim and blur · notes pad · 3 layouts. A plain local page: no ads, no tracking, no network requests unless you turn on site icons. Doubles as your home page. |
 | **Search** | Switch your engine in **one click** · a different engine for private windows · **25 one-click engines** (Startpage, Brave, Kagi, Mojeek, Arch Wiki, AUR, Void packages, Flathub, ProtonDB, GitHub, MDN, docs.rs, YouTube…) with ★ to add-and-make-default · add any site with a `%s` URL · edit every engine's `@keyword` · suggestion and new-tab toggles |
 | **Color** | 10 hand-tuned themes · a full **7-surface palette editor** (frame, toolbar, URL bar, text, dim text, accent, glow) · **save unlimited named themes** · **share themes as a one-line code** (`igni:0b0607,…`) · a quick accent swap · light and dark · steps aside for AMO themes if you want |
+| **Tab strip** | A picture or accent gradient behind the tabs (like a Firefox theme header) with a darken slider · **multi-row tabs** · right-click menu clean-up (hide AI, send-to-device, screenshot, highlights and 10 more) |
+| **Add-ons** | One-click installs of hand-picked open-source add-ons: Dark Reader, SponsorBlock, Sidebery, Bitwarden, DeArrow, Stylus, Privacy Badger and more |
 | **Placement** | Tabs **top / below the bar / vertical / hidden** · sidebar left or right · collapsed-on-hover sidebar · bookmarks bar modes · **move any toolbar button** to the nav bar, tab strip, bookmarks bar, overflow menu or hidden, with ◀ ▶ reordering · one-click toolbar layouts (Classic / Minimal / Power) · hide 6 kinds of clutter |
 | **Shape & feel** | Tab styles (pills, underline, boxy) · tab height · **floating page** (rounded card with a gap, Zen-style) · interface scale (90–200%) · 6 scrollbar styles · overlay scrollbars · compact menus · address bar max width · icon-only bookmarks · corner radius 0–20px · tab min and max width · density · interface font and size · tab glow · accent strip · flame loading bar · **focus mode** (toolbars slide away, Ctrl+Alt+Z) · centered URL · slim nav bar |
 | **Privacy levels** | Balanced / Hardened / Fortress in one click, plus 25 fine-tune switches (DoH with Quad9, Mullvad, Cloudflare, NextDNS or custom · RFP · clear on exit · WebRTC · WebGL…) |
@@ -40,6 +45,10 @@ curl -fsSL https://raw.githubusercontent.com/rxvy-dev/ignifox/main/install.sh | 
 | **Always current** | A new Ignifox is built and published automatically within hours of every Firefox release, so Mozilla's security fixes arrive fast. A built-in notifier (GitHub only, no identifiers, can be turned off) tells you when one is out. |
 
 <p align="center"><img src="docs/newtab.png" width="98%" alt="Ignifox New Tab"></p>
+<p align="center">
+  <img src="docs/studio-import.png" width="49%" alt="Ignifox Studio: import">
+  <img src="docs/studio-fonts.png" width="49%" alt="Ignifox Studio: fonts">
+</p>
 <p align="center">
   <img src="docs/studio-newtab.png" width="49%" alt="Ignifox Studio: new tab">
   <img src="docs/studio-search.png" width="49%" alt="Ignifox Studio: search">

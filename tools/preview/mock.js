@@ -75,8 +75,27 @@
     isWidgetRemovable: id => id != "tabbrowser-tabs", getWidget: id => ({ id, label: id }),
     addListener() {}, removeListener() {}, addWidgetToArea() {}, removeWidgetFromArea() {}, moveWidgetWithinArea() {}, reset() {},
   };
+  const importerMock = {
+    findProfiles: async () => [
+      { browser: "Firefox", name: "default-release", path: "/home/rxvy/.mozilla/firefox/ab12cd34.default-release", isDefault: true, modified: Date.now() - 86400000, hasPlaces: true, hasLogins: true, running: false },
+      { browser: "Emberfox", legacy: true, name: "default-release", path: "/home/rxvy/.emberfox/emberfox/x9y8.default-release", isDefault: true, modified: Date.now() - 3 * 86400000, hasPlaces: true, hasLogins: false, running: false },
+      { browser: "LibreWolf", name: "default", path: "/home/rxvy/.librewolf/k1l2.default", isDefault: true, modified: Date.now() - 40 * 86400000, hasPlaces: true, hasLogins: true, running: true },
+    ],
+    launcherAvailable: () => true, currentLoginCount: () => 0, pendingImport: async () => null,
+    importBookmarks: async () => 412, importHistory: async () => 8231, importSettings: async () => 37, importChromeFolder: async () => 2,
+    listExtensions: async () => [{ id: "a", name: "Dark Reader", enabled: true, installed: false }, { id: "b", name: "Bitwarden", enabled: true, installed: false }],
+    stageImport: async () => ["logins.json", "key4.db"], installAddon: async () => "ok",
+  };
+  const fontsMock = {
+    listImported: async () => [{ file: "MetalMania-Regular.ttf", path: "/x/MetalMania-Regular.ttf", family: "Metal Mania", ext: "ttf", size: 251000 }],
+    fontFaceCSS: () => '@font-face { font-family: "Metal Mania"; src: url("./fonts/MetalMania-Regular.ttf"); }',
+    systemFamilies: async () => ["Cantarell", "DejaVu Sans", "JetBrains Mono", "Noto Sans"],
+    importFont: async () => ({ family: "X" }), removeFont: async () => {},
+  };
   window.ChromeUtils = {
-    importESModule: url => url.includes("boot") ? { IgniBoot: { customCSSPath: () => "/profile/chrome/igni-custom.css", bumpCustomCSS() {},
+    importESModule: url => url.includes("importer") ? importerMock : url.includes("fonts.sys") ? fontsMock
+      : url.includes("AddonManager") ? { AddonManager: { getAddonsByTypes: async () => [{ name: "uBlock Origin" }, { name: "Dark Reader" }] } }
+      : url.includes("boot") ? { IgniBoot: { customCSSPath: () => "/profile/chrome/igni-custom.css", bumpCustomCSS() {},
         version: async () => "160.0.1-1",
         newtabURL: () => "./newtab/index.html",
         setNewtabWallpaper: async () => "wallpaper.jpg",

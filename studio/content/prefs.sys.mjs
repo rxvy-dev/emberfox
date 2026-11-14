@@ -87,6 +87,18 @@ export const IGNI_PREFS = {
   "ignifox.newtab.tileStyle":         { type: "string", def: "rounded" }, // rounded | circle | square | minimal
   "ignifox.newtab.favicons":          { type: "bool",   def: false },     // fetch /favicon.ico from each site
   "ignifox.newtab.notes":             { type: "bool",   def: false },
+  // frame (tab strip / toolbar background)
+  "ignifox.frame.style":            { type: "string", def: "solid" },   // solid | gradient | image
+  "ignifox.frame.image":            { type: "string", def: "" },        // file in <profile>/chrome/
+  "ignifox.frame.dim":              { type: "int",    def: 35,  min: 0,   max: 90 },
+  // more tabs
+  "ignifox.tabs.multirow":          { type: "bool",   def: false },
+  "ignifox.tabs.maxRows":           { type: "int",    def: 3,   min: 2,   max: 8 },
+  // right-click menu clean-up: comma-separated MENU_ITEMS keys
+  "ignifox.menu.hide":              { type: "string", def: "ai" },
+  // fonts
+  "ignifox.fonts.rev":              { type: "int",    def: 0 },
+  "ignifox.newtab.font":            { type: "string", def: "" },        // "" = built-in look
   "ignifox.customcss.enabled":        { type: "bool",   def: true },
   "ignifox.customcss.rev":            { type: "int",    def: 0 },
   "ignifox.firstrun.done":            { type: "bool",   def: false },
@@ -150,6 +162,13 @@ export const NATIVE_PREFS = {
   "widget.non-native-theme.scrollbar.style": "int",
   "widget.gtk.overlay-scrollbars.enabled": "bool",
   "browser.startup.homepage": "string",
+  // website fonts
+  "font.name.sans-serif.x-western": "string",
+  "font.name.serif.x-western": "string",
+  "font.name.monospace.x-western": "string",
+  "font.size.variable.x-western": "int",
+  "font.minimum-size.x-western": "int",
+  "browser.display.use_document_fonts": "int",
   // search
   "browser.search.suggest.enabled.private": "bool",
   "browser.search.openintab": "bool",
@@ -466,6 +485,7 @@ export const WIDGETS = {
   "characterencoding-button": "Text encoding",
   "email-link-button": "Email link",
   "search-container": "Separate search bar",
+  "personal-bookmarks": "Bookmarks toolbar items",
 };
 
 // One-click toolbar arrangements. Each lists nav-bar order; listed-but-unknown ids are skipped.

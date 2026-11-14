@@ -161,3 +161,9 @@ kbd { font: 11px ui-monospace, monospace; padding: 1px 5px; border-radius: 4px; 
 }
 #gear-tip b { color: var(--fg); }
 #gear-tip > b:first-child { display: block; margin-bottom: 4px; color: var(--accent2); }
+
+/* imported / chosen font for the big text */
+:root[style*="--nt-font"] #clock,
+:root[style*="--nt-font"] #greeting {
+  font-family: var(--nt-font) !important;
+}

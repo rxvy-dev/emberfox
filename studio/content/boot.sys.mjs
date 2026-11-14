@@ -18,6 +18,7 @@ import {
   readPref,
   resolvePalette,
 } from "chrome://ignifox/content/prefs.sys.mjs";
+import { menuHideCSS } from "chrome://ignifox/content/data.sys.mjs";
 
 const { setTimeout } = ChromeUtils.importESModule("resource://gre/modules/Timer.sys.mjs");
 
@@ -33,6 +34,8 @@ const TOPSITES_REFRESH_MS = 15 * 60 * 1000;
 
 let gChromeHandle = null; // keeps chrome://ignifox/ registered for the app's lifetime
 const gCustomSheets = new WeakMap(); // window -> loaded custom css url
+const gFontSheets = new WeakMap(); // window -> loaded @font-face sheet url
+const gDynSheets = new WeakMap(); // window -> generated data: sheet (menu clean-up)
 
 function log(...args) {
   console.log("[Ignifox]", ...args);
@@ -148,6 +151,13 @@ export const IgniBoot = {
       if (data == "ignifox.customcss.rev" || data == "ignifox.customcss.enabled") {
         browserWindows().forEach(w => this.loadCustomCSS(w));
       }
+      if (data == "ignifox.fonts.rev") {
+        browserWindows().forEach(w => this.loadFontsCSS(w));
+        this.queueNewtabConfig();
+      }
+      if (data == "ignifox.menu.hide") {
+        browserWindows().forEach(w => this.loadDynamicSheet(w));
+      }
       browserWindows().forEach(w => this.paint(w));
     }
   },
@@ -184,6 +194,8 @@ export const IgniBoot = {
       log("ui.css failed", e);
     }
     this.paint(win);
+    this.loadFontsCSS(win);
+    this.loadDynamicSheet(win);
     this.loadCustomCSS(win);
     this.ensureWidget();
     this.addMenuAndKeys(win);
@@ -252,6 +264,20 @@ export const IgniBoot = {
     toggle("igni-urlbar-max", uw >= 300);
     css.setProperty("--igni-urlbar-max", `${uw}px`);
     toggle("igni-bm-icons", v["ignifox.layout.bookmarksIconsOnly"]);
+    toggle("igni-multirow", v["ignifox.tabs.multirow"]);
+    css.setProperty("--igni-max-rows", String(v["ignifox.tabs.maxRows"]));
+
+    // ---- frame background
+    const frame = v["ignifox.frame.style"];
+    const img = v["ignifox.frame.image"];
+    const frameMode = frame == "image" && img ? "image" : frame == "gradient" ? "gradient" : "";
+    if (frameMode && themed) root.setAttribute("igni-frame", frameMode);
+    else root.removeAttribute("igni-frame");
+    if (frameMode == "image") {
+      const path = PathUtils.join(PathUtils.profileDir, "chrome", PathUtils.filename(img));
+      css.setProperty("--igni-frame-img", `url("${PathUtils.toFileURI(path)}")`);
+    }
+    css.setProperty("--igni-frame-dim", String(v["ignifox.frame.dim"] / 100));
     toggle("igni-compact-menus", v["ignifox.layout.compactMenus"]);
 
     // ---- hide elements
@@ -277,6 +303,58 @@ export const IgniBoot = {
     } else {
       root.removeAttribute("igni-font-size");
     }
+  },
+
+  async loadFontsCSS(win) {
+    const wu = win.windowUtils;
+    const prev = gFontSheets.get(win);
+    if (prev) {
+      try { wu.removeSheetUsingURIString(prev, wu.AUTHOR_SHEET); } catch (e) {}
+      gFontSheets.delete(win);
+    }
+    const path = PathUtils.join(PathUtils.profileDir, "chrome", "ignifox-fonts.css");
+    if (!(await IOUtils.exists(path))) return;
+    const url = `${PathUtils.toFileURI(path)}?rev=${readPref(Services.prefs, "ignifox.fonts.rev", "int") || 0}`;
+    try {
+      wu.loadSheetUsingURIString(url, wu.AUTHOR_SHEET);
+      gFontSheets.set(win, url);
+    } catch (e) {
+      log("font sheet failed", e);
+    }
+  },
+
+  /** Generated rules that depend on lists in prefs (right-click menu clean-up). */
+  loadDynamicSheet(win) {
+    const wu = win.windowUtils;
+    const prev = gDynSheets.get(win);
+    if (prev) {
+      try { wu.removeSheetUsingURIString(prev, wu.AUTHOR_SHEET); } catch (e) {}
+      gDynSheets.delete(win);
+    }
+    const css = menuHideCSS(readPref(Services.prefs, "ignifox.menu.hide", "string"));
+    if (!css) return;
+    const url = "data:text/css;charset=utf-8," + encodeURIComponent(css);
+    try {
+      wu.loadSheetUsingURIString(url, wu.AUTHOR_SHEET);
+      gDynSheets.set(win, url);
+    } catch (e) {
+      log("menu sheet failed", e);
+    }
+  },
+
+  /** Studio hands over a picture for the tab strip background. */
+  async setFrameImage(bytes, ext) {
+    ext = String(ext || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 5) || "jpg";
+    const dir = PathUtils.join(PathUtils.profileDir, "chrome");
+    await IOUtils.makeDirectory(dir, { ignoreExisting: true });
+    for (const child of await IOUtils.getChildren(dir)) {
+      if (/\/ignifox-frame-\d+\.\w+$/.test(child)) await IOUtils.remove(child).catch(() => {});
+    }
+    const name = `ignifox-frame-${Date.now()}.${ext}`;
+    await IOUtils.write(PathUtils.join(dir, name), bytes);
+    Services.prefs.setStringPref("ignifox.frame.image", name);
+    Services.prefs.setStringPref("ignifox.frame.style", "image");
+    return name;
   },
 
   customCSSPath() {
@@ -545,7 +623,24 @@ export const IgniBoot = {
       tileStyle: v["ignifox.newtab.tileStyle"],
       favicons: v["ignifox.newtab.favicons"],
       notes: v["ignifox.newtab.notes"],
+      font: "",
+      fontFile: "",
     };
+    const ntFont = String(v["ignifox.newtab.font"] || "").trim();
+    if (ntFont) {
+      cfg.font = ntFont.replace(/["\\;{}]/g, "").slice(0, 80);
+      try {
+        const { listImported } = ChromeUtils.importESModule("chrome://ignifox/content/fonts.sys.mjs");
+        const hit = (await listImported()).find(f => f.family == ntFont);
+        if (hit) {
+          const name = `ntfont.${hit.ext}`;
+          await IOUtils.copy(hit.path, PathUtils.join(dir, name));
+          cfg.fontFile = name;
+        }
+      } catch (e) {
+        log("new tab font", e);
+      }
+    }
     const js = `window.IGNI_NEWTAB = ${JSON.stringify(cfg).replace(/</g, "\\u003c")};\n`;
     await IOUtils.writeUTF8(PathUtils.join(dir, "config.js"), js, { tmpPath: PathUtils.join(dir, "config.js.tmp") });
     Services.obs.notifyObservers(null, "igni-newtab-updated");
