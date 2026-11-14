@@ -304,10 +304,16 @@ resolve_release() {
       $2=="browser_download_url" {print n "\t" s "\t" $4}' "$TMP/fields" >"$ASSETS"
   fi
   if [[ -z $TAG ]]; then   # API rate-limited or blocked: fall back to the redirect
-    TAG="${WANT_TAG:-$(final_url "https://github.com/$REPO/releases/latest" | sed -n 's#.*/tag/##p')}"
+    local where
+    where="$(final_url "https://github.com/$REPO/releases/latest" 2>/dev/null || true)"
+    TAG="${WANT_TAG:-$(sed -n 's#.*/tag/##p' <<<"$where")}"
     : >"$ASSETS"
+    # GitHub sends /releases/latest to plain /releases when nothing is published yet.
+    if [[ -z $TAG && $where == */releases ]]; then
+      die "Emberfox hasn't published a release yet.\n\nThe first build is on its way. Try again soon, or watch https://github.com/$REPO/releases"
+    fi
   fi
-  [[ -n $TAG ]] || die "Couldn't find an Emberfox release on GitHub.\n\nCheck your connection, or see https://github.com/$REPO/releases"
+  [[ -n $TAG ]] || die "Couldn't reach GitHub to find the latest Emberfox release.\n\nCheck your internet connection, or see https://github.com/$REPO/releases"
 }
 asset() {   # asset NAME -> "size<TAB>url" (url built from tag if the API listing is missing)
   local line; line=$(awk -F'\t' -v n="$1" '$1==n{print $2 "\t" $3; exit}' "$ASSETS")
