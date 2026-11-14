@@ -9,7 +9,10 @@ pkg=dev.rxvy.ignifox
 ns=org.mozilla.reference.browser
 mkdir -p "$out"
 
-shot() { adb exec-out screencap -p > "$out/$1.png"; echo "  saved $1.png"; }
+shot() {
+  if timeout 40 adb exec-out screencap -p > "$out/$1.png"; then echo "  saved $1.png"; else echo "  screenshot $1 timed out"; hung=1; fi
+}
+hung=0
 alive() { adb shell pidof "$pkg" >/dev/null 2>&1; }
 
 adb root >/dev/null 2>&1 || true
@@ -61,12 +64,13 @@ adb shell input tap $((w - 350)) 185 >/dev/null 2>&1
 sleep 12
 shot 8-newtab-synthwave
 
-adb logcat -d > "$out/logcat.txt" 2>/dev/null || true
+timeout 60 adb logcat -d > "$out/logcat.txt" 2>/dev/null || true
 grep -E "FATAL EXCEPTION|AndroidRuntime: |IgnifoxPrefs|could not set" "$out/logcat.txt" | head -80 > "$out/problems.txt" || true
 
 if grep -q "FATAL EXCEPTION" "$out/logcat.txt" && grep -A3 "FATAL EXCEPTION" "$out/logcat.txt" | grep -q "$pkg"; then
   echo "Ignifox crashed:"; grep -A25 "FATAL EXCEPTION" "$out/logcat.txt" | head -60
   exit 1
 fi
+if [[ $hung == 1 ]]; then echo "The screen stopped responding during the test"; exit 1; fi
 if ! alive; then echo "Ignifox is not running at the end of the test"; exit 1; fi
 echo "SMOKE TEST PASSED"
