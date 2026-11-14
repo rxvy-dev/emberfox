@@ -4,6 +4,10 @@
 
 package org.mozilla.reference.browser.browser
 
+import android.content.res.ColorStateList
+import mozilla.components.concept.menu.candidate.TextStyle
+import mozilla.components.concept.menu.MenuStyle
+import org.mozilla.reference.browser.ignifox.Ignifox
 import android.content.Context
 import android.content.Intent
 import android.view.View
@@ -68,11 +72,14 @@ class ToolbarIntegration(
             it.initialize(context)
         }
 
+    private val palette = Ignifox.palette(context)
+    private val menuText = TextStyle(color = palette.fg)
+    private val barOnTop = Ignifox.prefs(context).getString(Ignifox.BAR_POSITION, "bottom") == "top"
     private val scope = MainScope()
     private var menuUpdateJob: Job? = null
 
     private fun menuToolbar(session: SessionState?): RowMenuCandidate {
-        val tint = ContextCompat.getColor(context, R.color.icons)
+        val tint = palette.fg
 
         val forward =
             SmallMenuCandidate(
@@ -120,12 +127,13 @@ class ToolbarIntegration(
     private fun sessionMenuItems(sessionState: SessionState): List<MenuCandidate> =
         listOfNotNull(
             menuToolbar(sessionState),
-            TextMenuCandidate("Share") {
+            TextMenuCandidate("Share", textStyle = menuText) {
                 val url = sessionState.content.url
                 context.share(url)
             },
             CompoundMenuCandidate(
                 text = "Request desktop site",
+                textStyle = menuText,
                 isChecked = sessionState.content.desktopMode,
                 end = CompoundMenuCandidate.ButtonType.SWITCH,
             ) { checked ->
@@ -134,6 +142,7 @@ class ToolbarIntegration(
             if (webAppUseCases.isPinningSupported()) {
                 TextMenuCandidate(
                     text = "Add to homescreen",
+                    textStyle = menuText,
                     containerStyle = ContainerStyle(isVisible = webAppUseCases.isPinningSupported()),
                 ) {
                     scope.launch { webAppUseCases.addToHomescreen() }
@@ -141,7 +150,7 @@ class ToolbarIntegration(
             } else {
                 null
             },
-            TextMenuCandidate(text = "Find in Page") {
+            TextMenuCandidate(text = "Find in Page", textStyle = menuText) {
                 FindInPageIntegration.launch?.invoke()
             },
         )
@@ -154,22 +163,33 @@ class ToolbarIntegration(
                 emptyList()
             }
 
-        return sessionMenuItems +
+        return listOf(
+            TextMenuCandidate(text = context.getString(R.string.igni_menu_new_tab), textStyle = menuText) {
+                tabsUseCases.addTab(url = Ignifox.homeUrl(context), selectTab = true)
+            },
+            TextMenuCandidate(text = context.getString(R.string.igni_menu_private_tab), textStyle = menuText) {
+                tabsUseCases.addTab(url = "about:privatebrowsing", selectTab = true, private = true)
+            },
+        ) +
+            sessionMenuItems +
             listOf(
-                TextMenuCandidate(text = "Add-ons") {
+                TextMenuCandidate(text = "Add-ons", textStyle = menuText) {
                     val intent = Intent(context, AddonsActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     context.startActivity(intent)
                 },
-                TextMenuCandidate(text = "Synced Tabs") {
+                TextMenuCandidate(text = "Synced Tabs", textStyle = menuText) {
                     val intent = Intent(context, SyncedTabsActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     context.startActivity(intent)
                 },
-                TextMenuCandidate(text = "Report issue") {
-                    tabsUseCases.addTab(url = "https://github.com/mozilla-mobile/reference-browser/issues/new")
+                TextMenuCandidate(text = context.getString(R.string.igni_studio), textStyle = menuText) {
+                    val intent = Intent(context, SettingsActivity::class.java)
+                    intent.putExtra(SettingsActivity.EXTRA_OPEN_STUDIO, true)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(intent)
                 },
-                TextMenuCandidate(text = "Settings") {
+                TextMenuCandidate(text = "Settings", textStyle = menuText) {
                     val intent = Intent(context, SettingsActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     context.startActivity(intent)
@@ -177,7 +197,8 @@ class ToolbarIntegration(
             )
     }
 
-    private val browserMenuController: MenuController = BrowserMenuController()
+    private val browserMenuController: MenuController =
+        BrowserMenuController(style = MenuStyle(backgroundColor = ColorStateList.valueOf(palette.bg2)))
 
     init {
         toolbar.display.apply {
@@ -190,8 +211,10 @@ class ToolbarIntegration(
             menuController = browserMenuController
             hint = context.getString(R.string.toolbar_hint)
 
-            setUrlBackground(ResourcesCompat.getDrawable(context.resources, R.drawable.url_background, context.theme))
+            // The Ignifox New Tab is a local page: show the search hint instead of its file address.
+            urlFormatter = { url -> if (Ignifox.isNewTab(context, url)) "" else url }
         }
+        Ignifox.styleToolbar(toolbar)
 
         toolbar.edit.apply {
             hint = context.getString(R.string.toolbar_hint)
@@ -201,7 +224,7 @@ class ToolbarIntegration(
             updateAutocompleteProviders(listOf(historyStorage, shippedDomainsProvider))
         }
 
-        ImeInsetsSynchronizer.setup(
+        if (!barOnTop) ImeInsetsSynchronizer.setup(
             targetView = toolbar,
             onIMEAnimationStarted = { isKeyboardShowingUp, keyboardHeight ->
                 // If the keyboard is hiding have the engine view immediately expand to the entire height of the

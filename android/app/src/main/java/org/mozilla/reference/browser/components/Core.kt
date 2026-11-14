@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.components
 
+import org.mozilla.reference.browser.ignifox.Ignifox
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
@@ -77,13 +78,11 @@ class Core(
                 requestInterceptor = AppRequestInterceptor(context),
                 remoteDebuggingEnabled = prefs.getBoolean(context.getPreferenceKey(pref_key_remote_debugging), false),
                 testingModeEnabled = prefs.getBoolean(context.getPreferenceKey(R.string.pref_key_testing_mode), false),
-                trackingProtectionPolicy = createTrackingProtectionPolicy(prefs),
+                trackingProtectionPolicy = Ignifox.trackingPolicy(context),
+                preferredColorScheme = Ignifox.colorScheme(context),
+                httpsOnlyMode = Ignifox.httpsOnly(context),
                 historyTrackingDelegate = HistoryDelegate(lazyHistoryStorage),
-                globalPrivacyControlEnabled =
-                    prefs.getBoolean(
-                        context.getPreferenceKey(R.string.pref_key_global_privacy_control),
-                        false,
-                    ),
+                globalPrivacyControlEnabled = prefs.getBoolean(Ignifox.GPC, true),
             )
         EngineProvider.createEngine(context, defaultSettings)
     }
@@ -216,7 +215,8 @@ class Core(
         AMOAddonsProvider(
             context = context,
             client = client,
-            collectionName = "7dfae8669acc4312a65e8ba5553036",
+            collectionUser = "mozilla",
+            collectionName = "Extensions-for-Android",
             maxCacheAgeInMinutes = DAY_IN_MINUTES,
         )
 

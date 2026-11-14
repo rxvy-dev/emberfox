@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.addons
 
+import org.mozilla.reference.browser.ignifox.Ignifox
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
@@ -15,6 +16,7 @@ import org.mozilla.reference.browser.R
 /** An activity to manage add-ons. */
 class AddonsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        Ignifox.applyTheme(this, actionBar = true)
         setContentView(R.layout.activity_main)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))

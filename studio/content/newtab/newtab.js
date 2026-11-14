@@ -25,6 +25,7 @@
   root.style.setProperty("--blur", C.blur + "px");
   root.toggleAttribute("data-light", !P.dark);
   root.dataset.layout = C.layout;
+  if (C.platform) root.dataset.platform = C.platform;   // "android" in Ignifox for Android
   root.dataset.tiles = C.tileStyle;
   root.dataset.wall = C.wallpaper == "image" && !C.wallpaperFile ? "gradient" : C.wallpaper;
   if (C.wallpaper == "image" && C.wallpaperFile && /^[\w.-]+$/.test(C.wallpaperFile)) {

@@ -4,6 +4,8 @@
 
 package org.mozilla.reference.browser.settings
 
+import org.mozilla.reference.browser.ignifox.StudioFragment
+import org.mozilla.reference.browser.ignifox.Ignifox
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
@@ -18,6 +20,7 @@ import org.mozilla.reference.browser.R
 /** Hosts [SettingsFragment] and the sub-pages it opens, and keeps the action bar title in step with them. */
 class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater {
     override fun onCreate(savedInstanceState: Bundle?) {
+        Ignifox.applyTheme(this, actionBar = true)
         setContentView(R.layout.activity_main)
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
@@ -41,7 +44,8 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater 
 
         if (savedInstanceState == null) {
             with(supportFragmentManager.beginTransaction()) {
-                replace(R.id.container, SettingsFragment())
+                val studio = intent?.getBooleanExtra(EXTRA_OPEN_STUDIO, false) == true
+                replace(R.id.container, if (studio) StudioFragment() else SettingsFragment())
                 commit()
             }
         }
@@ -61,5 +65,9 @@ class SettingsActivity : AppCompatActivity(), SettingsFragment.ActionBarUpdater 
 
     override fun updateTitle(titleResId: Int) {
         setTitle(titleResId)
+    }
+
+    companion object {
+        const val EXTRA_OPEN_STUDIO = "open_studio"
     }
 }

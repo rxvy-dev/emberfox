@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.tabs
 
+import org.mozilla.reference.browser.ignifox.Ignifox
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -42,6 +43,11 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        val palette = Ignifox.palette(requireContext())
+        view.setBackgroundColor(palette.bg)
+        view.findViewById<View>(R.id.tabsToolbar).setBackgroundColor(Ignifox.barBackground(palette))
+        view.findViewById<View>(R.id.tabsPanel).setBackgroundColor(Ignifox.barBackground(palette))
+        view.findViewById<TabsPanel>(R.id.tabsPanel).setSelectedTabIndicatorColor(palette.accent)
 
         val trayAdapter = createAndSetupTabsTray(requireContext())
 
@@ -93,7 +99,16 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
     private fun createAndSetupTabsTray(context: Context): TabsTray {
         val layoutManager = LinearLayoutManager(context)
         val thumbnailLoader = ThumbnailLoader(context.components.core.thumbnailStorage)
-        val trayStyling = TabsTrayStyling(itemBackgroundColor = Color.TRANSPARENT, itemTextColor = Color.WHITE)
+        val palette = Ignifox.palette(context)
+        val trayStyling =
+            TabsTrayStyling(
+                itemBackgroundColor = Color.TRANSPARENT,
+                itemTextColor = palette.fg,
+                selectedItemBackgroundColor = Ignifox.blend(palette.bg, palette.accent, SELECTED_TAB_TINT),
+                selectedItemTextColor = palette.fg,
+                itemUrlTextColor = palette.fgDim,
+                selectedItemUrlTextColor = palette.fgDim,
+            )
         val viewHolderProvider: ViewHolderProvider = { viewGroup ->
             val view = LayoutInflater.from(context).inflate(R.layout.browser_tabstray_item, viewGroup, false)
 
@@ -133,5 +148,9 @@ class TabsTrayFragment : Fragment(), UserInteractionHandler {
             .attachToRecyclerView(tabsTray)
 
         return tabsAdapter
+    }
+
+    companion object {
+        private const val SELECTED_TAB_TINT = 0.25f
     }
 }

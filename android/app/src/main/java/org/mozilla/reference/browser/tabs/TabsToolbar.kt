@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.tabs
 
+import org.mozilla.reference.browser.ignifox.Ignifox
 import android.content.Context
 import android.util.AttributeSet
 import mozilla.components.feature.tabs.tabstray.TabsFeature
@@ -35,7 +36,7 @@ constructor(
                 R.id.newTab -> {
                     when (isPrivateTray) {
                         true -> tabsUseCases.addTab.invoke("about:privatebrowsing", selectTab = true, private = true)
-                        false -> tabsUseCases.addTab.invoke("about:blank", selectTab = true)
+                        false -> tabsUseCases.addTab.invoke(Ignifox.homeUrl(context), selectTab = true)
                     }
                     closeTabsTray?.invoke()
                 }

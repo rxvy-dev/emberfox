@@ -167,3 +167,15 @@ kbd { font: 11px ui-monospace, monospace; padding: 1px 5px; border-radius: 4px; 
 :root[style*="--nt-font"] #greeting {
   font-family: var(--nt-font) !important;
 }
+
+/* ---- Ignifox for Android: same page, phone-sized. Settings live in the app's Ignifox Studio. */
+:root[data-platform="android"] #gear, :root[data-platform="android"] #gear-tip,
+:root[data-platform="android"] #hint { display: none !important; }
+:root[data-platform="android"] #center { padding-left: 16px; padding-right: 16px; }
+:root[data-platform="android"] #notes { position: static; width: auto; margin: 18px 16px; }
+@media (max-width: 600px) {
+  #clock { font-size: clamp(54px, 19vw, 92px); }
+  #greeting { font-size: clamp(20px, 6vw, 30px); }
+  #search { width: 100%; }
+  #tiles { gap: 10px; }
+}

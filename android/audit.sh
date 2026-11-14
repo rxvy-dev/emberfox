@@ -24,17 +24,20 @@ else
   echo "  (no Android build-tools found: skipping manifest and signature checks)"
 fi
 
-# Class names live in the dex files as plain strings.
-tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
-unzip -q -o "$apk" 'classes*.dex' -d "$tmp"
-for needle in \
-  "Lcom/google/firebase/" \
-  "Lcom/google/android/gms/" \
-  "Lio/sentry/" \
-  "Lcom/adjust/sdk/" \
-  "Lcom/leanplum/" \
-  "Lcom/google/android/play/"; do
-  if grep -q -a -F "$needle" "$tmp"/classes*.dex; then bad "contains $needle"; else ok "no $needle"; fi
-done
+# What matters is which classes the APK actually contains, not which names it mentions.
+analyzer=""
+if [[ -n "$sdk" ]]; then
+  analyzer=$(find "$sdk/cmdline-tools" -name apkanalyzer -type f 2>/dev/null | sort -V | tail -1)
+fi
+if [[ -n "$analyzer" ]]; then
+  packages=$("$analyzer" dex packages --defined-only "$apk" | awk '$1 == "P" { print $NF }')
+  for pkg in com.google.firebase com.google.android.gms com.google.android.play io.sentry com.adjust.sdk com.leanplum; do
+    if grep -q -x -F "$pkg" <<<"$packages" || grep -q -F "$pkg." <<<"$packages"; then bad "contains $pkg"; else ok "no $pkg"; fi
+  done
+else
+  echo "  (no apkanalyzer found: skipping the bundled-library check)"
+fi
+
+if unzip -l "$apk" | grep -q 'assets/newtab/index.html'; then ok "Ignifox New Tab bundled"; else bad "new tab page missing"; fi
 
 if [[ $fail == 0 ]]; then echo "APK AUDIT PASSED"; else echo "APK AUDIT FAILED"; exit 1; fi

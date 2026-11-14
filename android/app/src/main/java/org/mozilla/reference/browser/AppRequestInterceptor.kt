@@ -6,6 +6,7 @@
 
 package org.mozilla.reference.browser
 
+import org.mozilla.reference.browser.ignifox.Ignifox
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
@@ -23,6 +24,20 @@ import org.mozilla.reference.browser.tabs.PrivatePage
  */
 class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
     override fun onLoadRequest(
+        engineSession: EngineSession,
+        uri: String,
+        lastUri: String?,
+        hasUserGesture: Boolean,
+        isSameDomain: Boolean,
+        isRedirect: Boolean,
+        isDirectNavigation: Boolean,
+        isSubframeRequest: Boolean,
+    ): RequestInterceptor.InterceptionResponse? =
+        Ignifox.resolveSearch(context, uri)?.let { RequestInterceptor.InterceptionResponse.Url(it) }
+            ?: intercept(engineSession, uri, lastUri, hasUserGesture, isSameDomain, isRedirect, isDirectNavigation, isSubframeRequest)
+
+    @Suppress("LongParameterList")
+    private fun intercept(
         engineSession: EngineSession,
         uri: String,
         lastUri: String?,

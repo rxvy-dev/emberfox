@@ -148,6 +148,14 @@ project.configurations.configureEach {
     }
 }
 
+// Freedom: GeckoView and a few components pull in Google Play Services (closed source) for
+// passkeys and casting. Ignifox ships without them; see GeckoPrefs for the matching switch.
+configurations.configureEach {
+    exclude group: 'com.google.android.gms'
+    exclude group: 'com.google.firebase'
+    exclude group: 'com.google.android.play'
+}
+
 dependencies {
     implementation libs.androidx.activity
     implementation libs.androidx.annotation

@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser.settings
 
+import org.mozilla.reference.browser.ignifox.StudioFragment
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -106,6 +107,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
             (preferenceAutofill as AutofillPreference).updateSwitch()
         }
 
+        findPreference<Preference>("igni_open_studio")?.onPreferenceClickListener = OnPreferenceClickListener {
+            parentFragmentManager
+                .beginTransaction()
+                .replace(R.id.container, StudioFragment())
+                .addToBackStack(null)
+                .commit()
+            true
+        }
         preferenceMakeDefaultBrowser?.onPreferenceClickListener = getClickListenerForMakeDefaultBrowser()
         preferenceRemoteDebugging?.onPreferenceChangeListener = getChangeListenerForRemoteDebugging()
         preferenceAboutPage?.onPreferenceClickListener = getAboutPageListener()

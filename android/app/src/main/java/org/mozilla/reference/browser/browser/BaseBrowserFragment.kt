@@ -4,6 +4,8 @@
 
 package org.mozilla.reference.browser.browser
 
+import android.view.Gravity
+import org.mozilla.reference.browser.ignifox.Ignifox
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -231,6 +233,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             ),
         )
 
+        // Ignifox Studio decides whether the toolbar sits at the top or the bottom.
+        val barOnTop = Ignifox.prefs(requireContext()).getString(Ignifox.BAR_POSITION, "bottom") == "top"
         val bottomToolbarHeight = resources.getDimensionPixelSize(R.dimen.browser_toolbar_height)
         engineView.setDynamicToolbarMaxHeight(bottomToolbarHeight)
         (swipeRefresh.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
@@ -239,17 +243,18 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
                     context = requireContext(),
                     attrs = null,
                     engineViewParent = swipeRefresh,
-                    topToolbarHeight = 0,
-                    bottomToolbarHeight = bottomToolbarHeight,
+                    topToolbarHeight = if (barOnTop) bottomToolbarHeight else 0,
+                    bottomToolbarHeight = if (barOnTop) 0 else bottomToolbarHeight,
                 )
         }
 
         (toolbar.layoutParams as? CoordinatorLayout.LayoutParams)?.apply {
+            gravity = if (barOnTop) Gravity.TOP else Gravity.BOTTOM
             behavior =
                 EngineViewScrollingDataBehavior(
                     engineView = engineView,
                     dependency = toolbar,
-                    dependencyGravity = DependencyGravity.Bottom,
+                    dependencyGravity = if (barOnTop) DependencyGravity.Top else DependencyGravity.Bottom,
                 )
         }
 

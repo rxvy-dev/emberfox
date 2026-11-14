@@ -49,7 +49,7 @@
     <string name="preferences_global_privacy_control">Tell websites not to share &amp; sell data</string>
 
     <!-- Preference about page -->
-    <string name="preferences_about_page">About Reference Browser</string>
+    <string name="preferences_about_page">About Ignifox</string>
 
     <!-- Preference for signing in -->
     <string name="sign_in">Sign in</string>
@@ -103,7 +103,7 @@
     <string name="developer_tools_category">Developer tools</string>
 
     <!-- Preference category for Mozilla about/legal etc. -->
-    <string name="mozilla_category">Mozilla</string>
+    <string name="mozilla_category">Ignifox</string>
 
     <!-- Preference category for tracking protection -->
     <string name="tracker_category">Tracking Protection</string>
@@ -134,7 +134,7 @@
     <string name="private_browsing_title">Private Browsing</string>
     <string name="private_browsing_body"><![CDATA[
 <h1>Private Browsing</h1>
-<p>When you browse in a Private Window, Reference Browser <strong>does not save</strong>:</p>
+<p>When you browse in a Private Window, Ignifox <strong>does not save</strong>:</p>
 <ul class="two-column">
     <li>visited pages</li>
     <li>searches</li>
@@ -146,22 +146,21 @@
      ]]></string>
 
     <!-- Title of the notification shown on app startup informing about the data policy -->
-    <string name="datareporting_notification_title">Reference Browser</string>
+    <string name="datareporting_notification_title">Ignifox</string>
 
     <!-- Summary of the notification shown on app startup informing about the data policy -->
-    <string name="datareporting_notification_summary">To improve your experience, Reference Browser automatically sends some information to Mozilla.</string>
+    <string name="datareporting_notification_summary">To improve your experience, Ignifox automatically sends some information to Mozilla.</string>
     
     <string name="default_notification_channel">Browser</string>
 
     <!-- About content -->
     <string name="about_content"><![CDATA[
 <p>%1$s puts you in control.</p>
-<p>Use it as a reference to:
-    <br>&bull; Learn how to build your own browser.
-    <br>&bull; Contribute to making it easier to build browsers.
-    <br>&bull; File bug reports!
+<p>&bull; No telemetry, no crash upload, no Google services.
+    <br>&bull; Themes, toolbar and new tab are yours to change in Ignifox Studio.
+    <br>&bull; Any Firefox add-on, about:config unlocked.
 </p>
-<p>%1$s is produced by Mozilla. Our mission is to foster a healthy, open Internet.<br/>
+<p>%1$s is free software (MPL 2.0) built on Mozilla\'s Gecko engine and Android Components. It is not made or endorsed by Mozilla.<br/>
     ]]></string>
 
     <string name="menu_share_with">Share with…</string>

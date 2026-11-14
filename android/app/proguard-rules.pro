@@ -12,3 +12,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Ignifox is built without Google Play Services; the engine only touches these classes
+# for features that are switched off (see GeckoPrefs).
+-dontwarn com.google.android.gms.**
+-dontwarn com.google.firebase.**
+-dontwarn com.google.android.play.**

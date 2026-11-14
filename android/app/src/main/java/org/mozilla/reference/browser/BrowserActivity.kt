@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser
 
+import org.mozilla.reference.browser.ignifox.Ignifox
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -46,7 +47,11 @@ open class BrowserActivity : AppCompatActivity() {
     /** Returns a new instance of [BrowserFragment] to display. */
     open fun createBrowserFragment(sessionId: String?): Fragment = BrowserFragment.create(sessionId)
 
+    private var studioRevision = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        Ignifox.applyTheme(this, actionBar = false)
+        studioRevision = Ignifox.revision(this)
         setContentView(R.layout.activity_main)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT))
@@ -67,7 +72,6 @@ open class BrowserActivity : AppCompatActivity() {
             }
         lifecycle.addObserver(crashIntegration)
 
-        NotificationManager.checkAndNotifyPolicy(this)
         lifecycle.addObserver(webExtensionPopupObserver)
 
         onBackPressedDispatcher.addCallback(
@@ -98,6 +102,14 @@ open class BrowserActivity : AppCompatActivity() {
         }
 
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Ignifox Studio changed something while we were in the background: redraw with it.
+        if (studioRevision != Ignifox.revision(this)) {
+            recreate()
+        }
     }
 
     override fun onDestroy() {

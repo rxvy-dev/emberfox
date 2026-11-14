@@ -4,6 +4,7 @@
 
 package org.mozilla.reference.browser
 
+import org.mozilla.reference.browser.ignifox.Ignifox
 import android.app.Application
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -66,6 +67,8 @@ open class BrowserApplication : Application() {
         }
 
         components.core.engine.warmUp()
+        Ignifox.writeNewTab(this)
+        Ignifox.applyEngineSettings(this)
 
         restoreBrowserState()
 
@@ -140,6 +143,11 @@ open class BrowserApplication : Application() {
         val sessionStorage = components.core.sessionStorage
 
         components.useCases.tabsUseCases.restore(sessionStorage)
+
+        // First start, or every tab was closed: open the Ignifox New Tab instead of nothing.
+        if (store.state.tabs.isEmpty()) {
+            components.useCases.tabsUseCases.addTab(Ignifox.homeUrl(this@BrowserApplication), selectTab = true)
+        }
 
         // Now that we have restored our previous state (if there's one) let's setup auto saving the state while
         // the app is used.
